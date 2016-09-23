@@ -5,3 +5,4 @@ de foule pendant un incendie
 
 # Subtilité
 - Prendre en compte le mental des gens
+- Savoir que le mot départagement n'existe pas et qu'on dit juste 'Partage des taches'
