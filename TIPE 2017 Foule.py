@@ -7,55 +7,54 @@ from random import *
 
 class salle ( object) :
     
-    # Une salle a : -un nombre de personnes maximal
-    #               -une liste d'attente pour entre dans la salle
-    #               -une liste des salles precedentes (origines)
-    #               -une liste des salles suivantes 
-    #               -une liste des débits de sortie pour les salles suivantes
-    #               -un indice de visite qui determine si il a été visité ce tour
-    #               -si c'est une sortie
+    """Une salle a : -un nombre de personnes maximal
+                     -une liste d'attente pour entre dans la salle
+                     -une liste des salles precedentes (origines)
+                     -une liste des salles suivantes 
+                     -une liste des débits de sortie pour les salles suivantes
+                     -un indice de visite qui determine si il a été visité ce tour
+                     -si c'est une sortie"""
     
     def __init__( self, nb, mx, ori, srt=False):
+        """ Construit une salle avec les paramètres donnés"""
         
-        self.nombre = nb
+        self.nombre = nb # int
+        self.max = mx # int
+        #attente stocke les salles qui attendent à rentrer dans cette salle
+        self.attente = deque() # deque((salles,int))        
+        #suivants stocke les salles adjacentes 
+        self.suivants = [] # liste(salles)
+        #sens stocke True pour un chemin sortant et False pour un chemin rentrant
+        self.sens = [] # liste(bool)
+        #debits stocke le nombre de personnes qui sortent de cette salle par tour
+        self.debits = [] # list(int)
+        #visite stocke si ce noeud a été visité ce tour
+        self.visite = False # bool
+        self.estSortie = srt # bool
         
-        self.max = mx
-         
-        self.origines = ori
-        
-        self.attente = deque()
-        
-        self.suivants = []
-        
-        self.debits = []
-        
-        self.visite = False
-        
-        self.estSortie = srt
-        
-    def ajouterSuivant( self, suiv, deb):
-        
-        self.suivants.append(suiv)
-        
-        self.debits.append(suiv)
+    def ajouterSuivant( self, suiv, sens, deb):
+        """Ajoute une salle adjacente à celle ci"""
+        self.suivants.append(suiv) 
+        self.sens.append(sens)        
+        self.debits.append(deb)
         
         
     def etatSuivant( self):
+        """Fais passer le graphe au tour suivant"""
         
-        if self.attente != deque() :
-            while  self.nombre<self.max-self.attente[0] :
-            
+        if len(self.attente)!=0  :
+            while  self.nombre<self.max-self.attente[1] :
                 self.nombre += self.attente.popleft()
-            
-        if self.nombre<self.max and self.attente != deque():
-            
+                
+        if self.nombre<self.max and len(self.attente) != 0:
             self.attente[0]=self.attente[0]- (self.max - self.nombre)
             self.nombre = self.max
+        
             
         
-        if self.suivants == None :
+        if self.estSortie :
             
-            self.nombre -= self.debits
+            self.nombre -= self.debits[0]
             
         else :
             
