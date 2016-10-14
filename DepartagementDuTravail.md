@@ -13,10 +13,10 @@
  faciliter le travail sur la simulation
 
 2. Modéliser la salle 
-	1.  Faire un objet représentant un mur 
+	1.  **Faire un objet représentant un mur**
 		1. [1?] incorporer la physique de façon intelligente
-	2. Faire un objet représentant une sortie 
-	3. [2.i, 2.ii] Coupler l'objet mur et sortie pour définir la salle  
+	2. **Faire un objet représentant une sortie **
+	3. [2.i, 2.ii] Coupler l'objet mur et sortie pour définir la salle  --> fonction annexe afin de créer les parois proprement dans l'objet
 	4. [2.ii] Définir une interface pour donner les sorties aux Personnes
 	5. Faciliter l'ajout de polygone quelconque dans la salle
 
