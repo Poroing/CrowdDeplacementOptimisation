@@ -1,0 +1,5 @@
+vecteur (x,y)
+
+paroi ( coin1, coin2)                                                                               
+
+sortie (paroi, position, largeur) #position et largeur en proportion de la paroi
