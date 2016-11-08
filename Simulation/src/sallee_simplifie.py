@@ -19,7 +19,7 @@ class LieuFermre(object):
         sommet_bas_gauche = self.position
         sommet_bas_droit = self.position + Vec2d(self.largeur, 0)
         sommet_haut_gauche = self.position + Vec2d(0, self.hauteur)
-        sommet_haut_droit = self.position + Vec2d(self.largeur, self.largeur)
+        sommet_haut_droit = self.position + Vec2d(self.largeur, self.hauteur)
         sommet_porte_gauche = self.position + Vec2d((self.largeur - self.largeur_porte) / 2, 0)
         sommet_porte_droit = self.position + Vec2d((self.largeur + self.largeur_porte) / 2, 0)
 
