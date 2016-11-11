@@ -3,6 +3,7 @@ from pymunk.vec2d import Vec2d
 import pygame
 import pymunk.pygame_util
 import random
+import pygame.locals
 
 
 def test():
@@ -20,9 +21,13 @@ def test():
     personnes = [ Personne(Vec2d(random.randint(60, 140), random.randint(60, 140)), lieu_ferme) for _ in range(NOMBRE_PERSONNE) ]
     for personne in personnes:
         personne.ajouterDansEspace(espace)
+
+    running = True
     
-    while True:
-        print('Running')
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.locals.QUIT:
+                running = False
         ecran.fill(pygame.color.THECOLORS['black'])
         espace.debug_draw(option_dessin)
         pygame.display.flip()
