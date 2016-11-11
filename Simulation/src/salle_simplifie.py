@@ -57,6 +57,9 @@ class Personne(object):
         
         self.lieu_ferme = lieu_ferme
 
+    def estSortie(self):
+        return self.body.position.y < self.lieu_ferme.avoirCentrePorte().y
+
     def ajouterDansEspace(self, espace):
         espace.add(self.body, self.shape)
 
@@ -66,7 +69,6 @@ class Personne(object):
 
     def update(self):
         self.traiterVitesse()
-        force = (self.lieu_ferme.avoirCentrePorte() - self.body.position).normalized() * Personne.FORCE_DEPLACEMENT
-        self.body.apply_force_at_local_point(force, Vec2d(0, 0))
-            
-
+        if not self.estSortie():
+            force = (self.lieu_ferme.avoirCentrePorte() - self.body.position).normalized() * Personne.FORCE_DEPLACEMENT
+            self.body.apply_force_at_local_point(force, Vec2d(0, 0))
