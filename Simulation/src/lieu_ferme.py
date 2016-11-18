@@ -1,9 +1,9 @@
 from pymunk.vec2d import Vec2d
 import pymunk
 
-class LieuFermre(object):
+class LieuFerme(object):
 
-    def __init__(self, largeur, hauteur, position=(0, 0), largeur_porte=30):
+    def __init__(self, largeur=400, hauteur=800, position=(0, 0), largeur_porte=85):
         self.largeur = largeur
         self.hauteur = hauteur
         self.position = Vec2d(position)

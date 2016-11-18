@@ -3,11 +3,11 @@ import pymunk
 
 class Personne(object):
 
-    RAYON = 5
+    RAYON = 26
     MASSE = 70
     MOMENT = pymunk.moment_for_circle(MASSE, 0, RAYON)
-    FORCE_DEPLACEMENT = 5 * 10**4
-    VITESSE_MAXIMALE = 50
+    FORCE_DEPLACEMENT = RAYON * 10**4
+    VITESSE_MAXIMALE = 100
 
     def __init__(self, position, lieu_ferme):
         self.body = pymunk.Body(Personne.MASSE, Personne.MOMENT)

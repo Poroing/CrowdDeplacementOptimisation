@@ -6,6 +6,9 @@ import pymunk.pygame_util
 import random
 import pygame.locals
 
+largeur, hauteur = 800
+largeur_porte = 85
+
 
 def test():
     IMAGE_PAR_SECONDE = 60
