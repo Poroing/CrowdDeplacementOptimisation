@@ -8,17 +8,17 @@ import pygame.locals
 
 def test():
     IMAGE_PAR_SECONDE = 60
-    NOMBRE_PERSONNE = 60
+    NOMBRE_PERSONNE = 1000
     horloge = pygame.time.Clock()
 
-    ecran = pygame.display.set_mode((200, 200))
+    ecran = pygame.display.set_mode((720, 1080))
     option_dessin = pymunk.pygame_util.DrawOptions(ecran)
 
     espace = pymunk.Space()
-    lieu_ferme = LieuFermre(100, 100, Vec2d(50, 50))
+    lieu_ferme = LieuFermre(600, 900, Vec2d(50, 50), )
     lieu_ferme.ajouterDansEspace(espace)
 
-    personnes = [ Personne(Vec2d(random.randint(60, 140), random.randint(60, 140)), lieu_ferme) for _ in range(NOMBRE_PERSONNE) ]
+    personnes = [ Personne(Vec2d(random.randint(60, 40+ lieu_ferme.largeur), random.randint(60, 40 + lieu_ferme.hauteur)), lieu_ferme) for _ in range(NOMBRE_PERSONNE) ]
     for personne in personnes:
         personne.ajouterDansEspace(espace)
 
