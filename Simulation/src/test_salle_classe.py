@@ -1,12 +1,13 @@
 from lieu_ferme import LieuFerme
 from personne import Personne
+from obstacle_rectangulaire import ObstacleRectangulaire
 from pymunk.vec2d import Vec2d
 import pygame
 import pymunk.pygame_util
 import random
 import pygame.locals
 
-largeur, hauteur = 800
+largeur, hauteur = 800,800
 largeur_porte = 85
 
 
@@ -25,7 +26,10 @@ def test():
     personnes = [ Personne(Vec2d(random.randint(60, 40+ lieu_ferme.largeur), random.randint(60, 40 + lieu_ferme.hauteur)), lieu_ferme) for _ in range(NOMBRE_PERSONNE) ]
     for personne in personnes:
         personne.ajouterDansEspace(espace)
-
+    
+    premierRectangle = ObstacleRectangulaire(200,200,(300,100))
+    premierRectangle.ajouterDansEspace(espace)
+    
     running = True
     
     while running:
