@@ -7,8 +7,9 @@ import pymunk.pygame_util
 import random
 import pygame.locals
 
-largeur, hauteur = 800,800
+largeur_classe, hauteur_classe = 800,800
 largeur_porte = 85
+largeur_mur, hauteur_mur = 275, 50
 
 
 def test():
@@ -20,15 +21,25 @@ def test():
     option_dessin = pymunk.pygame_util.DrawOptions(ecran)
 
     espace = pymunk.Space()
-    lieu_ferme = LieuFerme(800,800,Vec2d(50, 50) )
+    lieu_ferme = LieuFerme(largeur_classe,hauteur_classe,Vec2d(50, 50) )
     lieu_ferme.ajouterDansEspace(espace)
 
     personnes = [ Personne(Vec2d(random.randint(60, 40+ lieu_ferme.largeur), random.randint(60, 40 + lieu_ferme.hauteur)), lieu_ferme) for _ in range(NOMBRE_PERSONNE) ]
     for personne in personnes:
         personne.ajouterDansEspace(espace)
     
-    premierRectangle = ObstacleRectangulaire(200,200,(300,100))
-    premierRectangle.ajouterDansEspace(espace)
+    pos = 125
+    
+    
+    while pos + 50 <= hauteur_classe :
+        murGauche = ObstacleRectangulaire(hauteur_mur,largeur_mur,(125,pos))
+        murGauche.ajouterDansEspace(espace)
+        murDroit = ObstacleRectangulaire(hauteur_mur,largeur_mur,(525,pos))
+        murDroit.ajouterDansEspace(espace)
+        pos += 110
+        
+    
+    
     
     running = True
     
