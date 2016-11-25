@@ -3,11 +3,14 @@ import pymunk
 
 class LieuFermre(object):
 
-    def __init__(self, largeur, hauteur, position=(0, 0), largeur_porte=30):
+    def __init__(self, largeur, hauteur, position=(0, 0), largeur_porte=30, obstacle=None):
         self.largeur = largeur
         self.hauteur = hauteur
         self.position = Vec2d(position)
         self.largeur_porte = largeur_porte
+        if obstacle is None:
+            obstacle = []
+        self.ensemble_obstacle = obstacle
 
     def avoirCentrePorte(self):
         return self.position + Vec2d(self.largeur / 2, 0)
