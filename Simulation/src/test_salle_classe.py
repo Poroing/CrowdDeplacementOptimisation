@@ -21,7 +21,7 @@ def cv_liste_into_texte(liste):
     for k in range(len(liste)) :
         sortie += str(liste[k])
         if k !=len(liste) -1 :
-            sortie += " , "
+            sortie += " "
     return sortie
 ##
 def test():
@@ -69,17 +69,17 @@ def test():
         espace.step(1 / IMAGE_PAR_SECONDE)
         
         numeroPersonne = 0
-        
+        tempsEvenement = time.time() - depart
         for personne in personnes:
             
             personne.update()
             if not(personne.estSortie()):
                 
-                tempsPersonne[numeroPersonne] = round(time.time() - depart,3)
+                tempsPersonne[numeroPersonne] = round(tempsEvenement,3)
             
             numeroPersonne+= 1
-        resultat_debit.write(str(round(time.time() - depart, 3)))
-        resultat_debit.write(" , ")
+        resultat_debit.write(str(round(tempsEvenement, 3)))
+        resultat_debit.write(" ")
         resultat_debit.write(cv_liste_into_texte(tempsPersonne))
         
         resultat_debit.write('\n')
