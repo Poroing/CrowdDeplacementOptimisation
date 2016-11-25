@@ -10,9 +10,7 @@ class LieuFerme(object):
         self.largeur_porte = largeur_porte
         self.position_porte = position_porte
 
-        if obstacle is None:
-            obstacle = []
-        self.ensemble_obstacle = obstacle
+        self.ensemble_obstacle = []
 
     def avoirCentrePorte(self):
         return self.position + Vec2d(self.largeur * self.position_porte, 0)

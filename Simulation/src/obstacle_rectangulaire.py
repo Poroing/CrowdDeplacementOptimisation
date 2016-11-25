@@ -6,7 +6,7 @@ class ObstacleRectangulaire (object):
     def __init__ (self, hauteur, largeur, position):
         self.largeur = largeur
         self.hauteur = hauteur
-        self.position = position
+        self.position = Vec2d(position)
 
         self.corps = pymunk.Body(body_type=pymunk.Body.STATIC)
         self.corps.position = position + Vec2d(largeur * 1/2, hauteur * 1/2)

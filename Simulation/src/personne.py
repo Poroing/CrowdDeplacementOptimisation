@@ -39,23 +39,25 @@ class Personne(object):
 
 class TestProximite(object):
 
-    ENSEMBLE_BASE_POINT_TEST = [ Vec2d(math.cos(2 * math.pi * i / 8), math.sin(2 * math.pi * i / 8)) for i in range(8) ]
-    NOMBRE_POINT = 8
-
-    def __init__(self, position, lieu_ferme, rayon):
+    def __init__(self, position, lieu_ferme, rayon, nombre_point=8):
         self.position = position
         self.lieu_ferme = lieu_ferme
-        self.ensemble_point = [ rayon * point + self.position for point in TestProximite.ENSEMBLE_BASE_POINT_TEST ]
+        self.nombre_point = nombre_point
+        self.initialiserEnsemblePoint(rayon)
 
         self.retirerPointDansObstacle()
 
+    def initialiserEnsemblePoint(self, rayon):
+        self.ensemble_point = [ Vec2d(math.cos(2 * math.pi * i / self.nombre_point), math.sin(2 * math.pi * i / self.nombre_point)) for i in range(self.nombre_point) ]
+        self.ensemble_point = [ rayon * point + self.position for point in self.ensemble_point ]
+
     def retirerPointDansObstacle(self):
-        point_dans_obstacle = [ False ] * TestProximite.NOMBRE_POINT
-        for index_point in range(TestProximite.NOMBRE_POINT):
+        point_dans_obstacle = [ False ] * self.nombre_point
+        for index_point in range(self.nombre_point):
             for obstacle in self.lieu_ferme.ensemble_obstacle:
                 if obstacle.pointEstAInterieur(self.ensemble_point[index_point]):
                     point_dans_obstacle[index_point] = True
-        self.ensemble_point = [ self.ensemble_point[i] for i in range(TestProximite.NOMBRE_POINT) if not point_dans_obstacle[i] ]
+        self.ensemble_point = [ self.ensemble_point[i] for i in range(self.nombre_point) if not point_dans_obstacle[i] ]
 
     def avoirPointPlusProcheSortie(self):
         if self.ensemble_point == []:
