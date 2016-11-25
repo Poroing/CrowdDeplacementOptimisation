@@ -1,4 +1,5 @@
-from salle_simplifie import Personne, LieuFermre
+from lieu_ferme import LieuFerme
+from personne import Personne
 from pymunk.vec2d import Vec2d
 import pygame
 import pymunk.pygame_util
@@ -8,14 +9,14 @@ import pygame.locals
 
 def test():
     IMAGE_PAR_SECONDE = 60
-    NOMBRE_PERSONNE = 1000
+    NOMBRE_PERSONNE = 50
     horloge = pygame.time.Clock()
 
-    ecran = pygame.display.set_mode((720, 1080))
+    ecran = pygame.display.set_mode((900, 900))
     option_dessin = pymunk.pygame_util.DrawOptions(ecran)
 
     espace = pymunk.Space()
-    lieu_ferme = LieuFermre(600, 900, Vec2d(50, 50), )
+    lieu_ferme = LieuFerme(800,800,Vec2d(50, 50) )
     lieu_ferme.ajouterDansEspace(espace)
 
     personnes = [ Personne(Vec2d(random.randint(60, 40+ lieu_ferme.largeur), random.randint(60, 40 + lieu_ferme.hauteur)), lieu_ferme) for _ in range(NOMBRE_PERSONNE) ]
