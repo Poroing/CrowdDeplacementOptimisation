@@ -3,22 +3,23 @@ import pymunk
 
 class LieuFerme(object):
 
-    def __init__(self, largeur=400, hauteur=800, position=(0, 0), largeur_porte=85):
+    def __init__(self, largeur=400, hauteur=800, position=(0, 0), position_porte = 0.5, largeur_porte = 85):
         self.largeur = largeur
         self.hauteur = hauteur
         self.position = Vec2d(position)
         self.largeur_porte = largeur_porte
+        self.position_porte = position_porte
 
     def avoirCentrePorte(self):
-        return self.position + Vec2d(self.largeur / 2, 0)
+        return self.position + Vec2d(self.largeur * self.position_porte, 0)
 
     def ajouterDansEspace(self, espace):
         sommet_bas_gauche = self.position
         sommet_bas_droit = self.position + Vec2d(self.largeur, 0)
         sommet_haut_gauche = self.position + Vec2d(0, self.hauteur)
         sommet_haut_droit = self.position + Vec2d(self.largeur, self.hauteur)
-        sommet_porte_gauche = self.position + Vec2d((self.largeur - self.largeur_porte) / 2, 0)
-        sommet_porte_droit = self.position + Vec2d((self.largeur + self.largeur_porte) / 2, 0)
+        sommet_porte_gauche = self.position + Vec2d(self.largeur * self.position_porte - self.largeur_porte / 2, 0)
+        sommet_porte_droit = self.position + Vec2d(self.largeur * self.position_porte + self.largeur_porte /2, 0)
 
 
         corps_mur_haut = pymunk.Body(body_type=pymunk.Body.STATIC)
