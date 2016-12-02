@@ -10,6 +10,8 @@ class LieuFerme(object):
         self.largeur_porte = largeur_porte
         self.position_porte = position_porte
 
+        self.ensemble_obstacle = []
+
     def avoirCentrePorte(self):
         return self.position + Vec2d(self.largeur * self.position_porte, 0)
 
@@ -42,4 +44,6 @@ class LieuFerme(object):
         mur_bas_gauche = pymunk.Segment(corps_mur_bas_gauche ,sommet_bas_gauche, sommet_porte_gauche, 0.0)
         espace.add(corps_mur_bas_gauche, mur_bas_gauche)
 
+        for obstacle in self.ensemble_obstacle:
+            obstacle.ajouterDansEspace(espace)
 

@@ -14,6 +14,7 @@ largeur_classe, hauteur_classe = 800,800
 position_porte = 0.8
 largeur_porte = 85 
 largeur_mur, hauteur_mur = 275, 50
+stop_apres_temp = False
 resultat_debit = open("resultat.txt", "w")
 ##
 def cv_liste_into_texte(liste):
@@ -24,6 +25,16 @@ def cv_liste_into_texte(liste):
             sortie += " "
     return sortie
 ##
+
+def ajouterTables(lieu_ferme):
+    pos = 150
+    
+    while pos + 50 <= hauteur_classe :
+        lieu_ferme.ensemble_obstacle.append(ObstacleRectangulaire(hauteur_mur,largeur_mur,(125,pos)))
+        lieu_ferme.ensemble_obstacle.append(ObstacleRectangulaire(hauteur_mur,largeur_mur,(500,pos)))
+        pos += 100
+    
+
 def test():
     IMAGE_PAR_SECONDE = 60
     NOMBRE_PERSONNE = 50
@@ -34,6 +45,7 @@ def test():
 
     espace = pymunk.Space()
     lieu_ferme = LieuFerme(largeur_classe,hauteur_classe,Vec2d(50, 50), position_porte )
+    ajouterTables(lieu_ferme)
     lieu_ferme.ajouterDansEspace(espace)
 
     personnes = [ Personne(Vec2d(random.randint(60, 40+ lieu_ferme.largeur), random.randint(60, 40 + lieu_ferme.hauteur)), lieu_ferme) for _ in range(NOMBRE_PERSONNE) ]
@@ -41,17 +53,7 @@ def test():
         personne.ajouterDansEspace(espace)
     
     tempsPersonne = [0 for _ in range (50)]
-    
-    pos = 150
-    
-    
-    while pos + 50 <= hauteur_classe :
-        murGauche = ObstacleRectangulaire(hauteur_mur,largeur_mur,(125,pos))
-        murGauche.ajouterDansEspace(espace)
-        murDroit = ObstacleRectangulaire(hauteur_mur,largeur_mur,(500,pos))
-        murDroit.ajouterDansEspace(espace)
-        pos += 100
-        
+       
     
     
     
@@ -86,7 +88,7 @@ def test():
         
         horloge.tick(IMAGE_PAR_SECONDE)
         
-        if time.time() - depart > 10 :
+        if stop_apres_temp and time.time() - depart > 10 :
             running = False
 
         
