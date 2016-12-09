@@ -11,9 +11,19 @@ class LieuFerme(object):
         self.position_porte = position_porte
 
         self.ensemble_obstacle = []
+        self.ensemble_personnes = []
 
     def avoirCentrePorte(self):
         return self.position + Vec2d(self.largeur * self.position_porte, 0)
+
+    def pointEstDansObstacle(self, point):
+        return ( point.x > self.position.x + self.largeur or point.x < self.position.x
+            or point.y > self.position.y + self.hauteur or point.y < self.position.y
+            or any(map(lambda obstacle: obstacle.pointEstAInterieur(point),
+                self.ensemble_obstacle))
+            or any(map(lambda obstacle: obstacle.pointEstAInterieur(point),
+                self.ensemble_personnes)))
+
 
     def ajouterDansEspace(self, espace):
         sommet_bas_gauche = self.position
@@ -46,4 +56,7 @@ class LieuFerme(object):
 
         for obstacle in self.ensemble_obstacle:
             obstacle.ajouterDansEspace(espace)
+
+        for personne in self.ensemble_personnes:
+            personne.ajouterDansEspace(espace)
 
