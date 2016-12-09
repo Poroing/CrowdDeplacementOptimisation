@@ -46,11 +46,13 @@ def test():
     espace = pymunk.Space()
     lieu_ferme = LieuFerme(largeur_classe,hauteur_classe,Vec2d(50, 50), position_porte )
     ajouterTables(lieu_ferme)
-    lieu_ferme.ajouterDansEspace(espace)
 
-    personnes = [ Personne(Vec2d(random.randint(60, 40+ lieu_ferme.largeur), random.randint(60, 40 + lieu_ferme.hauteur)), lieu_ferme) for _ in range(NOMBRE_PERSONNE) ]
-    for personne in personnes:
-        personne.ajouterDansEspace(espace)
+    for _ in range(NOMBRE_PERSONNE):
+        lieu_ferme.ensemble_personnes.append(
+            Personne(Vec2d(random.randint(60, 40+ lieu_ferme.largeur),
+                random.randint(60, 40 + lieu_ferme.hauteur)), lieu_ferme))
+
+    lieu_ferme.ajouterDansEspace(espace)
     
     tempsPersonne = [0 for _ in range (50)]
        
@@ -72,7 +74,7 @@ def test():
         
         numeroPersonne = 0
         
-        for personne in personnes:
+        for personne in lieu_ferme.ensemble_personnes:
             
             personne.update()
             if not(personne.estSortie()):
