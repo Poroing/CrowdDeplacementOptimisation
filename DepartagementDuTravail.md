@@ -1,4 +1,4 @@
-# Travail à faire
+﻿# Travail à faire
 - Implémenter un graphe orienté pour modéliser les mouvement lors d'un incendie (Alex)
 - Implémenter une simulation de mouvement de foule applicable pour un mouvement  (les autres)
  de foule pendant un incendie
@@ -32,3 +32,7 @@
 		2. Gérer l'interaction des personnes avec les autres personnes
 
 4. Créer une interface pour le couplage avec le graphe
+
+
+
+salut jean, rajoute la programmation d'un lissage de courbe stp merci bisous
