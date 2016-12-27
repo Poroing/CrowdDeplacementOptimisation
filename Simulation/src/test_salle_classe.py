@@ -63,7 +63,7 @@ def test():
     ajouterPersonnesAleatoirementDansLieuFerme(lieu_ferme, NOMBRE_PERSONNE)
     lieu_ferme.ajouterDansEspace(espace)
     
-    tempsPersonne = [0 for _ in range (50)]
+    tempsPersonne = [0 for _ in range (NOMBRE_PERSONNE)]
        
     running = True
     depart = time.time()
@@ -82,14 +82,13 @@ def test():
         tempsEvenement = time.time() - depart
         
         for personne in lieu_ferme.ensemble_personnes:
-            
             personne.update()
 
         mettreAJourTempsPersonne(lieu_ferme, tempsEvenement, tempsPersonne)
         
         horloge.tick(IMAGE_PAR_SECONDE)
         
-        if stop_apres_temp and time.time() - depart > 10 :
+        if stop_apres_temp and tempsEvenement > 10 :
             running = False
 
         
