@@ -16,6 +16,3 @@ class ObstacleRectangulaire (object):
     def pointEstAInterieur(self, point):
         return ( point.x > self.position.x and point.x < self.position.x + self.largeur
             and point.y > self.position.y and point.y < self.position.y + self.hauteur)
-        
-    def ajouterDansEspace(self, espace):
-        espace.add(self.corps, self.representation)

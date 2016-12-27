@@ -1,6 +1,7 @@
 from lieu_ferme import LieuFerme
 from personne import Personne
 from obstacle_rectangulaire import ObstacleRectangulaire
+from espace import Espace
 from pymunk.vec2d import Vec2d
 import pygame
 import pymunk.pygame_util
@@ -25,22 +26,22 @@ def cv_liste_into_texte(liste):
             sortie += " "
     return sortie
 
-def ajouterTables(lieu_ferme, hauteur_range_tables=50, largeur_range_tables=275):
+def ajouterTables(espace, hauteur_range_tables=50, largeur_range_tables=275):
     position_range = 150
     
-    while position_range + hauteur_range_tables <= lieu_ferme.hauteur :
-        lieu_ferme.ensemble_obstacle.append(ObstacleRectangulaire(hauteur_range_tables, largeur_range_tables, (125,position_range)))
-        lieu_ferme.ensemble_obstacle.append(ObstacleRectangulaire(hauteur_range_tables, largeur_range_tables, (500,position_range)))
+    while position_range + hauteur_range_tables <= espace.lieu_ferme.hauteur :
+        espace.ajouterObstacle(ObstacleRectangulaire(hauteur_range_tables, largeur_range_tables, (125,position_range)))
+        espace.ajouterObstacle(ObstacleRectangulaire(hauteur_range_tables, largeur_range_tables, (500,position_range)))
         position_range += 100
 
-def ajouterPersonnesAleatoirementDansLieuFerme(lieu_ferme, nombre_personnes):
+def ajouterPersonnesAleatoirementDansEspace(espace, nombre_personnes):
     for _ in range(nombre_personnes):
-        lieu_ferme.ensemble_personnes.append(
-            Personne(Vec2d(random.randint(60, 40 + lieu_ferme.largeur),
-                random.randint(60, 40 + lieu_ferme.hauteur)), lieu_ferme))
+        espace.ajouterPersonne(
+            Personne(Vec2d(random.randint(60, 40 + espace.lieu_ferme.largeur),
+                random.randint(60, 40 + espace.lieu_ferme.hauteur)), espace))
 
-def mettreAJourTempsPersonne(lieu_ferme, temps_evenement, temps_personne):
-        for index_personne, personne in enumerate(lieu_ferme.ensemble_personnes):
+def mettreAJourTempsPersonne(espace, temps_evenement, temps_personne):
+        for index_personne, personne in enumerate(espace.ensemble_personnes):
             if not(personne.estSortie()):
                 temps_personne[index_personne] = round(temps_evenement,3)
             
@@ -48,6 +49,9 @@ def mettreAJourTempsPersonne(lieu_ferme, temps_evenement, temps_personne):
         resultat_debit.write(" ")
         resultat_debit.write(cv_liste_into_texte(temps_personne))
         resultat_debit.write('\n')
+
+def dessinerEspace(espace, option_dessin):
+    espace.pymunk_espace.debug_draw(option_dessin)
 
 def test():
     IMAGE_PAR_SECONDE = 60
@@ -57,11 +61,10 @@ def test():
     ecran = pygame.display.set_mode((1000, 1000))
     option_dessin = pymunk.pygame_util.DrawOptions(ecran)
 
-    espace = pymunk.Space()
-    lieu_ferme = LieuFerme(largeur_classe, hauteur_classe, Vec2d(50, 50), position_porte)
-    ajouterTables(lieu_ferme)
-    ajouterPersonnesAleatoirementDansLieuFerme(lieu_ferme, NOMBRE_PERSONNE)
-    lieu_ferme.ajouterDansEspace(espace)
+    espace = Espace()
+    espace.ajouterLieuFerme(LieuFerme(largeur_classe, hauteur_classe, Vec2d(50, 50), position_porte))
+    ajouterTables(espace)
+    ajouterPersonnesAleatoirementDansEspace(espace, NOMBRE_PERSONNE)
     
     tempsPersonne = [0 for _ in range (NOMBRE_PERSONNE)]
        
@@ -74,28 +77,19 @@ def test():
                 running = False
 
         ecran.fill(pygame.color.THECOLORS['black'])
-        espace.debug_draw(option_dessin)
+        dessinerEspace(espace, option_dessin)
         pygame.display.flip()   
 
-        espace.step(1 / IMAGE_PAR_SECONDE)
+        espace.avancer(1 / IMAGE_PAR_SECONDE)
         
         tempsEvenement = time.time() - depart
-        
-        for personne in lieu_ferme.ensemble_personnes:
-            personne.update()
 
-        mettreAJourTempsPersonne(lieu_ferme, tempsEvenement, tempsPersonne)
+        mettreAJourTempsPersonne(espace, tempsEvenement, tempsPersonne)
         
         horloge.tick(IMAGE_PAR_SECONDE)
         
         if stop_apres_temp and tempsEvenement > 10 :
             running = False
-
-        
-        
-        
-        
-        
 
 test()
 resultat_debit.close()

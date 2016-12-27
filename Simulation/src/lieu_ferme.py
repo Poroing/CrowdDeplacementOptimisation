@@ -10,53 +10,11 @@ class LieuFerme(object):
         self.largeur_porte = largeur_porte
         self.position_porte = position_porte
 
-        self.ensemble_obstacle = []
-        self.ensemble_personnes = []
-
     def avoirCentrePorte(self):
         return self.position + Vec2d(self.largeur * self.position_porte, 0)
 
-    def pointEstDansObstacle(self, point):
+    def pointEstAExterieur(self, point):
         return ( point.x > self.position.x + self.largeur or point.x < self.position.x
-            or point.y > self.position.y + self.hauteur or point.y < self.position.y
-            or any(map(lambda obstacle: obstacle.pointEstAInterieur(point),
-                self.ensemble_obstacle))
-            or any(map(lambda obstacle: obstacle.pointEstAInterieur(point),
-                self.ensemble_personnes)))
+            or point.y > self.position.y + self.hauteur or point.y < self.position.y)
 
-
-    def ajouterDansEspace(self, espace):
-        sommet_bas_gauche = self.position
-        sommet_bas_droit = self.position + Vec2d(self.largeur, 0)
-        sommet_haut_gauche = self.position + Vec2d(0, self.hauteur)
-        sommet_haut_droit = self.position + Vec2d(self.largeur, self.hauteur)
-        sommet_porte_gauche = self.position + Vec2d(self.largeur * self.position_porte - self.largeur_porte / 2, 0)
-        sommet_porte_droit = self.position + Vec2d(self.largeur * self.position_porte + self.largeur_porte /2, 0)
-
-
-        corps_mur_haut = pymunk.Body(body_type=pymunk.Body.STATIC)
-        mur_haut = pymunk.Segment(corps_mur_haut, sommet_haut_gauche, sommet_haut_droit, 0.0)
-        espace.add(corps_mur_haut, mur_haut)
-
-        corps_mur_gauche = pymunk.Body(body_type=pymunk.Body.STATIC)
-        mur_gauche = pymunk.Segment(corps_mur_gauche, sommet_haut_gauche, sommet_bas_gauche, 0.0)
-        espace.add(corps_mur_gauche, mur_gauche)
-
-        corps_mur_droit = pymunk.Body(body_type=pymunk.Body.STATIC)
-        mur_droit = pymunk.Segment(corps_mur_droit, sommet_bas_droit, sommet_haut_droit, 0.0)
-        espace.add(corps_mur_droit, mur_droit)
-
-        corps_mur_bas_droit = pymunk.Body(body_type=pymunk.Body.STATIC)
-        mur_bas_droit = pymunk.Segment(corps_mur_bas_droit, sommet_bas_droit, sommet_porte_droit, 0.0)
-        espace.add(corps_mur_bas_droit, mur_bas_droit)
-
-        corps_mur_bas_gauche = pymunk.Body(body_type=pymunk.Body.STATIC)
-        mur_bas_gauche = pymunk.Segment(corps_mur_bas_gauche ,sommet_bas_gauche, sommet_porte_gauche, 0.0)
-        espace.add(corps_mur_bas_gauche, mur_bas_gauche)
-
-        for obstacle in self.ensemble_obstacle:
-            obstacle.ajouterDansEspace(espace)
-
-        for personne in self.ensemble_personnes:
-            personne.ajouterDansEspace(espace)
 
