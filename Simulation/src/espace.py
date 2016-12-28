@@ -1,9 +1,13 @@
 import pymunk
 from obstacle_rectangulaire import ObstacleRectangulaire
+from representation_categories import RepresentationCategorie
 from personne import Personne
 from pymunk.vec2d import Vec2d
 
 class Espace(object):
+
+    CATEGORIE_PERSONNE = 0x1
+    CATEGORIE_OBSTACLE = 0x2
 
     def __init__(self):
         self.pymunk_espace = pymunk.Space()
@@ -18,20 +22,19 @@ class Espace(object):
         for personne in self.ensemble_personnes:
             personne.update()
 
+    def avoirInfoSurLancerRayon(self, debut, fin, ignorer_personne=True):
+        if ignorer_personne:
+            filtre = pymunk.ShapeFilter(mask=pymunk.ShapeFilter.ALL_MASKS ^ RepresentationCategorie.PERSONNE.value)
+        else:
+            filtre = pymunk.ShapeFilter()
+        return self.pymunk_espace.segment_query_first(debut, fin, 1, filtre)
+
     def pointEstDansObstacle(self, point):
         return (self.lieu_ferme.pointEstAExterieur(point)
             or any(map(lambda obstacle: obstacle.pointEstAInterieur(point),
                 self.ensemble_obstacle))
             or any(map(lambda obstacle: obstacle.pointEstAInterieur(point),
                 self.ensemble_personnes)))
-
-    def ajouterElement(self, element):
-        if isinstance(element, Personne):
-            self.ajouterPersonne(element)
-        elif isinstance(element, ObstacleRectangulaire):
-            self.ajouterObstacle(element)
-        else:
-            raise ValueError('{} n\'est pas valide comme element d\'Espace'.format(type(element)))
 
     def ajouterPersonne(self, personne):
         self.ensemble_personnes.append(personne)

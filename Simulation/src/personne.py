@@ -1,4 +1,6 @@
 from pymunk.vec2d import Vec2d
+from representation_categories import RepresentationCategorie
+from test_point_suivre import TestBordsObstacle, TestProximite
 import math
 import pymunk
 import operator
@@ -14,11 +16,13 @@ class Personne(object):
     VITESSE_MAXIMALE = 222
     COEFFICIENT_EVITEMENT = 0.4
 
-    def __init__(self, position, espace):
+    def __init__(self, position, espace, test_direction_cls=TestBordsObstacle):
         self.body = pymunk.Body(Personne.MASSE, Personne.MOMENT)
         self.shape = pymunk.Circle(self.body, Personne.RAYON)
+        self.shape.filter = pymunk.ShapeFilter(categories=RepresentationCategorie.PERSONNE.value)
         self.body.position = position
-        self.test_direction = TestProximite(position, espace, Personne.COEFFICIENT_TEST * Personne.RAYON)
+        self.test_direction = test_direction_cls(position, espace, Personne.COEFFICIENT_TEST * Personne.RAYON,
+            espace.lieu_ferme.avoirCentrePorte())
         
         self.espace = espace
 
@@ -46,46 +50,3 @@ class Personne(object):
             self.test_direction.update(self.body.position)
             force = (self.test_direction.point_a_suivre - self.body.position).normalized() * Personne.FORCE_DEPLACEMENT
             self.body.apply_force_at_local_point(force, Vec2d(0, 0))
-
-class TestBordsObstacle(object):
-
-    def __init__(self, position, espace, rayon):
-        self.espace = espace
-        self.point_a_suivre = None
-
-    def update(self, positon):
-        pass
-
-class TestProximite(object):
-
-    def __init__(self, position, espace, rayon, nombre_point=16):
-        self.espace = espace
-        self.nombre_point = nombre_point
-        self.position = position
-        self.ensemble_point = [ self.position + rayon * Vec2d(math.cos(2 * math.pi * i / self.nombre_point), math.sin(2 * math.pi * i / self.nombre_point)) for i in range(self.nombre_point) ]
-        self.point_a_suivre = self.ensemble_point[0]
-
-    def update(self, position):
-        self.updatePosition(position)
-        if self.espace.pointEstDansObstacle(self.point_a_suivre):
-            self.updatePointASuivre()
-
-    def forceUpdate(self, position):
-        self.updatePosition(position)
-        self.updatePointASuivre()
-        
-    def updatePosition(self, position):
-        for point in self.ensemble_point:
-            point += position - self.position
-        self.position = position
-
-    def updatePointASuivre(self):
-            self.point_a_suivre = self.avoirPointLibrePlusProcheSortie()
-            
-    def genererPointsLibres(self):
-        return filter(lambda point: not self.espace.pointEstDansObstacle(point), self.ensemble_point)
-
-    def avoirPointLibrePlusProcheSortie(self):
-        return min(self.genererPointsLibres(),
-            key=lambda p: p.get_distance(self.espace.lieu_ferme.avoirCentrePorte()),
-            default=self.ensemble_point[0])
