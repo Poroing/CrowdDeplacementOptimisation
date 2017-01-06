@@ -85,4 +85,3 @@ class Simulation(object):
         self.debut_lancement = time.time()
         while True:
             self.mettreAJour()
-

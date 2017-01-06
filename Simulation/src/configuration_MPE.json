@@ -19,6 +19,7 @@
 	{
 	    "nombre" : 50
 	},
-    "mise_a_jour_par_seconde": 60
+    "mise_a_jour_par_seconde": 60,
+	"stop_apres_temps" : 10
 }
    
