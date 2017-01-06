@@ -1,9 +1,51 @@
 import time
+import random
+from lieu_ferme import LieuFerme
+from personne import Personne
+from obstacle_rectangulaire import ObstacleRectangulaire
+from espace import Espace
+from pymunk.vec2d import Vec2d
+import pygame
+import pymunk.pygame_util
 
-def ConstruireSalle (, fichierJSON):
-    hahfe = fichierJson['hauteur_rang'] 
-
-def initialiserSimulation 
+class ConstructeurSalle(object):
+       
+    def __init__(self, donnees_simulation):
+        
+        
+        self.donnees_simulation = donnees_simulation
+        
+        self.espace = Espace()
+        self.ajouterLieuFerme(self.espace, **self.donnees_simulation['lieu_ferme'])
+        self.ajouterObstacles(self.espace, **self.donnees_simulation['obstacles'])
+        
+    
+    def ajouterLieuFerme(self, espace, salle_hauteur=None, salle_largeur=None, porte_largeur=None, porte_position=None):
+        
+        espace.ajouterLieuFerme(LieuFerme(salle_largeur, salle_hauteur, Vec2d(50, 50), porte_position, porte_largeur))
+        
+    
+    def ajouterObstacles(self,espace, obstacle_hauteur=None,obstacle_largeur=None, obstacle_distance_intermediaire=None,mur_rang_distance=None, obstacle_gauche_position_premier=None, obstacle_droit_position_premier=None  ):
+        
+        position_gauche_y = obstacle_gauche_position_premier
+        position_droit_y = obstacle_droit_position_premier
+        
+        
+        
+        while position_gauche_y + 50 <=self.espace.lieu_ferme.hauteur :
+            
+            position_gauche = 50 + mur_rang_distance, position_gauche_y
+            
+            espace.ajouterObstacle(ObstacleRectangulaire(obstacle_hauteur,obstacle_largeur,position_gauche))
+            position_gauche_y += obstacle_distance_intermediaire
+            
+        
+        while position_droit_y + 50 <= self.espace.lieu_ferme.hauteur :
+            
+            position_droit = 50 + self.espace.lieu_ferme.largeur + mur_rang_distance, position_droit_y
+            
+            espace.ajouterObstacle(ObstacleRectangulaire( obstacle_hauteur,obstacle_largeur,position_droit))
+            position_droit_y += obstacle_distance_intermediaire
 
 class EcouteurPersonne(self):
 
@@ -16,14 +58,11 @@ class EcouteurPersonne(self):
         if not self.personne_deja_sortie and personne.estSortie():
             self.action(temps)
 
-def mettreAJourPersonneSortie():
-    print('Sortie')
-
 class ConstructeurSimulation(object):
 
-    def __init__(self, donnees_simulation):
+    def __init__(self, donnees_simulation, action_sortie):
         constructeur_salle = ConstructeurSalle(donnees_simulation)
-        self.simulation = Simulation(constructeur_salle.espace, donnees_simulation['mise_a_jour_par_seconde'])
+        self.simulation = Simulation(constructeur_salle.espace, donnees_simulation['mise_a_jour_par_seconde'], action_sortie)
 
     def contruirePersonneEtEcouteur(self, nombre_personnes):
         #Pour le moment on met un ecouteur sur chaque personne
@@ -52,3 +91,4 @@ class Simulation(object):
         self.debut_lancement = time.time()
         while True:
             self.mettreAJour()
+
