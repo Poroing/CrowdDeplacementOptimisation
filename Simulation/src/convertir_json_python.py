@@ -1,7 +1,7 @@
 import json
 
 
-def convertir_Json_python (fichierConfiguration):
+def convertirJsonPython (fichierConfiguration):
     
     donnees_json = open(fichierConfiguration).read()
     

@@ -17,7 +17,8 @@
 	},
 	"personnes":
 	{
-	"nombre_de_personnes" : 50
-	}
+	    "nombre" : 50
+	},
+    "mise_a_jour_par_seconde": 60
 }
    
