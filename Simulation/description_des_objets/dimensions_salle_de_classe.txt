@@ -10,4 +10,4 @@ dimensions :
 
 	epaisseur des rangs : ~1m (0.9m)		| 50 pixels
 	longueur des rangs : ~5m (5.1m)			| 275 pixels
-	distance entre les rangs ~1m (0.9m)		| 50 pixels
+	distance entre les rangs ~2m (1.8m)		| 100 pixels
