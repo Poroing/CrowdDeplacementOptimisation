@@ -1,47 +1,54 @@
+import time
+
 def ConstruireSalle (, fichierJSON):
     hahfe = fichierJson['hauteur_rang'] 
 
 def initialiserSimulation 
 
+class EcouteurPersonne(self):
+
+    def __init__(self, personne, action):
+        self.personne = personne
+        self.action = action
+        self.personne_deja_sortie = False
+
+    def ecouter(self, temps):
+        if not self.personne_deja_sortie and personne.estSortie():
+            self.action(temps)
+
+def mettreAJourPersonneSortie():
+    print('Sortie')
+
+class ConstructeurSimulation(object):
+
+    def __init__(self, donnees_simulation):
+        constructeur_salle = ConstructeurSalle(donnees_simulation)
+        self.simulation = Simulation(constructeur_salle.espace, donnees_simulation['mise_a_jour_par_seconde'])
+
+    def contruirePersonneEtEcouteur(self, nombre_personnes):
+        #Pour le moment on met un ecouteur sur chaque personne
+        for _ in range(nombre_personnes):
+            personne = Personne(Vec2d(random.randint(60, 40 + self.espace.lieu_ferme.largeur),
+                random.randint(60, 40 + self.espace.lieu_ferme.hauteur)), self.espace))
+            self.simulation.ecouteurs.append(EcouteurPersonne(personne, mettreAJourPersonneSortie))
+            self.simulation.espace.ajouterPersonne(personne)
+
 class Simulation(object):
     
-    def __init__(self, type_de_salle, temps_execution, largeur_ecran = 1000, hauteur_ecran = 1000):
-        
-        self.bibliotheque = bibliotheque[type_de_salle]
-        self.largeur_ecran = largeur_ecran
-        self.hauteur_ecran = hauteur_ecran
-        self.temps_execution = temps_execution
-    
-    def ajouterObstacles(self,lieu_ferme, bibliotheque):
-        posGauche = int(bibliotheque['position_premier_obstacle_gauche'])
-        posDroite = int(bibliotheque['position_premier_obstacle_droit'])
-    
-        while posGauche + 50 <= bibliotheque['hauteur_salle'] :
-            lieu_ferme.ensemble_obstacle.append(ObstacleRectangulaire(int( bibliotheque['hauteur_obstacle']),int(bibliotheque['largeur_obstacle']),(int(bibliotheque['distance_mur_rang']),posGauche)))
-            posGauche += int(bibliotheque['distance_entre_deux_obstacles'])
-        
-        while posDroit + 50 <= bibliotheque['hauteur_salle'] :
-            lieu_ferme.ensemble_obstacle.append(ObstacleRectangulaire(int( bibliotheque['hauteur_obstacle']),int(bibliotheque['largeur_obstacle']),(50 +int( bibliotheque['largeur_salle']) + int(bibliotheque['distance_mur_rang']),posDroit)))
-            posDroit += int(bibliotheque['distance_entre_deux_obstacles'])
-        
-        
-    def ajouterPersonnes(self, bibliotheque
-    
-        for _ in range ( int( bibliotheque['nombre_de_personnes'] ) ) :
-            lieu_ferme.ensemble_personnes.append(
-                Personne(Vec2d(random.randint(60, 40+ lieu_ferme.largeur),
-                    random.randint(60, 40 + lieu_ferme.hauteur)), lieu_ferme))
+    def __init__(self, espace, mise_a_jour_par_seconde, action_mise_a_jour):
+        self.espace = espace
+        self.mise_a_jour_par_seconde = mise_a_jour_par_seconde
+        self.ecouteurs = []
+        self.mise_a_jour_par_seconde = action_mise_a_jour
 
-        lieu_ferme.ajouterDansEspace(espace)
-    
-    def construireEspace(self, bibliotheque):
-        IMAGE_PAR_SECONDE = 60
-        horloge = pygame.time.Clock()
+    def mettreAJour(self):
+        self.espace.avancer(1 / self.mise_a_jour_par_seconde)
+        temp_mise_a_jour = time.time() - self.debut_lancement
+        for ecouteur in self.ecouteurs:
+            ecouteur.ecouter(temp_mise_a_jour)
+        self.mise_a_jour_par_seconde(self)
 
-        ecran = pygame.display.set_mode((hauteur_ecran, largeur_ecran))
-        option_dessin = pymunk.pygame_util.DrawOptions(ecran)
-
-        espace = pymunk.Space()
-        lieu_ferme = LieuFerme(float(bibliotheque['largeur_salle']),float(bibliotheque['hauteur_salle']),Vec2d(50, 50), float(bibliotheque['position_porte']), float(bibliotheque['largeur_porte'] )
-        ajouterObstacles(lieu_ferme, bibliotheque)
-        
+    def lancer(self):
+        self.debut_lancement = time.time()
+        while True:
+            self.mettreAJour()
