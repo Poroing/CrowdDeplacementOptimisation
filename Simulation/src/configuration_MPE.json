@@ -18,6 +18,10 @@
 	"personnes":
 	{
 	"nombre_de_personnes" : 50
-	}
+	
+	},
+	
+	"stop_apres_temps" : 10
+	
 }
    
