@@ -52,8 +52,4 @@ class ConstructeurSalle(object):
 
         
 
-        
-##
-
-class Simulation(object)
-    ##
+  
