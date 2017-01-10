@@ -18,25 +18,37 @@ class ConstructeurSalle(object):
         self.ajouterObstacles(self.espace, **self.donnees_simulation['obstacles'])
         
     
-    def ajouterLieuFerme(self, espace, salle_hauteur=None, salle_largeur=None, porte_largeur=None, porte_position=None):
+    def ajouterLieuFerme(self, espace, salle_hauteur=None, salle_largeur=None,
+            porte_largeur=None, porte_position=None):
+
         espace.ajouterLieuFerme(LieuFerme(salle_largeur, salle_hauteur, Vec2d(50, 50), porte_position, porte_largeur))
-        
     
-    def ajouterObstacles(self,espace, obstacle_hauteur=None,obstacle_largeur=None, obstacle_distance_intermediaire=None,mur_rang_distance=None, obstacle_gauche_position_premier=None, obstacle_droit_position_premier=None  ):
+    def ajouterObstacles(self,espace, obstacle_hauteur=None, 
+            obstacle_largeur=None, obstacle_distance_intermediaire=None,
+            mur_rang_distance=None, obstacle_gauche_position_premier=None,
+            obstacle_droit_position_premier=None):
+
         position_gauche_y = obstacle_gauche_position_premier
         position_droit_y = obstacle_droit_position_premier
         
         while position_gauche_y + 50 <=self.espace.lieu_ferme.hauteur :
             position_gauche = 50 + mur_rang_distance, position_gauche_y
-            
-            espace.ajouterObstacle(ObstacleRectangulaire(obstacle_hauteur,obstacle_largeur,position_gauche))
+
+            obstacle_gauche = ObstacleRectangulaire(obstacle_hauteur,
+                obstacle_largeur, position_gauche)
+            espace.ajouterObstacle(obstacle_gauche)
+
             position_gauche_y += obstacle_distance_intermediaire
             
         
         while position_droit_y + 50 <= self.espace.lieu_ferme.hauteur :
-            position_droit = 50 + self.espace.lieu_ferme.largeur / 2 + mur_rang_distance, position_droit_y
+            position_droit_x = 50 + self.espace.lieu_ferme.largeur / 2 + mur_rang_distance
+            position_droit = position_droit_x, position_droit_y
             
-            espace.ajouterObstacle(ObstacleRectangulaire( obstacle_hauteur,obstacle_largeur,position_droit))
+            obstacle_droit = ObstacleRectangulaire(obstacle_hauteur,
+                obstacle_largeur, position_droit)
+            espace.ajouterObstacle(obstacle_droit)
+
             position_droit_y += obstacle_distance_intermediaire
 
 class EcouteurPersonne(object):
@@ -49,7 +61,13 @@ class EcouteurPersonne(object):
     def ecouter(self, temps):
         if not self.personne_deja_sortie and self.personne.estSortie():
             self.personne_deja_sortie = True
-            self.action(temps)
+            self.executerAction(temps)
+
+    def executerAction(self, temps):
+        #Seul moyen d'appeler la fonction self.action sans passer self comme
+        #premier argument
+        _action = self.action
+        _action(temps)
 
 class ConstructeurSimulation(object):
 
@@ -67,21 +85,32 @@ class ConstructeurSimulation(object):
             self.simulation.espace.ajouterPersonne(personne)
 
 class Simulation(object):
+
+    AUCUN = 0x0
+    ARRET = 0x1
     
     def __init__(self, espace, mise_a_jour_par_seconde):
         self.espace = espace
         self.mise_a_jour_par_seconde = mise_a_jour_par_seconde
         self.ecouteurs = []
         self.action_mise_a_jour = lambda simulation: None
+        self.en_marche = False
 
     def mettreAJour(self):
         self.espace.avancer(1 / self.mise_a_jour_par_seconde)
-        temp_mise_a_jour = time.time() - self.debut_lancement
+        self.temps_depuis_lancement = time.time() - self.debut_lancement
         for ecouteur in self.ecouteurs:
-            ecouteur.ecouter(temp_mise_a_jour)
-        self.action_mise_a_jour(self)
+            ecouteur.ecouter(self.temps_depuis_lancement)
+        commande = self.action_mise_a_jour(self)
+        self.executerCommande(commande)
+
+    def executerCommande(self, commande):
+        if commande & Simulation.ARRET:
+            self.en_marche = False
 
     def lancer(self):
         self.debut_lancement = time.time()
-        while True:
+        self.temps_depuis_lancement = 0
+        self.en_marche = True
+        while self.en_marche:
             self.mettreAJour()
