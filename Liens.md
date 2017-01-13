@@ -12,3 +12,6 @@ http://www.sciencesetavenir.fr/fondamental/20130328.OBS6053/mouvements-de-foule-
 http://www.math.u-psud.fr/~roudneff/Images/these_roudneff.pdf
 
 http://www.breves-de-maths.fr/prevoir-les-mouvements-de-foule-pourquoi-comment/
+
+
+http://mpec.sc.mahidol.ac.th/radok/physmath/mat7/Step26.htm
