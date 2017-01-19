@@ -23,33 +23,39 @@ class ConstructeurSalle(object):
 
         espace.ajouterLieuFerme(LieuFerme(salle_largeur, salle_hauteur, Vec2d(50, 50), porte_position, porte_largeur))
     
-    def ajouterObstacles(self,espace, obstacle_hauteur=None, 
-            obstacle_largeur=None, obstacle_distance_intermediaire=None,
+    def ajouterObstacles(self,espace, obstacle_gauche_largeur=None, obstacle_droit_largeur = None, obstacle_hauteur = None,
+            obstacle_distance_intermediaire=None,
             mur_rang_distance=None, obstacle_gauche_position_premier=None,
             obstacle_droit_position_premier=None):
 
         position_gauche_y = obstacle_gauche_position_premier
         position_droit_y = obstacle_droit_position_premier
         
+        
+        #on ajoute les ranges de gauche
         while position_gauche_y + 50 <=self.espace.lieu_ferme.hauteur :
+            
             position_gauche = 50 + mur_rang_distance, position_gauche_y
-
-            obstacle_gauche = ObstacleRectangulaire(obstacle_hauteur,
-                obstacle_largeur, position_gauche)
+            
+            obstacle_gauche = ObstacleRectangulaire(obstacle_hauteur, obstacle_gauche_largeur, position_gauche)
+            
             espace.ajouterObstacle(obstacle_gauche)
 
-            position_gauche_y += obstacle_distance_intermediaire
+            position_gauche_y += obstacle_distance_intermediaire + obstacle_hauteur
             
-        
+            
+        #on ajoute les rangs à droite
         while position_droit_y + 50 <= self.espace.lieu_ferme.hauteur :
-            position_droit_x = 50 + self.espace.lieu_ferme.largeur / 2 + mur_rang_distance
+            
+            position_droit_x = 50 + self.espace.lieu_ferme.largeur - obstacle_droit_largeur - mur_rang_distance
+            
             position_droit = position_droit_x, position_droit_y
             
-            obstacle_droit = ObstacleRectangulaire(obstacle_hauteur,
-                obstacle_largeur, position_droit)
+            obstacle_droit = ObstacleRectangulaire(obstacle_hauteur, obstacle_droit_largeur, position_droit)
+            
             espace.ajouterObstacle(obstacle_droit)
 
-            position_droit_y += obstacle_distance_intermediaire
+            position_droit_y += obstacle_distance_intermediaire + obstacle_hauteur
 
 class EcouteurPersonne(object):
 

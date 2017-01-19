@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 horloge = pygame.time.Clock()
 
-ecran = pygame.display.set_mode((1000, 1000))
+ecran = pygame.display.set_mode((1100, 1100))
 option_dessin = pymunk.pygame_util.DrawOptions(ecran)
 
 def dessinerEspaceEtAttendre(simulation):
@@ -19,14 +19,16 @@ def dessinerEspaceEtAttendre(simulation):
 
     ecran.fill(pygame.color.THECOLORS['black'])
     simulation.espace.pymunk_espace.debug_draw(option_dessin)
+    
     pygame.display.flip()   
     horloge.tick(simulation.mise_a_jour_par_seconde)
 
     return Simulation.AUCUN
 
-configuration = convertirJsonPython('configuration_MPE.json')
+configuration = convertirJsonPython('configuation_MPE.json')
 recuperation = RecuperationDeDonnees(configuration, 10, dessinerEspaceEtAttendre)
 recuperation.lancer()
-plt.plot(list(range(configuration['personnes']['nombre'] + 1)), [0] + recuperation.temps_de_sortie)
+
+plt.plot([0] + recuperation.temps_de_sortie, list(range(len(recuperation.temps_de_sortie)+1)))
 plt.show()
 
