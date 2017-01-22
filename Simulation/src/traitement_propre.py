@@ -31,7 +31,7 @@ class RecuperationDeDonnees(object):
 
     def actionMiseAJour(self, simulation):
         commandes = self.action_mise_a_jour_secondaire(simulation)
-        if  simulation.temps_depuis_lancement > self.temps_maximal:
+        if self.arreter_apres_temps and simulation.temps_depuis_lancement > self.temps_maximal:
             commandes = commandes | Simulation.ARRET
         return commandes
         

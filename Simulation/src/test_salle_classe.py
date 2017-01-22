@@ -31,8 +31,9 @@ def dessinerEspaceEtAttendre(simulation):
     return commande
 
 configuration = convertirJsonPython('couloir.json')
-recuperation = RecuperationDeDonnees(configuration, temps_maximal=10, action_mise_a_jour_secondaire=dessinerEspaceEtAttendre)
-recuperation.simulation.sources.append(Source(recuperation.simulation.espace, Vec2d(500, 750), 0.5))
+recuperation = RecuperationDeDonnees(configuration, arreter_apres_temps=False, action_mise_a_jour_secondaire=dessinerEspaceEtAttendre)
+#recuperation.simulation.sources.append(Source(recuperation.simulation.espace, Vec2d(500, 750), 0.5))
+        
 recuperation.lancer()
-plt.plot(list(range(len(recuperation.temps_de_sortie) + 1)), [0] + recuperation.temps_de_sortie)
+plt.plot([0] + recuperation.temps_de_sortie, list(range(len(recuperation.temps_de_sortie) + 1)))
 plt.show()

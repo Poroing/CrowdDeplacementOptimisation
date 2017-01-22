@@ -6,9 +6,13 @@ class TestBordsObstacle(object):
 
     def __init__(self, position, espace, rayon, position_voulue):
         self.espace = espace
+        self.rayon = rayon
         self.point_a_suivre = None
         self.position_voulue = position_voulue
         self.update(position)
+
+    def sommetEstAccessible(self, sommet):
+        return not self.espace.cercleEstEnDehorsDeLieuFerme(sommet, self.rayon * 2)
 
     def update(self, position):
         info_lancer_rayon = self.espace.avoirInfoSurLancerRayon(position,
@@ -19,17 +23,21 @@ class TestBordsObstacle(object):
         else:
             avoirDistanceAPointRayon = lambda sommet: sommet.get_distance(info_lancer_rayon.point)
             transformerEnCoordoneeGlobal = lambda sommet: info_lancer_rayon.shape.body.local_to_world(sommet)
-            self.point_a_suivre = min(map(transformerEnCoordoneeGlobal,
-                info_lancer_rayon.shape.get_vertices()), key=avoirDistanceAPointRayon)
+            sommets = list(map(transformerEnCoordoneeGlobal, info_lancer_rayon.shape.get_vertices()))
+            sommets_accessible = filter(self.sommetEstAccessible, sommets)
+            self.point_a_suivre = min(sommets_accessible, key=avoirDistanceAPointRayon, default=sommets[0])
 
 class TestProximite(object):
+
+    COEFFICIENT_TEST = 3
 
     def __init__(self, position, espace, rayon, position_voulue, nombre_point=16):
         self.espace = espace
         self.nombre_point = nombre_point
         self.position_voulue = position_voulue
         self.position = position
-        self.ensemble_point = list(self.genererEnsemblePoint(rayon))
+        self.ensemble_point = list(
+            self.genererEnsemblePoint(rayon * TestProximite.COEFFICIENT_TEST))
         self.point_a_suivre = self.ensemble_point[0]
 
     def genererEnsemblePoint(self, rayon):
