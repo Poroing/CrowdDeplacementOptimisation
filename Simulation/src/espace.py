@@ -6,9 +6,6 @@ from pymunk.vec2d import Vec2d
 
 class Espace(object):
 
-    CATEGORIE_PERSONNE = 0x1
-    CATEGORIE_OBSTACLE = 0x2
-
     def __init__(self):
         self.pymunk_espace = pymunk.Space()
 
