@@ -88,7 +88,7 @@ class ConstructeurSimulation(object):
         minimum_y = max(donnees_simulation['obstacles']['obstacle_gauche_position_premier'],
             donnees_simulation['obstacles']['obstacle_droit_position_premier'])
 
-        self.contruirePersonneEtEcouteur(action_sortie, **donnees_simulation['personnes'], minimum_y=minimum_y)
+        self.contruirePersonneEtEcouteur(action_sortie, minimum_y = minimum_y ,**donnees_simulation['personnes'] )
 
     def contruirePersonneEtEcouteur(self, action_sortie, nombre=0, sources=None, minimum_y=0):
         #Pour le moment on met un ecouteur sur chaque personne
