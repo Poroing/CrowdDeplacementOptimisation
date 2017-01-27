@@ -6,8 +6,7 @@ from pymunk.vec2d import Vec2d
 
 class Espace(object):
 
-    CATEGORIE_PERSONNE = 0x1
-    CATEGORIE_OBSTACLE = 0x2
+    DIRECTIONS = [ Vec2d(0, -1), Vec2d(-1, 0), Vec2d(0, 1), Vec2d(1, 0) ]
 
     def __init__(self):
         self.pymunk_espace = pymunk.Space()
@@ -21,6 +20,10 @@ class Espace(object):
         
         for personne in self.ensemble_personnes:
             personne.update()
+
+    def cercleEstEnDehorsDeLieuFerme(self, position, rayon):
+        return any(map(self.lieu_ferme.pointEstAExterieur,
+            map(lambda direction: position + rayon * direction, Espace.DIRECTIONS)))
 
     def avoirInfoSurLancerRayon(self, debut, fin, ignorer_personne=True):
         if ignorer_personne:

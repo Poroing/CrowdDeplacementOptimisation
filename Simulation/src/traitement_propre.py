@@ -5,12 +5,14 @@ from simulation_propre import Simulation, ConstructeurSimulation
 ##
 class RecuperationDeDonnees(object):
     
-    def __init__(self, configuration_simulation, temps_maximal, action_mise_a_jour_secondaire=None):
+    def __init__(self, configuration_simulation, arreter_apres_temps=True, temps_maximal=0, action_mise_a_jour_secondaire=None):
         if action_mise_a_jour_secondaire is None:
             action_mise_a_jour_secondaire = lambda simulation: Simulation.AUCUN
 
         self.temps_de_sortie = []
+
         self.temps_maximal = temps_maximal
+        self.arreter_apres_temps = arreter_apres_temps
 
         constructeur_simulation = ConstructeurSimulation(configuration_simulation, self.ajouterTempsSortie)
         self.simulation = constructeur_simulation.simulation
@@ -24,9 +26,12 @@ class RecuperationDeDonnees(object):
     def ajouterTempsSortie(self, temps):
         self.temps_de_sortie.append(temps)
 
+    def avoirNombrePersonneSortie(self):
+        return len(self.temps_de_sortie)
+
     def actionMiseAJour(self, simulation):
         commandes = self.action_mise_a_jour_secondaire(simulation)
-        if simulation.temps_depuis_lancement > self.temps_maximal:
+        if self.arreter_apres_temps and simulation.temps_depuis_lancement > self.temps_maximal:
             commandes = commandes | Simulation.ARRET
         return commandes
         

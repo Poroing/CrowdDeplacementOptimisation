@@ -11,7 +11,6 @@ class Personne(object):
     RAYON = 21
     MASSE = 70
     MOMENT = pymunk.moment_for_circle(MASSE, 0, RAYON)
-    COEFFICIENT_TEST = 3
     FORCE_DEPLACEMENT = RAYON * 10**4
     VITESSE_MAXIMALE = 222
     COEFFICIENT_EVITEMENT = 0.4
@@ -21,7 +20,7 @@ class Personne(object):
         self.shape = pymunk.Circle(self.body, Personne.RAYON)
         self.shape.filter = pymunk.ShapeFilter(categories=RepresentationCategorie.PERSONNE.value)
         self.body.position = position
-        self.test_direction = test_direction_cls(position, espace, Personne.COEFFICIENT_TEST * Personne.RAYON,
+        self.test_direction = test_direction_cls(position, espace, Personne.RAYON,
             espace.lieu_ferme.avoirCentrePorte())
         
         self.espace = espace
