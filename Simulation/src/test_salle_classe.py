@@ -25,7 +25,7 @@ def dessinerEspaceEtAttendre(simulation):
 
     return Simulation.AUCUN
 
-configuration = convertirJsonPython('configuration_MPSI2.json')
+configuration = convertirJsonPython('configuration_MPSTAR.json')
 recuperation = RecuperationDeDonnees(configuration, 10, dessinerEspaceEtAttendre)
 recuperation.lancer()
 

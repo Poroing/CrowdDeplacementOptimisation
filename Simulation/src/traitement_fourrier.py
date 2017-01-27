@@ -1,6 +1,15 @@
 
 from math import *
+import cmath
 
+##
+
+def doubler_points(signal):
+    sortie = [signal[0]]
+    for k in range (1,len(signal)):
+        sortie.append((signal[k] + signal[k-1])/2)
+        sortie.append(signal[k])
+    return sortie
 ##
 
 def transfFourrier(signalTemp):
@@ -31,6 +40,16 @@ def signal_reel(signal):
     for x in signal :
         
         sortie.append(x.real)
+        
+    return sortie
+##
+
+def signal_mod(signal):
+    sortie = []
+    
+    for z in signal :
+        
+        sortie.append(abs(z))
         
     return sortie
     
@@ -69,12 +88,25 @@ def passe_bas(signalFreq, ordre):
         
     return sortie
     
+##
+
+data = recuperation.temps_de_sortie
+
+for _ in range (4):
+    data = doubler_points(data)
+    print(len(data))
+
+
+
+
 
 ##
 
 #on transforme les signaux temporels en signaux fréquenciels
 
-signal_exp_freq = transfFourrier(recuperation.temps_de_sortie)
+
+
+signal_exp_freq = transfFourrier(data)
 
 
 
@@ -82,18 +114,18 @@ signal_exp_freq = transfFourrier(recuperation.temps_de_sortie)
 
 #on applique le passe bas sur les signaux fréquenciels
 
-result_fourrier_reel1 = passe_bas(signal_exp_reel, 5)
-result_fourrier_reel2 = passe_bas(signal_exp_reel, 10)
-result_fourrier_reel3 = passe_bas(signal_exp_reel, 15)
+result_fourrier_reel1 = passe_bas(signal_exp_freq,0)
+result_fourrier_reel2 = passe_bas(signal_exp_freq, 10)
+result_fourrier_reel3 = passe_bas(signal_exp_freq, 15)
 
 
 ##
 
 #on effectue la transformée inverse (fréquentiel --> temporel) et on prend la partie réelle du signal
 
-signal_traite_reel1 = signal_reel(transfFourrierInverse(result_fourrier_reel1))
-signal_traite_reel2 = signal_reel(transfFourrierInverse(result_fourrier_reel2))
-signal_traite_reel3 = signal_reel(transfFourrierInverse(result_fourrier_reel3))
+signal_traite_reel1 = signal_mod(transfFourrierInverse(result_fourrier_reel1))
+signal_traite_reel2 = signal_mod(transfFourrierInverse(result_fourrier_reel2))
+signal_traite_reel3 = signal_mod(transfFourrierInverse(result_fourrier_reel3))
 
 ##
 
@@ -103,7 +135,7 @@ plt.plot([0] + signal_traite_reel2, list(range(len(signal_traite_reel2)+1)), 'bl
 
 plt.plot([0] + signal_traite_reel3, list(range(len(signal_traite_reel3)+1)), 'pink')
 
+##
 
-
-plt.plot([0] + recuperation.temps_de_sortie, list(range(len(recuperation.temps_de_sortie)+1)))
+plt.plot([0] + data, list(range(len(data)+1)))
 plt.show()
