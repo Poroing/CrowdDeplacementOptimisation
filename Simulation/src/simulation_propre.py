@@ -78,13 +78,17 @@ class ConstructeurSimulation(object):
 
         self.simulation = Simulation(constructeur_salle.espace,
             donnees_simulation['mise_a_jour_par_seconde'], creer_ecouteur)
-        self.contruirePersonneEtEcouteur(action_sortie, **donnees_simulation['personnes'])
 
-    def contruirePersonneEtEcouteur(self, action_sortie, nombre=0, sources=None):
+        minimum_y = max(donnees_simulation['obstacles']['obstacle_gauche_position_premier'],
+            donnees_simulation['obstacles']['obstacle_droit_position_premier'])
+
+        self.contruirePersonneEtEcouteur(action_sortie, **donnees_simulation['personnes'], minimum_y=minimum_y)
+
+    def contruirePersonneEtEcouteur(self, action_sortie, nombre=0, sources=None, minimum_y=0):
         #Pour le moment on met un ecouteur sur chaque personne
         for _ in range(nombre):
             personne = Personne(Vec2d(random.randint(60, 40 + self.simulation.espace.lieu_ferme.largeur),
-                random.randint(60, 40 + self.simulation.espace.lieu_ferme.hauteur)), self.simulation.espace)
+                random.randint(50 + minimum_y, 40 + self.simulation.espace.lieu_ferme.hauteur)), self.simulation.espace)
             self.simulation.ecouteurs.append(EcouteurPersonne(personne, action_sortie))
             self.simulation.espace.ajouterPersonne(personne)
 
