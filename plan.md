@@ -16,4 +16,14 @@ Les personnes
 	- On a trouvé une meilleure solution grâce un papier sur la modélisation sur la réponse
 	d'une foule en cas d'urgence
 	- Cela consiste en un lancer de rayon (BESOIN DIAPO)
-	- Il faut prendre en compte les problème sur les côté
+	- Il faut prendre en compte les problème la place sur le côté
+
+On a ainsi une simulation sur laquelle on peut récuperer des donneés
+
+	- On récupère les valeurs lors de la sortie des gens
+	- On veut un débit, il y a nécessité de dérivé
+	- Si on fait ça basiquement, c'est pas très représentatif
+	- On cherche à lisser la courbe
+
+Qu'est ce que l'on peut faire par la suite
+
