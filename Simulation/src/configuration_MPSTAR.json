@@ -1,0 +1,26 @@
+{
+	"lieu_ferme":
+	{
+		"salle_hauteur" : 850,
+		"salle_largeur" : 900,
+		"porte_position" : 0.2,
+		"porte_largeur" : 75
+	},
+	"obstacles":
+	{
+		"obstacle_hauteur" : 45,
+		"obstacle_distance_intermediaire" : 80,
+		"mur_rang_distance" : 50,
+		"obstacle_gauche_largeur" : 260,
+		"obstacle_droit_largeur" : 390,
+		"obstacle_gauche_position_premier" : 250,
+		"obstacle_droit_position_premier" : 200
+	},
+	"personnes":
+	{
+	    "nombre" : 50
+	},
+    "mise_a_jour_par_seconde": 60,
+	"stop_apres_temps" : 10
+}
+   

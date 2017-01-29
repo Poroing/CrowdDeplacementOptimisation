@@ -1,13 +1,14 @@
 dimensions :
 
-	largeur salle : 15m				| 800 pixels
-	hauteur salle : 15m				| 800 pixels
+	largeur salle : 9m				| 900 pixels
+	hauteur salle : 9.5m				| 950 pixels
 	nombre de personnes : 50			| (50 personnes)
-	taille d'une personne (en rayon) : 0,4m		| 21 pixels
-	taille d'une porte : 1,5m			| 80 pixels
-	Vitesse maximale d'une personne :15km/h		| 222 pixels/s ?
+	taille d'une personne (en rayon) : 0,4m		| 40 pixels
+	taille d'une porte : 1m				| 100 pixels
+	Vitesse maximale d'une personne :10km/h		| 277 pixels/s ?
 	
 
-	epaisseur des rangs : ~1m (0.9m)		| 50 pixels
-	longueur des rangs : ~5m (5.1m)			| 275 pixels
-	distance entre les rangs ~2m (1.8m)		| 100 pixels
+	epaisseur des rangs : ~1m (0.45m)		| 45 pixels
+	longueur des rangs gauche : 2.6m		| 260 pixels
+	longueurs rangs droits : 3.9m			| 390
+	distance entre les rangs 0.8m			| 80 pixels

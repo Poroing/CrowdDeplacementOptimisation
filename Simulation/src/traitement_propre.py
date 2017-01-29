@@ -35,28 +35,50 @@ class RecuperationDeDonnees(object):
             commandes = commandes | Simulation.ARRET
         return commandes
         
-
 ##
 class TraitementDeDonnees(object):
     
     
-    def __init__(self, donnees_test):
+    def __init__(self, temps_de_sortie):
         
-        self.donnees_test = donnees_test
+        self.temps_de_sortie = temps_de_sortie
+        self.nombre = len(self.temps_de_sortie)
+    
+    def personnes_en_fonction_du_temps(self):
+        plt.plot([0] + self.temps_de_sortie, list(range(len(self.temps_de_sortie)+1)))
+    
+
+    
+        
+    
+    def debit_ordre_premier(self):
+        derivee = [0]
+        for x in range (1,self.nombre) :
+            print(self.temps_de_sortie[x] - self.temps_de_sortie[x-1])
+            derivee.append(1/(self.temps_de_sortie[x] - self.temps_de_sortie[x-1]))
+            
+        return derivee + [0]
+        
+
+    def debit_ordre_quatre(self):
+        derivee = [0]
+        derivee.append((1/self.temps_de_sortie[1]-self.temps_de_sortie[0]))
+        for x in range (2, self.nombre - 2):
+            
+            derivee.append(- 12/( -self.temps_de_sortie[x-2] + 8 * self.temps_de_sortie[x-1] - 8 * self.temps_de_sortie[x+1] + self.temps_de_sortie[x+2]))
+        
+        derivee.append(1/(self.temps_de_sortie[self.nombre-2]-self.temps_de_sortie[self.nombre-3]))
+        derivee.append(1/(self.temps_de_sortie[self.nombre-1]-self.temps_de_sortie[self.nombre-2]))
+        return derivee + [0]
+        
+    
+
+        
+        
+        
         
         
     
-    
-    def pourcentage_cumule_croissant(self):
-        pourcentages = [k/len(self.donnees_test) for k in range (len(self.donnees_test))]
-        return pourcentages
-        
-        
-    def tracer_pourcentage(self):
-        abscisse = self.donnees_test
-        ordonnee = self.pourcentage_cumule_croissant()
-        return plot(abscisse, ordonnee)
-        
 ##
     def tracer(self):
         pass

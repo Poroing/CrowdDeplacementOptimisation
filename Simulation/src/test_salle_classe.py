@@ -12,7 +12,7 @@ from pymunk.vec2d import Vec2d
 
 horloge = pygame.time.Clock()
 
-ecran = pygame.display.set_mode((1000, 1000))
+ecran = pygame.display.set_mode((1100, 1100))
 option_dessin = pymunk.pygame_util.DrawOptions(ecran)
 
 def dessinerEspaceEtAttendre(simulation):
@@ -25,10 +25,12 @@ def dessinerEspaceEtAttendre(simulation):
 
     ecran.fill(pygame.color.THECOLORS['black'])
     simulation.espace.pymunk_espace.debug_draw(option_dessin)
+    
     pygame.display.flip()   
     horloge.tick(simulation.mise_a_jour_par_seconde)
 
     return commande
+
 
 configuration = convertirJsonPython('couloir.json')
 recuperation = RecuperationDeDonnees(configuration, temps_maximal=10, action_mise_a_jour_secondaire=dessinerEspaceEtAttendre)
