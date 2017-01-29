@@ -29,9 +29,24 @@ def interpolation(X,Y,a):
     
     
     
-abs = [k/100 for k in range (100)]
+abs = [k/100 for k in range (600,900)]
+
 ##
 
-plot(abs,[interpolation(X,Y,a) for a in abs])
+def interval(X,Y,a):
+    ind = 0
+    while X[ind]<a :
+        ind+=1
+        
+    ind = ind//10
+    
+    return [X[k] for k in range (ind*10,(ind+1)*10)],[Y[k] for k in range (ind*10,(ind+1)*10)]
 ##
+def interpolation_par_parties(X,Y,a):
+    
+    return (interpolation(interval(X,Y,a)[0],interval(X,Y,a)[1],a))
+##
+
+plot(abs,[interpolation_par_parties(X,Y,a) for a in abs])
+
 plot(X,Y,'green')

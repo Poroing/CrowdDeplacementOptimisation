@@ -16,6 +16,7 @@ ecran = pygame.display.set_mode((1100, 1100))
 option_dessin = pymunk.pygame_util.DrawOptions(ecran)
 
 def dessinerEspaceEtAttendre(simulation):
+    
     commande = Simulation.AUCUN
     for event in pygame.event.get():
         if event.type == pygame.locals.QUIT:
@@ -31,9 +32,8 @@ def dessinerEspaceEtAttendre(simulation):
 
     return commande
 
-
-configuration = convertirJsonPython('couloir.json')
-recuperation = RecuperationDeDonnees(configuration, temps_maximal=10, action_mise_a_jour_secondaire=dessinerEspaceEtAttendre)
+configuration = convertirJsonPython('configuration_MPSI2.json')
+recuperation = RecuperationDeDonnees(configuration, temps_maximal=20, action_mise_a_jour_secondaire=dessinerEspaceEtAttendre)
 #recuperation.simulation.sources.append(Source(recuperation.simulation.espace, Vec2d(500, 750), 0.5))
         
 recuperation.lancer()
