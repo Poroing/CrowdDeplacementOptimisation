@@ -92,10 +92,6 @@ def passe_bas(signalFreq, ordre):
 
 data = recuperation.temps_de_sortie
 
-for _ in range (4):
-    data = doubler_points(data)
-    print(len(data))
-
 
 
 

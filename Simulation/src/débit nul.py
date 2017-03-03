@@ -1,13 +1,15 @@
-import traitement_propre 
-
+from traitement_propre import TraitementDeDonnees
 
 data = recuperation.temps_de_sortie
 deriv4 = TraitementDeDonnees(data).debit_ordre_quatre()
-deriv1 = TraitementDeDonnees(recuperation.temps_de_sortie).debit_ordre_premier()
+deriv1 = TraitementDeDonnees(data).debit_ordre_premier()
 
-
+deb = TraitementDeDonnees(data).debit_approximatif()
         
-plt.plot(temps, list(range(len(recuperation.temps_de_sortie) + 1)), 'blue')
-plt.plot(temps, deriv1, 'orange')
-plt.plot(temps, deriv4, 'green')
-
+plt.plot([0]+data, list(range(len(recuperation.temps_de_sortie) + 1)), 'blue')
+##
+plt.plot([0]+data, deriv1, 'black')
+##
+plt.plot([0]+data, deriv4, 'green')
+##
+plt.plot(deb[1],deb[0],'pink')
