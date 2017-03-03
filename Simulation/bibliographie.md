@@ -13,9 +13,9 @@ Référence -> http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.138.4481
 
 2.
 
-Auteur :
+Auteur : JOÃO E. ALMEIDA,ROSALDO ROSETTI,ANTÓNIO LEÇA COELHO
 
-Titre : 
+Titre : Crowd Simulation Modeling Applied to Emergency and Evacuation Simulations using Multi-Agent Systems
 
 Référence -> https://arxiv.org/pdf/1303.4692.pdf
 
