@@ -23,9 +23,9 @@ Référence -> https://arxiv.org/pdf/1303.4692.pdf
 
 3.
 
-Auteur : 
+Auteur : Constantin Theos
 
-Titre :
+Titre : Modélisation du mouvement des personnes lors de l'évacuation d'un bâtiment à la suite d'un sinistre
 
 Référence ->https://tel.archives-ouvertes.fr/file/index/docid/523176/filename/1994TH_THEOS_C_NS20040.pdf
 
