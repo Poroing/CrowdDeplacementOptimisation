@@ -2,6 +2,8 @@
 - Implémenter un graphe orienté pour modéliser les mouvement lors d'un incendie (Alex)
 - Implémenter une simulation de mouvement de foule applicable pour un mouvement  (les autres)
  de foule pendant un incendie
+- Essayer de faire une sous classe des objet de pymunk pour faciliter le travaille avec les
+ utilitaires de pymunk tel que le lancé de rayon
 
 # Subtilité
 - Prendre en compte le mental des gens
