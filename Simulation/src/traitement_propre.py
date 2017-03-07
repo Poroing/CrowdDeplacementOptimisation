@@ -54,7 +54,7 @@ class TraitementDeDonnees(object):
     def debit_ordre_premier(self):
         derivee = [0]
         for x in range (1,self.nombre) :
-            print(self.temps_de_sortie[x] - self.temps_de_sortie[x-1])
+            
             derivee.append(1/(self.temps_de_sortie[x] - self.temps_de_sortie[x-1]))
             
         return derivee + [0]
@@ -68,11 +68,33 @@ class TraitementDeDonnees(object):
             derivee.append(- 12/( -self.temps_de_sortie[x-2] + 8 * self.temps_de_sortie[x-1] - 8 * self.temps_de_sortie[x+1] + self.temps_de_sortie[x+2]))
         
         derivee.append(1/(self.temps_de_sortie[self.nombre-2]-self.temps_de_sortie[self.nombre-3]))
+        
         derivee.append(1/(self.temps_de_sortie[self.nombre-1]-self.temps_de_sortie[self.nombre-2]))
+        
         return derivee + [0]
         
+    def debit_approximatif(self):
+        
+        aprox = self.debit_ordre_quatre()
+        
+        moy = 0
+        
+        for temps in aprox :
+            
+            moy += temps
+        
+        moy = moy/len(aprox)
+        
+        debit = [0,0,moy,moy,0]
+        
+        temps_abs = [0,self.temps_de_sortie[0],self.temps_de_sortie[0],self.temps_de_sortie[self.nombre-1],self.temps_de_sortie[self.nombre-1]]
+        
+        aprox = self.debit_ordre_quatre()
+        
+        
+        return (debit, temps_abs)
+        
     
-
         
         
         

@@ -1,6 +1,6 @@
 
 from math import *
-import cmath
+from cmath import *
 
 ##
 
@@ -92,10 +92,6 @@ def passe_bas(signalFreq, ordre):
 
 data = recuperation.temps_de_sortie
 
-for _ in range (4):
-    data = doubler_points(data)
-    print(len(data))
-
 
 
 
@@ -107,6 +103,14 @@ for _ in range (4):
 
 
 signal_exp_freq = transfFourrier(data)
+
+
+##
+
+signal_exp_freq_pol = [(phase(x),abs(x)) for x in signal_exp_freq]
+
+
+signal_exp_freq = [rect(x[1],x[0]) for x in signal_exp_freq_pol]
 
 
 
@@ -130,10 +134,6 @@ signal_traite_reel3 = signal_mod(transfFourrierInverse(result_fourrier_reel3))
 ##
 
 plt.plot([0] + signal_traite_reel1, list(range(len(signal_traite_reel1)+1)), 'green')
-
-plt.plot([0] + signal_traite_reel2, list(range(len(signal_traite_reel2)+1)), 'black')
-
-plt.plot([0] + signal_traite_reel3, list(range(len(signal_traite_reel3)+1)), 'pink')
 
 ##
 
