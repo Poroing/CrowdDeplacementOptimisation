@@ -46,3 +46,11 @@ Auteur :  Juliette Venel
 Titre : PRÉVOIR LES MOUVEMENTS DE FOULE : POURQUOI, COMMENT ?
 
 Référence -> http://www.breves-de-maths.fr/prevoir-les-mouvements-de-foule-pourquoi-comment/
+
+6.
+
+Auteur : T. M. Kisko, R. L. Francis and C. R. Nobel University of Florida
+
+Titre : EVACNET4 USER'S GUIDE
+
+Référence -> http://tomkisko.com/ise/files/evacnet/EVAC4UG.HTM
