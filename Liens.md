@@ -7,3 +7,5 @@ https://tel.archives-ouvertes.fr/file/index/docid/523176/filename/1994TH_THEOS_C
 
 
 http://www.breves-de-maths.fr/prevoir-les-mouvements-de-foule-pourquoi-comment/
+
+https://duepublico.uni-duisburg-essen.de/servlets/DerivateServlet/Derivate-5477/Disskluepfel.pdf
