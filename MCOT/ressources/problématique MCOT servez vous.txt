@@ -1,0 +1,3 @@
+
+Une masse importante de personnes a un comportement plus simpliste et grégaire qu’un groupe de taille modeste.
+Afin d’ériger un plan d’évacuation incendie pour un bâtiment, il faut donc envisager une étude globale de l’évacuation, et l’associer à une simulation locale, spécifique à chaque salle.
