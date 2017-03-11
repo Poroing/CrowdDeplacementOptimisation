@@ -1,0 +1,23 @@
+	
+	Les foules sont des groupes de personnes qui de par leur taille perdent un comportement individuel, gagnant parallèlement un comportement qui leur est propre. L'étude de leurs mouvements, fait l'objet de recherches pluridisciplinaires mêlant psychologie, sciences sociales et cognitives mais aussi des sciences physique ou informatiques pour leur modélisation.
+	Les simulations en situation réelles de mouvements sont couteuses en personnel, dangereuses, et rendent difficilement compte d’un comportement réel, car il est difficile de simuler artificiellement un comportement humain face à un danger réel. Cela légitime l’intérêt d’une modélisation. Cependant, le comportement d’une foule est complexe, et de nombreux phénomènes doivent être pris en compte avant même de proposer des mouvements globaux.  Les travaux de JOÃO E. ALMEIDA, de ROSALDO ROSETTI et d’ ANTÓNIO LEÇA COELHO [2] permettent de rendre compte de quelques effets. La panique est un paramètre important, ce dernier modifiant le comportement des individus de façon radicale. Les individus ont aussi tendance à suivre les autres personnes suite à la panique ce qui a tendance à éloigner le cas réel du cas optimal (comportement grégaire ou herd behavior). De plus la formation de groupe et la volonté d'une évacuation rapide peut provoquer des phénomènes d’arcs et d'engorgement, ralentissant au final la vitesse d'évacuation
+       Cependant des études sont menées, permettant l’élaboration de certains modèles physiques et informatiques approximant de façon plus ou moins juste le comportement global d’une foule, comme par exemple Daniel Flower [1] dans« Crowd Simulation for Emergency Response Planning ».
+      Une possibilité de modélisation est celle d'un mouvement de fluide qui pose cependant certains problèmes même si la simulation permet une première approximation. Une autre possibilité est l'utilisation d'automates cellulaires, qui sont cependant trop grossiers. Finalement on peut simuler un comportement individuel au lieu d'une simulation de foule en général, c'est la solution la plus adoptée récemment.
+	L'étude de groupes se fait cependant beaucoup sur un aspect planaire, négligeant les aspect volumétriques d'un bâtiment qui pourraient influer la situation.
+
+
+	
+
+
+	
+
+	[3]
+
+	Dans le cadre précis d’une évacuation incendie, l’objectif est de garantir la survie du plus d’occupants du bâtiment possible. Cela passe par la prévention de l'incident mais aussi par l'évacuation. Il serait illusoire de croire qu’une bonne simulation d’une masse en mouvement suffirait pour prévoir l’évacuation, il faut également prendre en compte les aspects du bâtiment, des mesures de sécurité et des aspects comportementaux. Les situations imposant l'évacuation d'un bâtiment peuvent aussi varier et l'évacuation doit s'y adapter. L'évacuation face à un incendie doit en effet être différente de celle face à une bombe ou un séisme. Le modèle doit donc être assez général pour simuler un mouvement d'évacuation quel que soit le cas.
+
+	De nombreuses études comportementales de foules ont été effectuées lors des trente dernières années, et des observations empiriques ont permis d'obtenir des lois de comportement <kek>
+
+	Lors de l'évacuation. L'évolution des technologies et techniques a de plus permis des approches plus générales des simulations.
+	
+	
+
