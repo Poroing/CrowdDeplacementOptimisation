@@ -3,9 +3,9 @@
 
 1.
 
-Auteur : 
+Auteur : Crowd Simulation for Emergency Response Planning
 
-Titre :
+Titre : Daniel Flower
 
 Référence -> http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.138.4481&rep=rep1&type=pdf
 
