@@ -1,0 +1,29 @@
+Les foules sont des groupes de personnes qui de par leur taille perdent un comportement individuel, gagnant parallelement
+un comportement qui leur est propre. L'étude de leurs mouvements, fait l'objet de recherches pluridisciplinaires mélant psychologie,
+sciences sociales et cognitives mais aussi des sciences physique ou informatiques pour leur modélisation.
+
+[1]
+Les simulations en situation réelles de mouvements sont en effet couteuses en personnel et parfois dangereuses.
+Les mouvements sont aussi régis par un comportement grégaire, certains individus se posant en chef de conduites de petits groupes.
+Une possibilité de modélisation est celle d'un mouvement de fluide qui pose cependant certains problème meme si la simulation  permet une première approximation.
+Une autre possibilité est l'utilisation d'automates cellulaires, qui sont cependant trops grossiers.
+Finalement on peut simuler un comportement individuel au lieu d'une simulation de foule en général, c'est la solution la plus adopée récemment.
+L'etude de groupes se fait cependant beaucoup sur un aspect planaire, négligeant les aspect volumetriques d'un batiment qui pourraient influer la situation.
+
+
+[2]
+Les simulations en situation réelles sont en effet couteuses en personnel et souvent peu representatives, les personnes n'agissant pas de la meme facon
+face a un danger fictif ou  a un danger réel.
+La panique est un paramètre important, ce dernier modifiant le comportement des individus radicalement.
+Les individus ont aussi tendance a suivre les autres personnes suite a la panique ce qui a tendance à éloigner le cas réel du cas optimal.
+De plus la formation de groupe et la volonté d'une évacuation rapide peut provaquer des phénomènes d'engorgement, ralentissant au final la vitesse d'evacuation
+
+[3]
+L'objectif principal lors d'une évacuation incendie est de garantir la survie du plus d'occupants possible du batiment. Cela passe par la prévention de l'incident mais aussi par l'évacuation
+efficace des zones dangereuses dans le cas de la déclaration d'un feu dans le batiment.
+La prévision de l'évacuation ne se limite pas à la simulation d'une masse en mouvement mais doit aussi prendre en compte les aspects du batiment, des mesures de sécurité et 
+des aspects comportementaux.
+Les situation imposant l'evacuation d'un batiment peuvent aussi varier et l'évacuation doit s'y adapter. L'evacuation face a un incendie doit en effet
+etre differente de celle face a une bombe ou un seisme. Le modèle doit donc etre assez général pour simuler un mouvement d'evacuation quel que soit le cas.
+De nombreuses études comportementales de foules ont été effectuées lors des trente dernières années, et des observations empiriques ont permis d'obtenir des lois de comportement
+lors de l'evacuation. L'evolution des technologies et techniques a de plus permis des approches plus générales des simulations.
