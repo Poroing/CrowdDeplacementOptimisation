@@ -1,12 +1,13 @@
 from pymunk.vec2d import Vec2d
 from representation_categories import RepresentationCategorie
+from representation import RepresentationDynamique, Cercle
 from test_point_suivre import TestBordsObstacle, TestProximite
 import math
 import pymunk
 import operator
 import itertools
 
-class Personne(object):
+class Personne(RepresentationDynamique, Cercle):
 
     RAYON = 21
     MASSE = 70
@@ -16,32 +17,30 @@ class Personne(object):
     COEFFICIENT_EVITEMENT = 0.4
 
     def __init__(self, position, espace, test_direction_cls=TestBordsObstacle):
-        self.body = pymunk.Body(Personne.MASSE, Personne.MOMENT)
-        self.shape = pymunk.Circle(self.body, Personne.RAYON)
-        self.shape.filter = pymunk.ShapeFilter(categories=RepresentationCategorie.PERSONNE.value)
-        self.body.position = position
-        self.test_direction = test_direction_cls(position, espace, Personne.RAYON,
+        super().__init__(masse=Personne.MASSE, moment=Personne.MOMENT,
+            rayon=Personne.RAYON, position=position)
+        self.filter = pymunk.ShapeFilter(categories=RepresentationCategorie.PERSONNE.value)
+        self.test_direction = test_direction_cls(position, espace, self.rayon,
             espace.lieu_ferme.avoirCentrePorte())
-        
         self.espace = espace
 
     def pointEstAInterieur(self, point):
-        return point.get_distance(self.body.position) < Personne.RAYON
+        return point.get_distance(self.body.position) < self.rayon
 
     def personneEstTropProche(self, personne):    
         return (personne.body.position.get_distance(self.body.position)
-            < (2 + Personne.COEFFICIENT_EVITEMENT) * Personne.RAYON)
+            < (2 + Personne.COEFFICIENT_EVITEMENT) * self.rayon)
 
     def estTropProcheDePersonne(self):
         return any(map(lambda personne: self.personneEstTropProche(personne),
             self.espace.ensemble_personnes))
 
     def estSortie(self):
-        return self.body.position.y < self.espace.lieu_ferme.avoirCentrePorte().y
+        return self.position.y < self.espace.lieu_ferme.avoirCentrePorte().y
 
     def traiterVitesse(self):
-        if self.body.velocity.length > Personne.VITESSE_MAXIMALE:
-            self.body.velocity *= Personne.VITESSE_MAXIMALE / self.body.velocity.length
+        if self.corps.velocity.length > Personne.VITESSE_MAXIMALE:
+            self.corps.velocity *= Personne.VITESSE_MAXIMALE / self.body.velocity.length
 
     def update(self):
         self.traiterVitesse()

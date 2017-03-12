@@ -1,4 +1,4 @@
-from simulation_propre import Simulation
+from simulation import Simulation
 import pymunk
 import pygame.locals
 import pygame
@@ -23,7 +23,7 @@ class Afficheur(object):
                 commande = commande | Simulation.TOGGLE_PAUSE
 
         self.ecran.fill(pygame.color.THECOLORS['black'])
-        simulation.espace.pymunk_espace.debug_draw(self.option_dessin)
+        simulation.espace.debug_draw(self.option_dessin)
         
         pygame.display.flip()   
         self.horloge.tick(simulation.mise_a_jour_par_seconde)

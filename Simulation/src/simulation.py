@@ -2,7 +2,7 @@ import time
 import random
 from lieu_ferme import LieuFerme
 from personne import Personne
-from obstacle_rectangulaire import ObstacleRectangulaire
+from obstacle import ObstacleRectangulaire, ObstacleCirculaire
 from espace import Espace
 from pymunk.vec2d import Vec2d
 import pygame
@@ -20,11 +20,27 @@ class ConstructeurSalle(object):
     
     def ajouterLieuFerme(self, espace, salle_hauteur=None, salle_largeur=None,
             porte_largeur=None, porte_position=None):
-
-        espace.ajouterLieuFerme(LieuFerme(salle_largeur, salle_hauteur, Vec2d(50, 50), porte_position, porte_largeur))
+        espace.ajouterLieuFerme(LieuFerme(salle_largeur, salle_hauteur, Vec2d(50, 50), porte_position,
+            porte_largeur))
     
-    def ajouterObstacles(self,espace, obstacle_gauche_largeur=None, obstacle_droit_largeur = None, obstacle_hauteur = None,
-            obstacle_distance_intermediaire=None,
+    def ajouterObstacles(self, espace, rangs=None, particulier=None):
+        self.ajouterRangs(espace, **rangs)
+        self.ajouterObstaclesParticulier(espace, particulier)
+
+    def ajouterObstaclesParticulier(self, espace, obstacles):
+        for obstacle in obstacles['rectangles']:
+            espace.ajouterObstacle(ObstacleRectangulaire(
+                hauteur = obstacle['height'],
+                largeur = obstacle['width'],
+                position = obstacle['position']))
+        for obstacle in obstacles['cercles']:
+            espace.ajouterObstacle(ObstacleCirculaire(
+                rayon = obstacle['rayon'],
+                position = obstacle['position']))
+
+
+    def ajouterRangs(self, espace, obstacle_gauche_largeur=None, obstacle_droit_largeur = None,
+            obstacle_hauteur = None, obstacle_distance_intermediaire=None,
             mur_rang_distance=None, obstacle_gauche_position_premier=None,
             obstacle_droit_position_premier=None):
 
@@ -34,11 +50,13 @@ class ConstructeurSalle(object):
         
         #on ajoute les ranges de gauche
         while position_gauche_y + 50 <=self.espace.lieu_ferme.hauteur :
-            
             position_gauche = 50 + mur_rang_distance, position_gauche_y
             
-            obstacle_gauche = ObstacleRectangulaire(obstacle_hauteur, obstacle_gauche_largeur, position_gauche)
-            
+            obstacle_gauche = ObstacleRectangulaire(
+                hauteur = obstacle_hauteur,
+                largeur = obstacle_gauche_largeur,
+                position = position_gauche)
+
             espace.ajouterObstacle(obstacle_gauche)
 
             position_gauche_y += obstacle_distance_intermediaire + obstacle_hauteur
@@ -46,13 +64,13 @@ class ConstructeurSalle(object):
             
         #on ajoute les rangs à droite
         while position_droit_y + 50 <= self.espace.lieu_ferme.hauteur :
-            
             position_droit_x = 50 + self.espace.lieu_ferme.largeur - obstacle_droit_largeur - mur_rang_distance
-            
             position_droit = position_droit_x, position_droit_y
             
-            obstacle_droit = ObstacleRectangulaire(obstacle_hauteur, obstacle_droit_largeur, position_droit)
-            
+            obstacle_droit = ObstacleRectangulaire(
+                hauteur = obstacle_hauteur,
+                largeur = obstacle_droit_largeur,
+                position = position_droit)
             espace.ajouterObstacle(obstacle_droit)
 
             position_droit_y += obstacle_distance_intermediaire + obstacle_hauteur
@@ -85,8 +103,8 @@ class ConstructeurSimulation(object):
         self.simulation = Simulation(constructeur_salle.espace,
             donnees_simulation['mise_a_jour_par_seconde'], creer_ecouteur)
 
-        minimum_y = max(donnees_simulation['obstacles']['obstacle_gauche_position_premier'],
-            donnees_simulation['obstacles']['obstacle_droit_position_premier'])
+        minimum_y = max(donnees_simulation['obstacles']['rangs']['obstacle_gauche_position_premier'],
+            donnees_simulation['obstacles']['rangs']['obstacle_droit_position_premier'])
 
         self.contruirePersonneEtEcouteur(action_sortie, minimum_y = minimum_y ,**donnees_simulation['personnes'] )
 
