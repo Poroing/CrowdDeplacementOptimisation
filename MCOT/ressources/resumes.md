@@ -82,3 +82,12 @@ tant que les donnée sur le comportement individuelle est correctement fournie
 
 Le modèle MAS modélise le mouvement d'un agent et étudie le comportement de la foule
 qu'il en émerge
+
+# Modélisation de mouvements de foules - Bertrand Maury
+
+Le mouvement d'une foule est difficilement représenté par une modélisation mathématique 
+
+Il y a aussi ici une vision de l'arche à l'entrée de la porte
+
+Il parle d'un article qui montre que dans une situation d'urgence il peut y avoir de l'entraide
+entre la plupart des individus même si certain cède à la panique
