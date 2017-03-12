@@ -1,4 +1,4 @@
-from traitement_propre import RecuperationDeDonnees
+from traitement import RecuperationDeDonnees
 from convertir_json_python import convertirJsonPython
 from Lagrange import avoirFonctionInterpolatriceParIntervalle, enleverValeursProches
 import matplotlib.pyplot as plt
