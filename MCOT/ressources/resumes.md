@@ -41,3 +41,44 @@ Le point important de la simulation est l'implémentation de groupe dirigé par 
 L'implémentation des groupes marche bien
 
 n'as pas réussi à simuler l'espace que les personnes ont besoin autour d'eux
+
+# Crown Simulation Modeling Applied to Emergency and Evacuation Simulatons using Multi-Agent Systems
+
+L'étude des foules a toujours était fait avec du matériel réel par des sociologue ce qui n'est pas correcte
+car les personne ne sont pas souvent paniqué lors de ces études
+
+Les personnes ont tendance à prendre le chemin le plus cours même si il y a beaucoup de gens dans le cas
+où ils ne sont pas paniqué  (Conflit avec le papier précédent qui est moins sérieux) "Least effort principle"
+
+Ces situations disparaisse lorsqu'il y a panique ou lorsque les personne cherches la meilleure place assise
+dans un concert ou pour les achat (Des domaines d'application supplémentaire) Ils ne font plus attention
+à leurs distance avec les autres et prennent le seul chemin qu'il connaisse pour sortir lorsqu'il ne
+connaisse pas de chemin pour sortir
+
+Les personnes ont tendance à suivre un autre groupe de personne en pensant qu'il pourront les sortir de
+la situation dangereuse, ce genre de disposition ne permet pas une évacuation optimal
+
+Les tas de gens devant les portes s'appel "arching" (Je sais pas comment le dire en Français)
+
+trois raisons pour une simulation, tester des théorie scientifique et hypothèse, tester les
+stratégies de sécurité, déduire des études théoriques
+
+On peut utiliser des rapport historiques
+
+Les foules ne peuvent être simulé facilement avec des équations
+
+On peut faire des modélisation par un graphe appelé modèle macroscopique
+
+Automate cellulaire peut être utilisé pour une étude microscopique comme macroscopique mais ne
+peux simuler le mouvement erratique des agents surtout utiliser pour les jeux 
+
+Le truc d'Alex s'appelle Flow-based system, et le notre Multi-agent system
+
+Les système multi-agent sont les plus réaliste SIMULEX fut le premier 
+
+La grande complexité des MAS demandant beaucoup de donnée et de temps de processeur
+à créé des difficulté malgré la loi de Moore, mais MAS donne beaucoup de possibilité
+tant que les donnée sur le comportement individuelle est correctement fournie
+
+Le modèle MAS modélise le mouvement d'un agent et étudie le comportement de la foule
+qu'il en émerge
