@@ -1,39 +1,10 @@
-Les foules sont des groupes de personnes qui de par leur taille perdent un
-comportement individuel, gagnant parallèlement un comportement qui leur est
-propre. L'étude de leurs mouvements, fait l'objet de recherches
-pluridisciplinaires mêlant psychologie, sciences sociales et cognitives mais
-aussi des sciences physique ou informatiques pour leur modélisation.
-Les simulations en situation réelles de mouvements sont couteuses en 
-personnel, dangereuses, et rendent difficilement compte d'un comportement
-réel, car il est difficile de simuler artificiellement un comportement 
-humain face à un danger réel. Cela légitime l'intérêt d'une
-modélisation. Cependant, le comportement d'une foule est complexe, et de
-nombreux phénomènes doivent être pris en compte avant même de proposer
-des mouvements globaux.  Les travaux de JOÃO E. ALMEIDA, de ROSALDO ROSETTI
-et d' ANTÓNIO LEÇA COELHO [2] permettent de rendre compte de quelques
-effets. La panique est un paramètre important, ce dernier modifiant le
-comportement des individus de façon radicale. Les individus ont aussi
-tendance à suivre les autres personnes suite à la panique ce qui a tendance
-à éloigner le cas réel du cas optimal (comportement grégaire ou herd
-behavior). De plus la formation de groupe et la volonté d'une évacuation
-rapide peut provoquer des phénomènes d'arcs et d'engorgement, ralentissant
-au final la vitesse d'évacuation
+Les foules sont des groupes de personnes qui de par leur taille perdent un comportement individuel, gagnant parallelement
+un comportement qui leur est propre. L'Ã©tude de leurs mouvements, fait l'objet de recherches pluridisciplinaires mÃ©lant psychologie,
+sciences sociales et cognitives mais aussi des sciences physique ou informatiques pour leur modÃ©lisation. En effet l'une des premiÃ¨res voies de modÃ©lisation fut l'application de mÃ©canique des fluides en considÃ©rant la foule en tant que gaz.[1] Si cette modÃ©lisation donne
+des premiers rÃ©sultats concluants (comme avec le modÃ¨le de Henderson [3]), les comportements sont encore vaguements approchÃ©s. En effet
+le comportement de la foule varie selon des paramÃ¨tres comme le comprtement grÃ©gaire des individus [1] ou la forte influence du niveau de panique des individus[2][3] entre autres. Ces paramÃ¨tres rendent la crÃ©ation des plans d'Ã©vacuation plus empiriques, et laissÃ©s Ã  l'experience de l'administrateur du batiment, selon le respect de quelques rÃ¨gles.[5]Les comportements dans cette situation ont cependant Ã©tÃ© estimÃ©s dans diverses Ã©tudes sociologiques depuis les annÃ©es 60[3] ce qui rend une approximation informatique possible. 
 
-Cependant des études sont menées, permettant l'élaboration de certains
-modèles physiques et informatiques approximant de façon plus ou moins juste
-le comportement global d'une foule, comme par exemple Daniel Flower [1] dans
-« Crowd Simulation for Emergency Response Planning ».
-
-Une possibilité de modélisation est celle d'un mouvement de fluide qui pose
-cependant certains problèmes même si la simulation permet une première
-approximation. Une autre possibilité est l'utilisation d'automates
-cellulaires, qui sont cependant trop grossiers. Finalement on peut simuler un
-comportement individuel au lieu d'une simulation de foule en général, c'est la
-solution la plus adoptée récemment.
-
-L'étude de groupes se fait cependant beaucoup sur un aspect planaire,
-négligeant les aspect volumétriques d'un bâtiment qui pourraient influer la
-situation.
+Les premiÃ¨res modÃ©lisation ne tardÃ¨rent pas Ã  etre implÃ©mentÃ©es, dans un premier temps sous forme d'automates cellulaires[1][2] qui furent suivis par les systÃ¨mes plus prÃ©cis pour approcher les mouvements de la foule de facon discrÃ¨te. Ces systÃ¨mes dits Ã  "ModÃ©lisation par Flux" (Flow Based System) tels que EvacNet [2][3] permettent d'obtenir des approximations gÃ©nÃ©rales au prix de petites approximations locales. Cependant ces modes de simulations ont l'inconvÃ©nient d'approximer certains dÃ©placements et comprtements et ne modÃ©lisent le problÃ¨me qu'en deux dimensions. Une autre mÃ©thode de modÃ©lisation est celle dite "Multi-Agents" (Multi Agent Systems), c'est Ã  dire une modÃ©lisation qui prend en compte la foule par une somme d'individuels.[1][2][4] C'est la modÃ©lisation la plus prÃ©cise 
 
 
 
@@ -42,24 +13,24 @@ situation.
 
 [3]
 
-Dans le cadre précis d'une évacuation incendie, l'objectif est de
-garantir la survie du plus d'occupants du bâtiment possible. Cela passe par
-la prévention de l'incident mais aussi par l'évacuation. Il serait
+Dans le cadre prÃ©cis d'une Ã©vacuation incendie, l'objectif est de
+garantir la survie du plus d'occupants du bÃ¢timent possible. Cela passe par
+la prÃ©vention de l'incident mais aussi par l'Ã©vacuation. Il serait
 illusoire de croire qu'une bonne simulation d'une masse en mouvement
-suffirait pour prévoir l'évacuation, il faut également prendre en compte
-les aspects du bâtiment, des mesures de sécurité et des aspects
-comportementaux. Les situations imposant l'évacuation d'un bâtiment peuvent
-aussi varier et l'évacuation doit s'y adapter. L'évacuation face à un
-incendie doit en effet être différente de celle face à une bombe ou un
-séisme. Le modèle doit donc être assez général pour simuler un mouvement
-d'évacuation quel que soit le cas.
+suffirait pour prÃ©voir l'Ã©vacuation, il faut Ã©galement prendre en compte
+les aspects du bÃ¢timent, des mesures de sÃ©curitÃ© et des aspects
+comportementaux. Les situations imposant l'Ã©vacuation d'un bÃ¢timent peuvent
+aussi varier et l'Ã©vacuation doit s'y adapter. L'Ã©vacuation face Ã  un
+incendie doit en effet Ãªtre diffÃ©rente de celle face Ã  une bombe ou un
+sÃ©isme. Le modÃ¨le doit donc Ãªtre assez gÃ©nÃ©ral pour simuler un mouvement
+d'Ã©vacuation quel que soit le cas.
 
-De nombreuses études comportementales de foules ont été effectuées lors
-des trente dernières années, et des observations empiriques ont permis
+De nombreuses Ã©tudes comportementales de foules ont Ã©tÃ© effectuÃ©es lors
+des trente derniÃ¨res annÃ©es, et des observations empiriques ont permis
 d'obtenir des lois de comportement <kek>
 
-Lors de l'évacuation. L'évolution des technologies et techniques a de plus
-permis des approches plus générales des simulations.
+Lors de l'Ã©vacuation. L'Ã©volution des technologies et techniques a de plus
+permis des approches plus gÃ©nÃ©rales des simulations.
 	
 	
 
