@@ -11,20 +11,20 @@ dans diverses études sociologiques depuis les années 60 [3] ce qui rend une ap
 Les premières modélisation ne tardèrent pas à etre implémentées, dans un premier temps sous forme d'automates cellulaires [1][2] qui furent
 suivis par les systèmes plus précis pour approcher les mouvements de la foule de facon discrète. Ces systèmes dits à "Modélisation par
 Flux" (Flow Based System) tels que EvacNet [2][3] permettent d'obtenir des approximations générales au prix de petites approximations
-locales. Cependant ces modes de simulations ont l'inconvénient d'approximer certains déplacements et comportements et pour la plupart ne
-modélisent le problème qu'en deux dimensions. Une autre méthode de modélisation est celle dite "Multi-Agents" (Multi Agent Systems), c'est
-à dire une modélisation qui prend en compte la foule par une somme d'individuels [1][2][4] . Cette forme de modélisation est plus précise
-de par le fait qu'elle permet de mieux prendre en compte les comportements des individus comme la formation de groupes ou l'entassement du
-à la panique mais aussi de prendre en compte les spécificités du Batiment comme les tailles de couloirs, de portes, la présence
-d'obstacles, et caetera [3]. Ces simulations, bien que plus précises et plus utilisées de nos jours gardent cependant un inconvénient
-majeur qui est la puissance de traitement nécessaire. En effet la simulation d'une foule par la conjonction des comportement locaux de
-chaque individus atteint elle aussi se limites lors de la présence d'un très grand nombre de personnes. Il a donc fallu attendre les
-récentes augmentations de la puissance des machines pour obtenir de telles simulations sur une large echelle [3].
+locales. Cependant ces modes de simulations ont l'inconvénient d'approximer certains déplacements et comportements ainsi que de ne
+modéliser le problème qu'en deux dimensions pour la plupart d'entre eux. Une autre méthode de modélisation est celle dite "Multi-Agents"
+(Multi Agent Systems), c'est à dire une modélisation qui prend en compte la foule par une somme d'individuels [1][2][4] . Cette forme de
+modélisation est plus précise de par le fait qu'elle permet de mieux prendre en compte les comportements des individus comme la formation
+de groupes ou l'entassement du à la panique mais aussi de prendre en compte les spécificités du batiment comme les tailles de couloirs, de
+portes, la présence d'obstacles, et caetera [3]. Ces simulations, bien que plus précises et plus utilisées de nos jours gardent cependant
+un inconvénient majeur qui est la puissance de traitement nécessaire. En effet la simulation d'une foule par la conjonction des
+comportement locaux de chaque individus atteint elle aussi se limites lors de la présence d'un très grand nombre de personnes. Il a donc
+fallu attendre les récentes augmentations de la puissance des machines pour obtenir de telles simulations sur une large echelle [3].
 
 Que ce soit à travers une modélisation par flux ou une modélisation par agents, le but principal de la modélisation de mouvements de foules
 dans un batiment reste de déterminer la meilleure facon de l'évacuer. Elles sont d'autant plus nécessaire qu'en réalité, les contraintes
 sur les plans d'évacuations n'imposent pas un plan parfaitement optimisé [5] et que les simulations en conditions réelles d'une evacuation,
-bien qu'obligatoires pour certains établissements acceuillant du public, sont pour la plupart couteux a organiser et peu représentatif, les
+bien qu'obligatoires pour certains établissements acceuillant du public, sont pour la plupart couteux à organiser et peu représentatif, les
 sujets n'étant pas soumis aux conditions rééeles d'evacuations (panique,fumées,obstacles...) [1][2]. Le but d'une évacuation efficace étant
 la survie du plus grand nombre d'individus, l'utilisation de logiciels optimisant les plans d'évacuations à travers la modélisation des
 différents cas d'evacuations, sont un enjeu crucial dans le domaine de la sécurité des batiments.
