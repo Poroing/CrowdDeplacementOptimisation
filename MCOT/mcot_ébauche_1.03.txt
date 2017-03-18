@@ -5,12 +5,18 @@ pluridisciplinaires mélant psychologie, sciences sociales et cognitives mais
 aussi des sciences physique ou informatiques pour leur modélisation. En
 effet l'une des premières voies de modélisation fut l'application de
 mécanique des fluides en considérant la foule en tant que gaz.[1] Si cette
+    %Est ce que la référence ne devrait pas être avant le point?
 modélisation donne des premiers résultats concluants (comme avec le modèle
 de Henderson [3]), les comportements sont encore vaguements approchés. En
 effet le comportement de la foule varie selon des paramètres comme le
 comprtement grégaire des individus [1] ou la forte influence du niveau de
+    %Est ce que le comportement gégaires des individues est un paramètre?
 panique des individus[2][3] entre autres. Ces paramètres rendent la
+    %Est ce qu'on ne devrait pas changer la tournure la phrase pour montrer
+    %que le paramètre n'est pas l'influence mais la panique?
 création des plans d'évacuation plus empiriques, et laissés à l'experience
+    %J'ai l'impression que l'on parle ici des plan d'évacuation crée par
+    %des modélisations
 de l'administrateur du batiment, selon le respect de quelques règles.[5]Les
 comportements dans cette situation ont cependant été estimés dans diverses
 études sociologiques depuis les années 60[3] ce qui rend une approximation
@@ -23,7 +29,10 @@ facon discrète. Ces systèmes dits à "Modélisation par Flux" (Flow Based
 System) tels que EvacNet [2][3] permettent d'obtenir des approximations
 générales au prix de petites approximations locales. Cependant ces modes de
 simulations ont l'inconvénient d'approximer certains déplacements et
-comprtements et ne modélisent le problème qu'en deux dimensions. Une autre
+    %EvacNet peut gèrer plusieurs étages en même temps
+comportements et ne modélisent le problème qu'en deux dimensions. Une autre
+    %Est ce qu'il serait mieux de parler plutôt d'un seul étage plutôt que
+    %deux dimensions?
 méthode de modélisation est celle dite "Multi-Agents" (Multi Agent Systems),
 c'est à dire une modélisation qui prend en compte la foule par une somme
 d'individuels.[1][2][4] C'est la modélisation la plus précise 
