@@ -5,8 +5,11 @@ from personne import Personne
 from obstacle import ObstacleRectangulaire, ObstacleCirculaire
 from espace import Espace
 from pymunk.vec2d import Vec2d
+from random import randint
 import pygame
 import pymunk.pygame_util
+
+
 
 class ConstructeurSalle(object):
        
@@ -108,10 +111,10 @@ class ConstructeurSimulation(object):
 
         self.contruirePersonneEtEcouteur(action_sortie, minimum_y = minimum_y ,**donnees_simulation['personnes'] )
 
-    def contruirePersonneEtEcouteur(self, action_sortie, nombre=0, sources=None, minimum_y=0):
+    def contruirePersonneEtEcouteur(self, action_sortie, nombre=0, sources=None, minimum_y=0, rayon_min = 30, rayon_max = 30,masse_surfacique = 1.8):
         #Pour le moment on met un ecouteur sur chaque personne
         for _ in range(nombre):
-            personne = Personne(Vec2d(random.randint(60, 40 + self.simulation.espace.lieu_ferme.largeur),
+            personne = Personne(masse_surfacique, randint(rayon_min, rayon_max), Vec2d(random.randint(60, 40 + self.simulation.espace.lieu_ferme.largeur),
                 random.randint(50 + minimum_y, 40 + self.simulation.espace.lieu_ferme.hauteur)), self.simulation.espace)
             self.simulation.ecouteurs.append(EcouteurPersonne(personne, action_sortie))
             self.simulation.espace.ajouterPersonne(personne)

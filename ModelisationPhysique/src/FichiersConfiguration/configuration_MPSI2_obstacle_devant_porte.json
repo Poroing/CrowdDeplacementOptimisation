@@ -30,7 +30,10 @@
 	},
 	"personnes":
 	{
-	    "nombre" : 50
+	    "nombre" : 50,
+		"rayon_min" : 18,
+		"rayon_max" : 24,
+		"masse_surfacique" : 1.8
 	},
     "mise_a_jour_par_seconde": 60,
 	"stop_apres_temps" : 10

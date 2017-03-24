@@ -1,6 +1,7 @@
 import pymunk
 from pymunk.vec2d import Vec2d
-        
+from math import pi
+
 class Representation(pymunk.Shape):
     '''Doit être instancié avec 
 
@@ -36,6 +37,9 @@ class RepresentationDynamique(Representation):
         del kwargs['moment']
         kwargs['corps'] = pymunk.Body(masse, moment)
         super().__init__(**kwargs)
+        
+
+
 
 class Rectangle(Representation, pymunk.Poly):
     '''Keyword Arguments: hauteur, largeur, position, corps'''
@@ -70,3 +74,22 @@ class Cercle(Representation, pymunk.Circle):
     @property
     def rayon(self):
         return self.radius
+
+
+
+
+class CercleDynamique(RepresentationDynamique, Cercle):
+    '''Keyword Arguments: position, masse, rayon'''
+    
+    def __init__(self, **kwargs):
+        
+       
+        rayon = kwargs['rayon']
+        masse = 2*pi* (kwargs['masse_surfacique'])**2
+        
+        del kwargs['masse_surfacique']
+        
+        kwargs['masse'] = masse
+        kwargs['moment'] = pymunk.moment_for_circle(masse, 0, rayon)
+        
+        super().__init__(**kwargs)
