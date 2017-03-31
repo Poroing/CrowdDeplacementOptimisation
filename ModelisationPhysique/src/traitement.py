@@ -64,4 +64,8 @@ class TraitementDeDonnees(object):
         derivee.append(1/(self.temps_de_sortie[self.nombre-2]-self.temps_de_sortie[self.nombre-3]))
         derivee.append(1/(self.temps_de_sortie[self.nombre-1]-self.temps_de_sortie[self.nombre-2]))
         return derivee + [0]
+
+    def avoirDebitMoyen(self):
+        ensemble_debits = self.debit_ordre_quatre()
+        return sum(ensemble_debits) / len(ensemble_debits)
         

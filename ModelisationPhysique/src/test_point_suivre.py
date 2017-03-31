@@ -14,6 +14,8 @@ class TestBordsObstacle(object):
     def sommetEstAccessible(self, sommet):
         return not self.espace.cercleEstEnDehorsDeLieuFerme(sommet, self.rayon * 2)
 
+    #def avoirSommets
+
     def update(self, position):
         info_lancer_rayon = self.espace.avoirInfoSurLancerRayon(position,
             self.position_voulue)

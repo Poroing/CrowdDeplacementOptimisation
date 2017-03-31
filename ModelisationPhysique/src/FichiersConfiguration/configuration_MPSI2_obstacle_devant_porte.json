@@ -9,20 +9,20 @@
 	"obstacles":
 	{
         "rangs" : {
-            "obstacle_hauteur" : 45,
-            "obstacle_distance_intermediaire" : 50,
-            "mur_rang_distance" : 0,
-            "obstacle_gauche_largeur" : 390,
-            "obstacle_droit_largeur" : 260,
-            "obstacle_gauche_position_premier" : 250,
-            "obstacle_droit_position_premier" : 250
+            "hauteur" : 45,
+            "distance_intermediaire" : 50,
+            "distance_au_mur" : 0,
+            "largeur_gauche" : 390,
+            "largeur_droit" : 260,
+            "position_debut_gauche" : 250,
+            "position_debut_droit" : 250
         },
 
         "particulier" : {
             "rectangles": [
-                { "width" : 15, "height" : 15, "position" : [ 475, 125 ] },
-                { "width" : 15, "height" : 15, "position" : [ 450, 110 ] },
-                { "width" : 15, "height" : 15, "position" : [ 500, 110 ] }
+                { "largeur" : 75, "hauteur" : 15, "position" : [ 440, 96 ] },
+                { "largeur" : 5, "hauteur" : 5, "position" : [ 435, 91 ] },
+                { "largeur" : 5, "hauteur" : 5, "position" : [ 515, 91 ] }
             ],
             "cercles" : [
             ]

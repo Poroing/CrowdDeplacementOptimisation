@@ -1,5 +1,7 @@
 import pymunk
 from pymunk.vec2d import Vec2d
+from functools import partial
+import operator
         
 class Representation(pymunk.Shape):
     '''Doit être instancié avec 
@@ -45,16 +47,28 @@ class Rectangle(Representation, pymunk.Poly):
         self.hauteur = kwargs['hauteur']
         del kwargs['largeur']
         del kwargs['hauteur']
+        kwargs['position'] = kwargs['position'] + self.avoirCentreRelatif()
         #Forcer d'appeler de cette façon car la représentation doit être
         #créé après poly pour que le corps soit initialisé correctement
-        pymunk.Poly.__init__(self, None, list(self.genererSommetsRelatifs()))
+        pymunk.Poly.__init__(self, None, list(self.genererSommetsRelatifsPymunk()))
         super().__init__(**kwargs)
 
+    @property
+    def position(self):
+        return super().position - self.avoirCentreRelatif()
+
     def genererSommetsRelatifs(self):
+        return map(partial(operator.add, self.avoirCentreRelatif()),
+            self.genererSommetsRelatifsPymunk())
+
+    def genererSommetsRelatifsPymunk(self):
         yield Vec2d(-self.largeur / 2, -self.hauteur / 2)
         yield Vec2d(+self.largeur / 2, -self.hauteur / 2)
         yield Vec2d(+self.largeur / 2, +self.hauteur / 2)
         yield Vec2d(-self.largeur / 2, +self.hauteur / 2)
+
+    def avoirCentreRelatif(self):
+        return Vec2d(self.largeur / 2, self.hauteur / 2)
 
 class Cercle(Representation, pymunk.Circle):
     '''Keyword aruments: position, corps, rayon'''
