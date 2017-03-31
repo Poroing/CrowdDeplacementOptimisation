@@ -41,7 +41,7 @@ Référence -> http://images.math.cnrs.fr/Modelisation-de-mouvements-de.html
 
 5.
 
-Auteur :  Juliette Venel
+Auteur :  OFFICIEL PREVENTION
 
 Titre : Incendie : Evacuation de Personnes
 
