@@ -32,51 +32,46 @@ class ConstructeurSalle(object):
 
     def ajouterObstaclesParticulier(self, espace, obstacles):
         for obstacle in obstacles['rectangles']:
-            espace.ajouterObstacle(ObstacleRectangulaire(
-                hauteur = obstacle['height'],
-                largeur = obstacle['width'],
-                position = obstacle['position']))
+            espace.ajouterObstacle(ObstacleRectangulaire(**obstacle))
         for obstacle in obstacles['cercles']:
-            espace.ajouterObstacle(ObstacleCirculaire(
-                rayon = obstacle['rayon'],
-                position = obstacle['position']))
+            espace.ajouterObstacle(ObstacleCirculaire(**obstacle))
 
 
-    def ajouterRangs(self, espace, obstacle_gauche_largeur=None, obstacle_droit_largeur = None,
-            obstacle_hauteur = None, obstacle_distance_intermediaire=None,
-            mur_rang_distance=None, obstacle_gauche_position_premier=None,
-            obstacle_droit_position_premier=None):
+    def ajouterRangs(self, espace, largeur_gauche=None, largeur_droit = None,
+            hauteur = None, distance_intermediaire=None,
+            distance_au_mur=None, position_debut_gauche=None,
+            position_debut_droit=None):
 
-        position_gauche_y = obstacle_gauche_position_premier
-        position_droit_y = obstacle_droit_position_premier
+        position_gauche_y = position_debut_gauche
+        position_droit_y = position_debut_droit
         
-        
+
         #on ajoute les ranges de gauche
-        while position_gauche_y + 50 <=self.espace.lieu_ferme.hauteur :
-            position_gauche = 50 + mur_rang_distance, position_gauche_y
+        while position_gauche_y + 50 <= self.espace.lieu_ferme.hauteur :
+            position_gauche = 50 + distance_au_mur, position_gauche_y
             
             obstacle_gauche = ObstacleRectangulaire(
-                hauteur = obstacle_hauteur,
-                largeur = obstacle_gauche_largeur,
+                hauteur = hauteur,
+                largeur = largeur_gauche,
                 position = position_gauche)
 
             espace.ajouterObstacle(obstacle_gauche)
 
-            position_gauche_y += obstacle_distance_intermediaire + obstacle_hauteur
+            position_gauche_y += distance_intermediaire + hauteur
             
             
         #on ajoute les rangs à droite
         while position_droit_y + 50 <= self.espace.lieu_ferme.hauteur :
-            position_droit_x = 50 + self.espace.lieu_ferme.largeur - obstacle_droit_largeur - mur_rang_distance
+            position_droit_x = 50 + self.espace.lieu_ferme.largeur - largeur_droit - distance_au_mur
             position_droit = position_droit_x, position_droit_y
             
             obstacle_droit = ObstacleRectangulaire(
-                hauteur = obstacle_hauteur,
-                largeur = obstacle_droit_largeur,
+                hauteur = hauteur,
+                largeur = largeur_droit,
                 position = position_droit)
             espace.ajouterObstacle(obstacle_droit)
 
-            position_droit_y += obstacle_distance_intermediaire + obstacle_hauteur
+            position_droit_y += distance_intermediaire + hauteur
 
 class EcouteurPersonne(object):
 
@@ -106,10 +101,11 @@ class ConstructeurSimulation(object):
         self.simulation = Simulation(constructeur_salle.espace,
             donnees_simulation['mise_a_jour_par_seconde'], creer_ecouteur)
 
-        minimum_y = max(donnees_simulation['obstacles']['rangs']['obstacle_gauche_position_premier'],
-            donnees_simulation['obstacles']['rangs']['obstacle_droit_position_premier'])
+        minimum_y = max(donnees_simulation['obstacles']['rangs']['position_debut_gauche'],
+            donnees_simulation['obstacles']['rangs']['position_debut_droit'])
 
-        self.contruirePersonneEtEcouteur(action_sortie, minimum_y = minimum_y ,**donnees_simulation['personnes'] )
+        self.contruirePersonneEtEcouteur(action_sortie, minimum_y = minimum_y ,
+            **donnees_simulation['personnes'])
 
     def contruirePersonneEtEcouteur(self, action_sortie, nombre=0, sources=None, minimum_y=0, rayon_min = 30, rayon_max = 30,masse_surfacique = 1.8):
         #Pour le moment on met un ecouteur sur chaque personne
@@ -135,6 +131,7 @@ class Simulation(object):
         self.creer_ecouteur = creer_ecouteur
 
     def mettreAJour(self):
+        self.temps_depuis_lancement += 1 / self.mise_a_jour_par_seconde
         self.espace.avancer(1 / self.mise_a_jour_par_seconde)
         for ecouteur in self.ecouteurs:
             ecouteur.ecouter(self.temps_depuis_lancement)
@@ -143,12 +140,6 @@ class Simulation(object):
     def gererActionExterieur(self):
         commande = self.action_mise_a_jour(self)
         self.executerCommande(commande)
-
-    def gererTemps(self):
-        if not self.en_pause:
-            self.temps_depuis_lancement += time.time() - self.temps_derniere_boucle
-        self.temps_derniere_boucle = time.time()
-        
 
     def mettreAJourSource(self):
         for source in self.sources:
@@ -164,12 +155,10 @@ class Simulation(object):
 
     def lancer(self):
         self.debut_lancement = time.time()
-        self.temps_derniere_boucle = time.time()
         self.temps_depuis_lancement = 0
         self.en_marche = True
         self.en_pause = False
         while self.en_marche:
-            self.gererTemps()
             self.gererActionExterieur()
             if self.en_pause:
                 continue
