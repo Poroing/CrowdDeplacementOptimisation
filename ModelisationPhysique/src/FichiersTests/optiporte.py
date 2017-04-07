@@ -2,7 +2,7 @@ import sys
 sys.path.append('..')
 from convertir_json_python import convertirJsonPython
 from traitement import RecuperationDeDonnees, TraitementDeDonnees
-import matplotlib.pyplot as plt
+from matplotlib.pyplot as plt
 from source_personne import Source
 from affichage import Afficheur
 from matplotlib.pyplot as plt
