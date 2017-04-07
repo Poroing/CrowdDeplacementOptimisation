@@ -22,13 +22,12 @@ Objectif global :
 
 Après la discussion avec Mercat :
 
-	Epsilon. implémenter de façon grossière mais simple le débit (ça suffira)
 	@. Faire couloirs (fichier de config)
 	
 	A. trouver le débit optimal que l'on peut espérer obternir selon la taille des portes
 	B. établir le meilleur rapport taille de porte/débit réaliste que l'on peut avoir
-	C.obstacles de taille définis n'importe où de n'importe quelle forme
+	C. Essayer de décomplexifier l'algo
+	D. faire des vitesses plus réalistes avec débit et tout v = 1,3- min{1,d^(-0.8)}
 	
 Optionnel :
 	1.Faire plusieurs portes
-	2.Rayons de personnes aléatoires
