@@ -20,14 +20,16 @@
 
         "particulier" : {
             "rectangles": [
-			],
+            ],
             "cercles" : [
             ]
         }
 	},
+	"sources": [
+	],
 	"personnes":
 	{
-	    "nombre" : 50,
+	    "nombre" : 1,
 		"rayon_min" : 18,
 		"rayon_max" : 21,
 		"masse_surfacique" : 1.8

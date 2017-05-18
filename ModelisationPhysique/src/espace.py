@@ -3,6 +3,7 @@ from obstacle import ObstacleRectangulaire
 from representation_categories import RepresentationCategorie
 from personne import Personne
 from pymunk.vec2d import Vec2d
+import time
 
 class Espace(pymunk.Space):
 
@@ -14,7 +15,7 @@ class Espace(pymunk.Space):
         self.lieu_ferme = None
         self.ensemble_obstacle = []
         self.ensemble_personnes = []
-
+        
     def avancer(self, delta):
         self.step(delta)
         
@@ -39,15 +40,18 @@ class Espace(pymunk.Space):
                 self.ensemble_obstacle))
             or any(map(lambda obstacle: obstacle.pointEstAInterieur(point),
                 self.ensemble_personnes)))
-
+    
     def ajouterPersonne(self, personne):
         self.ensemble_personnes.append(personne)
         self.add(personne.corps, personne)
-
+        
+    
     def ajouterObstacle(self, obstacle):
         self.ensemble_obstacle.append(obstacle)
         self.add(obstacle.corps, obstacle)
-
+    
+    
+    
     def ajouterLieuFerme(self, lieu_ferme):
         self.lieu_ferme = lieu_ferme
 
@@ -78,3 +82,5 @@ class Espace(pymunk.Space):
         corps_mur_bas_gauche = pymunk.Body(body_type=pymunk.Body.STATIC)
         mur_bas_gauche = pymunk.Segment(corps_mur_bas_gauche ,sommet_bas_gauche, sommet_porte_gauche, 0.0)
         self.add(corps_mur_bas_gauche, mur_bas_gauche)
+    
+    

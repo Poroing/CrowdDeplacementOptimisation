@@ -6,6 +6,7 @@ import math
 import pymunk
 import operator
 import itertools
+from random import randint
 
 class Personne(CercleDynamique):
 

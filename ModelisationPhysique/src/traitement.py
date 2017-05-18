@@ -1,5 +1,5 @@
 from functools import partial
-from matplotlib.pyplot import plot
+import matplotlib.pyplot as plt
 from simulation import Simulation, ConstructeurSimulation
 
 class RecuperationDeDonnees(object):

@@ -20,14 +20,13 @@
 
         "particulier" : {
             "rectangles": [
-                { "largeur" : 75, "hauteur" : 15, "position" : [ 440, 96 ] },
-                { "largeur" : 5, "hauteur" : 5, "position" : [ 435, 91 ] },
-                { "largeur" : 5, "hauteur" : 5, "position" : [ 515, 91 ] }
             ],
             "cercles" : [
             ]
         }
 	},
+	"sources": [
+	],
 	"personnes":
 	{
 	    "nombre" : 50,

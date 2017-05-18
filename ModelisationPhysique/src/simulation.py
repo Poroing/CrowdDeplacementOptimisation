@@ -8,7 +8,7 @@ from pymunk.vec2d import Vec2d
 from random import randint
 import pygame
 import pymunk.pygame_util
-
+from source_personne import Source
 
 
 class ConstructeurSalle(object):
@@ -29,7 +29,7 @@ class ConstructeurSalle(object):
     def ajouterObstacles(self, espace, rangs=None, particulier=None):
         self.ajouterRangs(espace, **rangs)
         self.ajouterObstaclesParticulier(espace, particulier)
-
+        
     def ajouterObstaclesParticulier(self, espace, obstacles):
         for obstacle in obstacles['rectangles']:
             espace.ajouterObstacle(ObstacleRectangulaire(**obstacle))
@@ -97,23 +97,31 @@ class ConstructeurSimulation(object):
         constructeur_salle = ConstructeurSalle(donnees_simulation)
 
         creer_ecouteur = lambda personne: EcouteurPersonne(personne, action_sortie)
-
+        
         self.simulation = Simulation(constructeur_salle.espace,
             donnees_simulation['mise_a_jour_par_seconde'], creer_ecouteur)
-
+        
+        
         minimum_y = max(donnees_simulation['obstacles']['rangs']['position_debut_gauche'],
             donnees_simulation['obstacles']['rangs']['position_debut_droit'])
 
-        self.contruirePersonneEtEcouteur(action_sortie, minimum_y = minimum_y ,
-            **donnees_simulation['personnes'])
+        self.contruirePersonneEtEcouteur(action_sortie, nombre = donnees_simulation['personnes']['nombre'], minimum_y = minimum_y , 
+            **donnees_simulation['personnes']['caracteristiques'])
+            
+        self.construireSources(donnees_simulation['personnes']['sources'], **donnees_simulation['personnes']['caracteristiques'])
 
-    def contruirePersonneEtEcouteur(self, action_sortie, nombre=0, sources=None, minimum_y=0, rayon_min = 30, rayon_max = 30,masse_surfacique = 1.8):
+    def contruirePersonneEtEcouteur(self, action_sortie, nombre=0, minimum_y=0, rayon_min = 30, rayon_max = 30,masse_surfacique = 1.8):
         #Pour le moment on met un ecouteur sur chaque personne
         for _ in range(nombre):
             personne = Personne(masse_surfacique, randint(rayon_min, rayon_max), Vec2d(random.randint(60, 40 + self.simulation.espace.lieu_ferme.largeur),
                 random.randint(50 + minimum_y, 40 + self.simulation.espace.lieu_ferme.hauteur)), self.simulation.espace)
             self.simulation.ecouteurs.append(EcouteurPersonne(personne, action_sortie))
             self.simulation.espace.ajouterPersonne(personne)
+            
+    def construireSources(self, liste_sources, rayon_min=30, rayon_max=30, masse_surfacique=1.8):
+        for source in liste_sources:
+            self.simulation.sources.append( Source(self.simulation.espace ,source['position'], source['periode'], rayon_min, rayon_max, masse_surfacique) )
+            
 
 class Simulation(object):
 
