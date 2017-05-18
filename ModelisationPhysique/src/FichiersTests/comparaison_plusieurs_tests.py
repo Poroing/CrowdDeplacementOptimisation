@@ -17,7 +17,7 @@ def resultats_moyens(config, nombre):
 
         afficheur = Afficheur()
 
-        recuperation = RecuperationDeDonnees(config, temps_maximal=20, action_mise_a_jour_secondaire=afficheur.dessinerEspaceEtAttendre)
+        recuperation = RecuperationDeDonnees(config, temps_maximal=15, action_mise_a_jour_secondaire=afficheur.dessinerEspaceEtAttendre)
         recuperation.lancer()
     
         if resultats == [] :
@@ -39,7 +39,8 @@ def resultats_moyens(config, nombre):
 ##
 
 
-def comparer(fichier1,fichier2):
+def comparer(chemin_acces_1, chemin_acces_2,n):
     config1 = convertirJsonPython(chemin_acces_1)
     config2 = convertirJsonPython(chemin_acces_2)
     
+    return (resultats_moyens(config1,n),resultats_moyens(config2,n))

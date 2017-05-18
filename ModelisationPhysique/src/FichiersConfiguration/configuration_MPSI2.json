@@ -3,22 +3,34 @@
 	{
 		"salle_hauteur" : 750,
 		"salle_largeur" : 850,
-		"porte_position" : 0.9,
+		"porte_position" : 0.5,
 		"porte_largeur" : 75
 	},
 	"obstacles":
 	{
-		"obstacle_hauteur" : 45,
-		"obstacle_distance_intermediaire" : 50,
-		"mur_rang_distance" : 0,
-		"obstacle_gauche_largeur" : 390,
-		"obstacle_droit_largeur" : 260,
-		"obstacle_gauche_position_premier" : 250,
-		"obstacle_droit_position_premier" : 250
+        "rangs" : {
+            "hauteur" : 45,
+            "distance_intermediaire" : 50,
+            "distance_au_mur" : 0,
+            "largeur_gauche" : 390,
+            "largeur_droit" : 260,
+            "position_debut_gauche" : 250,
+            "position_debut_droit" : 250
+        },
+
+        "particulier" : {
+            "rectangles": [
+			],
+            "cercles" : [
+            ]
+        }
 	},
 	"personnes":
 	{
-	    "nombre" : 50
+	    "nombre" : 50,
+		"rayon_min" : 18,
+		"rayon_max" : 21,
+		"masse_surfacique" : 1.8
 	},
     "mise_a_jour_par_seconde": 60,
 	"stop_apres_temps" : 10

@@ -18,7 +18,6 @@ class ObstacleRectangulaire(Obstacle, Rectangle):
 
     def __init__ (self, **kwargs):
         super().__init__(**kwargs)
-
     def pointEstAInterieur(self, point):
         return ( point.x > self.position.x and point.x < self.position.x + self.largeur
             and point.y > self.position.y and point.y < self.position.y + self.hauteur)
