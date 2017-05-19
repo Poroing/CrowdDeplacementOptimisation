@@ -1,6 +1,6 @@
 from pymunk.vec2d import Vec2d
 from representation_categories import RepresentationCategorie
-from representation import Representation, Rectangle, Cercle
+from representation import Representation, Rectangle, Cercle, Polygon
 import pymunk
 
 class Obstacle(Representation):
@@ -13,11 +13,16 @@ class Obstacle(Representation):
         self.filter = pymunk.ShapeFilter(
             categories=RepresentationCategorie.OBSTACLE.value)
 
+class ObstaclePolygonale(Obstacle, Polygon):
+    '''Keywords Arguments: position, sommets'''
+    pass
+
 class ObstacleRectangulaire(Obstacle, Rectangle):
     '''Keywords Arguments: position, hauteur, largeur'''
 
     def __init__ (self, **kwargs):
         super().__init__(**kwargs)
+
     def pointEstAInterieur(self, point):
         return ( point.x > self.position.x and point.x < self.position.x + self.largeur
             and point.y > self.position.y and point.y < self.position.y + self.hauteur)
