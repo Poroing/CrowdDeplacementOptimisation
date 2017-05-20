@@ -2,8 +2,8 @@
 	"lieu_ferme":
 	{
 		"salle_hauteur" : 750,
-		"salle_largeur" : 300,
-		"porte_position" : 0.5,
+		"salle_largeur" : 750,
+		"porte_position" : 0.55,
 		"porte_largeur" : 75
 	},
 	"obstacles":
@@ -14,12 +14,15 @@
             "distance_au_mur" : 5000,
             "largeur_gauche" : 1000,
             "largeur_droit" : 1000,
-            "position_debut_gauche" : 500,
-            "position_debut_droit" : 500
+            "position_debut_gauche" : 0,
+            "position_debut_droit" : 0
         },
 
         "particulier" : {
             "rectangles": [
+                { "largeur" : 75, "hauteur" : 15, "position" : [ 440, 96 ] },
+                { "largeur" : 5, "hauteur" : 5, "position" : [ 435, 91 ] },
+                { "largeur" : 5, "hauteur" : 5, "position" : [ 515, 91 ] }
             ],
             "cercles" : [
             ]
@@ -29,7 +32,6 @@
 	{
 		
 		"sources": [
-		{ "position" : [200,700] , "periode" : 0.1}
 		],
 	    
 		"caracteristiques": {
@@ -41,6 +43,6 @@
 		"nombre" : 50
 	},
     "mise_a_jour_par_seconde": 60,
-	"stop_apres_temps" : 10
+	"stop_apres_temps" : 15
 }
    

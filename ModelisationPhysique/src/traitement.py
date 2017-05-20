@@ -39,7 +39,7 @@ class TraitementDeDonnees(object):
     
     def __init__(self, temps_de_sortie):
         
-        self.temps_de_sortie = temps_de_sortie
+        self.temps_de_sortie = self.supprimerZeros(temps_de_sortie)
         self.nombre = len(self.temps_de_sortie)
     
     def personnes_en_fonction_du_temps(self):
@@ -53,7 +53,16 @@ class TraitementDeDonnees(object):
             
         return derivee + [0]
         
-
+    
+    def supprimerZeros(self, liste):
+        sortie = []
+        for elt in liste :
+            if elt not in sortie :
+                sortie.append(elt)
+                
+        return sortie
+    
+    
     def debit_ordre_quatre(self):
         derivee = [0]
         derivee.append((1/self.temps_de_sortie[1]-self.temps_de_sortie[0]))

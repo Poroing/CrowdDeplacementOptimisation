@@ -21,6 +21,9 @@
 
         "particulier" : {
             "rectangles": [
+                { "largeur" : 75, "hauteur" : 15, "position" : [ 185, 96 ] },
+                { "largeur" : 5, "hauteur" : 5, "position" : [ 260, 91 ] },
+                { "largeur" : 5, "hauteur" : 5, "position" : [ 180, 91 ] }
             ],
             "cercles" : [
             ]
