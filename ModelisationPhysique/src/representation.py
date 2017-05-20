@@ -39,11 +39,26 @@ class RepresentationDynamique(Representation):
         del kwargs['moment']
         kwargs['corps'] = pymunk.Body(masse, moment)
         super().__init__(**kwargs)
-        
 
 
+class Polygon(Representation, pymunk.Poly):
+    
+    def __init__(self, **kwargs):
+        #Forcer d'appeler de cette façon car la représentation doit être
+        #créé après poly pour que le corps soit initialisé correctement
+        pymunk.Poly.__init__(self, None, kwargs['sommets'])
+        del kwargs['sommets']
+        super().__init__(**kwargs)
 
-class Rectangle(Representation, pymunk.Poly):
+    @property
+    def sommets(self):
+        return self.get_vertices()
+
+    def avoirBaryCentre(self):
+        return (1 / len(self.sommet)) * sum(self.sommets)
+
+
+class Rectangle(Polygon):
     '''Keyword Arguments: hauteur, largeur, position, corps'''
 
     def __init__(self, **kwargs):
@@ -52,9 +67,7 @@ class Rectangle(Representation, pymunk.Poly):
         del kwargs['largeur']
         del kwargs['hauteur']
         kwargs['position'] = kwargs['position'] + self.avoirCentreRelatif()
-        #Forcer d'appeler de cette façon car la représentation doit être
-        #créé après poly pour que le corps soit initialisé correctement
-        pymunk.Poly.__init__(self, None, list(self.genererSommetsRelatifsPymunk()))
+        kwargs['sommets'] = list(self.genererSommetsRelatifsPymunk())
         super().__init__(**kwargs)
 
     @property
@@ -88,8 +101,6 @@ class Cercle(Representation, pymunk.Circle):
     @property
     def rayon(self):
         return self.radius
-
-
 
 
 class CercleDynamique(RepresentationDynamique, Cercle):

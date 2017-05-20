@@ -8,7 +8,7 @@ from source_personne import Source
 from affichage import Afficheur
 
 
-def resultats_moyens(config, nombre):
+def avoirTempsDeSortieMoyen(config, nombre):
     
     resultats = []
     
@@ -39,7 +39,7 @@ def resultats_moyens(config, nombre):
 ##
 
 
-def comparer(chemin_acces_1, chemin_acces_2,n):
+def avoirTempsSortieMoyenDeFichierConfiuration(chemin_acces_1, chemin_acces_2,n):
     config1 = convertirJsonPython(chemin_acces_1)
     config2 = convertirJsonPython(chemin_acces_2)
     

@@ -8,19 +8,21 @@ from affichage import Afficheur
 from random import randint
 from mpl_toolkits.mplot3d import Axes3D
 
-afficheur = Afficheur()
 
-configuration = convertirJsonPython('../FichiersConfiguration/MPSTAR_avec_obstacle.json')
-
-
-recuperation = RecuperationDeDonnees(configuration, temps_maximal=10, action_mise_a_jour_secondaire=afficheur.dessinerEspaceEtAttendre)
+configuration = convertirJsonPython('../FichiersConfiguration/configuration_MPSI2_obstacle_devant_porte.json')
 #recuperation.simulation.sources.append(Source(recuperation.simulation.espace, Vec2d(500, 750), 0.5))
         
-recuperation.lancer()
-traitement = TraitementDeDonnees(recuperation.temps_de_sortie)
-traitement.avoirDebitMoyen()
+data = []
+for numero_simumation in range(50):
+    print(f'Simulation {numero_simumation}')
+    recuperation = RecuperationDeDonnees(configuration, arreter_apres_temps=True,
+        temps_maximal=15,
+        arreter_apres_sortie=True)
+    recuperation.lancer()
+    traitement = TraitementDeDonnees(recuperation.temps_de_sortie)
+    data.append(traitement.avoirDebitMoyen())
 
-##
-fig = plt.figure()  
-plt.plot(ord, sortie)
+configuration = convertirJsonPython('
+
+plt.hist(data, 20)
 plt.show()
