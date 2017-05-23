@@ -2,16 +2,19 @@ from pymunk.vec2d import Vec2d
 from representation_categories import RepresentationCategorie
 from representation import CercleDynamique
 from test_point_suivre import TestBordsObstacle, TestProximite
+import fonctions_annexes
 import math
 import pymunk
 import operator
 import itertools
 from random import randint
+from math import pi
 
 class Personne(CercleDynamique):
 
-    VITESSE_MAXIMALE = 222
+    VITESSE_MAXIMALE = fonctions_annexes.convertirMetresPixels(2)
     COEFFICIENT_EVITEMENT = 0.4
+    RAYON_DE_PROXIMITE = fonctions_annexes.convertirMetresPixels(1.5)
 
     def __init__(self, masse_surfacique, rayon, position, espace, test_direction_cls=TestBordsObstacle):
         super().__init__(masse_surfacique = masse_surfacique, rayon=rayon, position=position)
@@ -22,6 +25,8 @@ class Personne(CercleDynamique):
         self.espace = espace
         self.test_direction = test_direction_cls(position = position, espace = espace, rayon = self.rayon,
             position_voulue = self.sortieLaPlusProche())
+        self.densite = self.nouvelleDensite()
+        self.vitesse_maximale_propre = Personne.VITESSE_MAXIMALE
         
     
     def sortieLaPlusProche(self):
@@ -51,11 +56,37 @@ class Personne(CercleDynamique):
     def estSortie(self):
         return self.espace.lieu_ferme.pointEstAExterieur(self.position)
 
+    def nouvelleDensite(self):
+        position = self.position
+        
+        centres_personnes = self.espace.ensemble_personnes
+        
+        nombre_de_personnes_a_proximite = 0
+        
+        for agent in self.espace.ensemble_personnes :
+            
+            if position.get_distance(agent.position) < Personne.RAYON_DE_PROXIMITE :
+                
+                nombre_de_personnes_a_proximite += 1
+        
+        return nombre_de_personnes_a_proximite /( pi* (Personne.RAYON_DE_PROXIMITE)**2)
+            
+    def miseAJourVitesseMax(self):
+        densite = self.densite
+        if densite == 0 :
+            self.vitesse_maximale_propre =  Personne.VITESSE_MAXIMALE
+        else :
+            self.vitesse_maximale_propre = fonctions_annexes.convertirMetresPixels( 2 - min(1, densite**(-0.8)))
+        
+        
     def traiterVitesse(self):
-        if self.corps.velocity.length > Personne.VITESSE_MAXIMALE:
-            self.corps.velocity *= Personne.VITESSE_MAXIMALE / self.body.velocity.length
+        if self.corps.velocity.length > self.vitesse_maximale_propre :
+            # On doit multiplier par un coefficient pour garder la direction du vecteur.
+            self.corps.velocity *= self.vitesse_maximale_propre / self.body.velocity.length 
 
     def update(self):
+        self.nouvelleDensite()
+        self.miseAJourVitesseMax()
         self.traiterVitesse()
         if not self.estSortie():
             self.test_direction.update(self.body.position)

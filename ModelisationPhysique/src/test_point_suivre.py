@@ -62,8 +62,8 @@ class TestDichotomie(TestBase):
         if info_lancer_rayon is None:
             self.point_a_suivre = self.position_voulue
         else:
-            representation_bloquante = info_lancer_rayon.shape*
-            print("Repr", representation_bloquante)*
+            representation_bloquante = info_lancer_rayon.shape
+            print("Repr", representation_bloquante)
             angle_inferieur, angle_superieur = self.avoirBornesDichotomie(info_lancer_rayon)
 
             while abs(angle_superieur - angle_inferieur) > TestDichotomie.PRECISION:

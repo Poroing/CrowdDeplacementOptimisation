@@ -5,6 +5,7 @@ from personne import Personne
 from pymunk.vec2d import Vec2d
 import time
 
+
 class Espace(pymunk.Space):
 
     DIRECTIONS = [ Vec2d(0, -1), Vec2d(-1, 0), Vec2d(0, 1), Vec2d(1, 0) ]

@@ -10,7 +10,6 @@ import pygame
 import pymunk.pygame_util
 from source_personne import Source
 
-
 class ConstructeurSalle(object):
        
     def __init__(self, donnees_simulation):
