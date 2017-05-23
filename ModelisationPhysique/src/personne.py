@@ -1,7 +1,7 @@
 from pymunk.vec2d import Vec2d
 from representation_categories import RepresentationCategorie
 from representation import CercleDynamique
-from test_point_suivre import TestBordsObstacle, TestProximite
+from test_point_suivre import TestBordsObstacle, TestProximite, TestDichotomie
 import math
 import pymunk
 import operator
@@ -13,13 +13,18 @@ class Personne(CercleDynamique):
     VITESSE_MAXIMALE = 222
     COEFFICIENT_EVITEMENT = 0.4
 
-    def __init__(self, masse_surfacique, rayon, position, espace, test_direction_cls=TestBordsObstacle):
+    def __init__(self, masse_surfacique, rayon, position, espace, test_direction_cls=TestDichotomie):
         super().__init__(masse_surfacique = masse_surfacique, rayon=rayon, position=position)
 
         self.force_deplacement = self.rayon * 10**4
         self.filter = pymunk.ShapeFilter(categories=RepresentationCategorie.PERSONNE.value)
-        self.test_direction = test_direction_cls(position, espace, self.rayon,
-            espace.lieu_ferme.avoirCentrePorte())
+
+        self.test_direction = test_direction_cls(
+            position=position,
+            espace=espace,
+            rayon=self.rayon,
+            position_voulue=espace.lieu_ferme.avoirCentrePorte())
+
         self.espace = espace
 
     def pointEstAInterieur(self, point):

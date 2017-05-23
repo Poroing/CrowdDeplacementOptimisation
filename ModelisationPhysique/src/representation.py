@@ -42,6 +42,7 @@ class RepresentationDynamique(Representation):
 
 
 class Polygon(Representation, pymunk.Poly):
+    '''Keywords Arguments: sommets, position, corps'''
     
     def __init__(self, **kwargs):
         #Forcer d'appeler de cette façon car la représentation doit être
@@ -54,8 +55,13 @@ class Polygon(Representation, pymunk.Poly):
     def sommets(self):
         return self.get_vertices()
 
+    def genererAretes(self):
+        for i in range(len(self.sommets) - 1):
+             yield Segment(self.sommets[i], self.sommets[i + 1])
+        yield Segment(self.sommets[-1], self.sommets[0])
+
     def avoirBaryCentre(self):
-        return (1 / len(self.sommet)) * sum(self.sommets)
+        return (1 / len(self.sommets)) * sum(self.sommets)
 
 
 class Rectangle(Polygon):

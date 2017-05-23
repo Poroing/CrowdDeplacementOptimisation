@@ -15,6 +15,8 @@ class Espace(pymunk.Space):
         self.lieu_ferme = None
         self.ensemble_obstacle = []
         self.ensemble_personnes = []
+
+        self.rappelle_personne_ajoute = lambda personne: None
         
     def avancer(self, delta):
         self.step(delta)
@@ -31,8 +33,9 @@ class Espace(pymunk.Space):
             filtre = pymunk.ShapeFilter(mask=pymunk.ShapeFilter.ALL_MASKS ^ RepresentationCategorie.PERSONNE.value)
         else:
             filtre = pymunk.ShapeFilter()
+        epaisseur_rayon = 1
 
-        return self.segment_query_first(debut, fin, 1, filtre)
+        return self.segment_query_first(debut, fin, epaisseur_rayon, filtre)
 
     def pointEstDansObstacle(self, point):
         return (self.lieu_ferme.pointEstAExterieur(point)
@@ -44,6 +47,7 @@ class Espace(pymunk.Space):
     def ajouterPersonne(self, personne):
         self.ensemble_personnes.append(personne)
         self.add(personne.corps, personne)
+        self.rappelle_personne_ajoute(personne)
         
     
     def ajouterObstacle(self, obstacle):

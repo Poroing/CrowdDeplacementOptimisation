@@ -20,22 +20,23 @@
 
         "particulier" : {
             "rectangles": [
-                { "largeur" : 75, "hauteur" : 15, "position" : [ 440, 96 ] },
-                { "largeur" : 5, "hauteur" : 5, "position" : [ 435, 91 ] },
-                { "largeur" : 5, "hauteur" : 5, "position" : [ 515, 91 ] }
             ],
             "cercles" : [
+            ],
+            "polygones": [
+                { "position": [ 475, 100 ], "sommets": [ [-50, -10], [0, 10], [50, -10] ] }
             ]
         }
 	},
-	"sources": [
-	],
 	"personnes":
 	{
-	    "nombre" : 50,
-		"rayon_min" : 18,
-		"rayon_max" : 21,
-		"masse_surfacique" : 1.8
+        "sources": [],
+        "caracteristiques": {
+            "rayon_min" : 18,
+            "rayon_max" : 21,
+            "masse_surfacique" : 1.8
+        },
+	    "nombre" : 50
 	},
     "mise_a_jour_par_seconde": 60,
 	"stop_apres_temps" : 10

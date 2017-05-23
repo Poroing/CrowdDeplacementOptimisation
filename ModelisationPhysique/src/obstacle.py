@@ -2,6 +2,7 @@ from pymunk.vec2d import Vec2d
 from representation_categories import RepresentationCategorie
 from representation import Representation, Rectangle, Cercle, Polygon
 import pymunk
+import geometrie
 
 class Obstacle(Representation):
     '''Keyword Arguments: position'''
@@ -15,13 +16,26 @@ class Obstacle(Representation):
 
 class ObstaclePolygonale(Obstacle, Polygon):
     '''Keywords Arguments: position, sommets'''
-    pass
 
-class ObstacleRectangulaire(Obstacle, Rectangle):
+    def peutEtrePasserEntre(self, rayon, autre):
+        for autre_sommet in autre.sommets:
+            for sommet in self.sommets:
+                if autre_sommet.get_distance(sommet) < rayon:
+                    return False
+
+        for sommet in self.sommets:
+            for arete in autre.genererAretes():
+                projection = geometrie.avoirProjectionSurSegment(sommet, arete)
+                if projection is None:
+                    continue
+                distance_arrete = sommet.get_distance(projection)
+                if distance_arrete < rayon:
+                    return False
+
+        return True
+
+class ObstacleRectangulaire(ObstaclePolygonale, Rectangle):
     '''Keywords Arguments: position, hauteur, largeur'''
-
-    def __init__ (self, **kwargs):
-        super().__init__(**kwargs)
 
     def pointEstAInterieur(self, point):
         return ( point.x > self.position.x and point.x < self.position.x + self.largeur
@@ -30,9 +44,6 @@ class ObstacleRectangulaire(Obstacle, Rectangle):
 
 class ObstacleCirculaire(Obstacle, Cercle):
     '''Keyword Arguments: position, rayon'''
-        
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
 
     def pointEstAInterieur(self, point):
         return self.positon.get_distance(point) < self.rayon

@@ -35,16 +35,6 @@ class TestBase(object):
     def fin_update(self):
         self.rappelle_update(self)
 
-class TestDichotomieCompactageObstacle(TestBase):
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def update(self, position):
-        pass
-        
-
-
 #TODO: Peut être éviter les mise à jour lorsque l'obstacle est loing
 class TestDichotomie(TestBase):
 
@@ -63,28 +53,25 @@ class TestDichotomie(TestBase):
             self.point_a_suivre = self.position_voulue
         else:
             representation_bloquante = info_lancer_rayon.shape
-            print(f'Repr {representation_bloquante}')
             angle_inferieur, angle_superieur = self.avoirBornesDichotomie(info_lancer_rayon)
 
             while abs(angle_superieur - angle_inferieur) > TestDichotomie.PRECISION:
                 millieu = (angle_inferieur + angle_superieur) / 2
                 info_lancer_rayon = self.avoirLancerAvecAngle(millieu)
 
-                print(f'angle: {angle_inferieur} {angle_superieur}')
-
-                if info_lancer_rayon is not None:
-                    print(f'Shape hit {info_lancer_rayon.shape}')
-                    
-
-                if info_lancer_rayon is None or (
-                        info_lancer_rayon is not None
-                        and info_lancer_rayon.shape is not representation_bloquante):
-
-                    angle_superieur = millieu
-                else:
+                if self.zoneSuperieurEstMeilleure(
+                        info_lancer_rayon,
+                        representation_bloquante):
                     angle_inferieur = millieu
+                else:
+                    angle_superieur = millieu
 
             self.point_a_suivre = self.avoirPointVersLequelLancer(angle_superieur)
+
+    def zoneSuperieurEstMeilleure(self, info_lancer_rayon, representation_bloquante):
+            return (info_lancer_rayon is not None
+            and info_lancer_rayon.shape is representation_bloquante)
+        
 
     def avoirPointVersLequelLancer(self, angle):
         direction_dans_laquel_lancer = self.position_voulue - self.position
@@ -126,13 +113,33 @@ class TestDichotomie(TestBase):
         return TestDichotomie.DROITE
         
 
+#TODO: Les mur de la salle ne sont pas pris en compte
+class TestDichotomieCompactageObstacle(TestDichotomie):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.initialiserObstacleCompacte()
+
+    def initialiserObstacleCompacte(self):
+        self.obstacle_compacte = dict()
+        for obstacle in self.espace.ensemble_obstacle:
+            ensemble_compacte = set()
+            for autre_obstacle in self.espace.ensemble_obstacle:
+                if obstacle.peutEtrePasserEntre(self.rayon, autre_obstacle):
+                    ensemble_compacte.add(autre_obstacle)
+            obstacle_compacte[obstacle] = frozenset(ensemble_compacte)
+            
+
+    def zoneSuperieurEstMeilleure(self, info_lancer_rayon, representation_bloquante):
+        return (info_lancer_rayon is not None
+            and info_lancer_rayon.shape in obstacle_compact[representation_bloquante])
+
 
 class TestBordsObstacle(TestBase):
 
     def sommetEstAccessible(self, sommet):
         return not self.espace.cercleEstEnDehorsDeLieuFerme(sommet, self.rayon * 2)
-
-    #def avoirSommets
 
     def update(self, position):
         super().update(position)

@@ -24,25 +24,21 @@
             "cercles" : [
             ],
             "polygones": [
+                { "position": [ 475, 100 ], "sommets": [ [-50, -10], [0, 10], [50, -10] ] }
             ]
         }
 	},
-	"sources": [
-	],
 	"personnes":
 	{
-		
-		"sources": [
-		],
-	    
-		"caracteristiques": {
-			"rayon_min" : 18,
-			"rayon_max" : 21,
-			"masse_surfacique" : 1.8
-		},
-		
-		"nombre" : 50
+        "sources": [],
+        "caracteristiques": {
+            "rayon_min" : 18,
+            "rayon_max" : 21,
+            "masse_surfacique" : 1.8
+        },
+	    "nombre" : 1
 	},
     "mise_a_jour_par_seconde": 60,
-	"stop_apres_temps" : 15
- }
+	"stop_apres_temps" : 10
+}
+   
