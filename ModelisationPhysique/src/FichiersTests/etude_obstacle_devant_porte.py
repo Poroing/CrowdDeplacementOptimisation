@@ -15,9 +15,9 @@ def recupererNDebitMoyenPourConfiguration(configuration, n, afficher_numero_simu
     return debits_moyens
 
 configuration_obstacle = convertirJsonPython(
-    '../FichiersConfiguration/MPSI2_obstacle_devant_porte.json')
+    '../FichiersConfiguration/salle_vide.json')
 configuration_sans_obstacle = convertirJsonPython(
-    '../FichiersConfiguration/MPSI2.json')
+    '../FichiersConfiguration/salle_vide_avec_obstacle.json')
 
 debits_moyens_obstacle = recupererNDebitMoyenPourConfiguration(
     configuration_obstacle,

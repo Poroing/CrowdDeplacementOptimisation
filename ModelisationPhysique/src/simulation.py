@@ -17,14 +17,13 @@ class ConstructeurSalle(object):
         self.donnees_simulation = donnees_simulation
         
         self.espace = Espace()
-        self.ajouterLieuFerme(self.espace, **self.donnees_simulation['lieu_ferme'])
+        self.ajouterLieuFerme(self.espace, **self.donnees_simulation['lieu_ferme']['salle'])
         self.ajouterObstacles(self.espace, **self.donnees_simulation['obstacles'])
         
     
     def ajouterLieuFerme(self, espace, salle_hauteur=None, salle_largeur=None,
             porte_largeur=None, porte_position=None):
-        espace.ajouterLieuFerme(LieuFerme(salle_largeur, salle_hauteur, Vec2d(50, 50), porte_position,
-            porte_largeur))
+        espace.ajouterLieuFerme(LieuFerme( self.donnees_simulation['lieu_ferme']['porte'], salle_largeur, salle_hauteur, Vec2d(50, 50)))
     
     def ajouterObstacles(self, espace, rangs=None, particulier=None):
         self.ajouterRangs(espace, **rangs)

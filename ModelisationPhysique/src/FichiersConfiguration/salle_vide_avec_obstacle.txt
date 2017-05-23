@@ -1,18 +1,11 @@
 {
 	"lieu_ferme":
 	{
-		"salle":
-		{
-			"salle_hauteur" : 850,
-			"salle_largeur" : 900
-			},
-		"porte": 
-		[
-			{"position" : 0.1, "largeur" : 75, "mur" : "bas"}
-			
-			]
+		"salle_hauteur" : 750,
+		"salle_largeur" : 300,
+		"porte_position" : 0.5,
+		"porte_largeur" : 75
 	},
-	
 	"obstacles":
 	{
         "rangs" : {
@@ -21,8 +14,8 @@
             "distance_au_mur" : 5000,
             "largeur_gauche" : 1000,
             "largeur_droit" : 1000,
-            "position_debut_gauche" : 0,
-            "position_debut_droit" : 0
+            "position_debut_gauche" : 500,
+            "position_debut_droit" : 500
         },
 
         "particulier" : {
@@ -36,7 +29,7 @@
 	{
 		
 		"sources": [
-		{"position" : [100,100], "periode" : 2, "rayon_min" : 18, "rayon_max" : 21, "masse_surfacique" : 1.8}
+		
 		],
 	    
 		"caracteristiques": {
@@ -47,6 +40,7 @@
 		
 		"nombre" : 50
 	},
-    "mise_a_jour_par_seconde": 60
+    "mise_a_jour_par_seconde": 60,
+	"stop_apres_temps" : 10
 }
    
