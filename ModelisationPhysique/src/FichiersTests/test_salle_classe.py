@@ -20,4 +20,3 @@ recuperation = RecuperationDeDonnees(
     action_mise_a_jour_secondaire=afficheur.dessinerEspaceEtAttendre)
 
 recuperation.lancer()
-

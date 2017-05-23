@@ -25,16 +25,19 @@
             ]
         }
 	},
-	"sources": [
-	],
 	"personnes":
 	{
-	    "nombre" : 1,
-		"rayon_min" : 18,
-		"rayon_max" : 21,
-		"masse_surfacique" : 1.8
+		
+		"sources": [
+		],
+	    
+		"caracteristiques": {
+			"rayon_min" : 18,
+			"rayon_max" : 21,
+			"masse_surfacique" : 1.8
+		},
+		
+		"nombre" : 50
 	},
-    "mise_a_jour_par_seconde": 60,
-	"stop_apres_temps" : 10
+    "mise_a_jour_par_seconde": 60
 }
-   

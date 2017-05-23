@@ -62,6 +62,7 @@ class TestDichotomie(TestBase):
                 if self.zoneSuperieurEstMeilleure(
                         info_lancer_rayon,
                         representation_bloquante):
+
                     angle_inferieur = millieu
                 else:
                     angle_superieur = millieu

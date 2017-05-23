@@ -15,18 +15,31 @@ class Personne(CercleDynamique):
 
     def __init__(self, masse_surfacique, rayon, position, espace, test_direction_cls=TestDichotomie):
         super().__init__(masse_surfacique = masse_surfacique, rayon=rayon, position=position)
-
+        
+        
         self.force_deplacement = self.rayon * 10**4
         self.filter = pymunk.ShapeFilter(categories=RepresentationCategorie.PERSONNE.value)
-
+        self.espace = espace
         self.test_direction = test_direction_cls(
             position=position,
             espace=espace,
             rayon=self.rayon,
-            position_voulue=espace.lieu_ferme.avoirCentrePorte())
-
-        self.espace = espace
-
+            position_voulue=self.sortieLaPlusProche())
+        
+    
+    def sortieLaPlusProche(self):
+        position = self.position
+        liste_centres = self.espace.lieu_ferme.avoirCentrePortes()
+        distmin = position.get_distance(liste_centres[0])
+        centre_min = liste_centres[0]
+        
+        for centre in (liste_centres):
+            dist = position.get_distance(centre)
+            if dist < distmin :
+                distmin, centre_min = dist, centre
+                
+        return centre_min
+    
     def pointEstAInterieur(self, point):
         return point.get_distance(self.body.position) < self.rayon
 
@@ -39,7 +52,7 @@ class Personne(CercleDynamique):
             self.espace.ensemble_personnes))
 
     def estSortie(self):
-        return self.position.y < self.espace.lieu_ferme.avoirCentrePorte().y
+        return self.espace.lieu_ferme.pointEstAExterieur(self.position)
 
     def traiterVitesse(self):
         if self.corps.velocity.length > Personne.VITESSE_MAXIMALE:

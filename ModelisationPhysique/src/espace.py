@@ -56,35 +56,75 @@ class Espace(pymunk.Space):
     
     
     
+    def recupererSommets(self, porte):
+        sommet1, sommet2 = 0,0
+        lieu_ferme = self.lieu_ferme
+        
+        if porte['mur'] == 'bas':
+            sommet1 = lieu_ferme.position + Vec2d (porte['position'] * lieu_ferme.largeur - porte['largeur'] /2, 0 )
+            sommet2 = lieu_ferme.position + Vec2d (porte['position'] * lieu_ferme.largeur + porte['largeur'] /2, 0 )
+        
+        if porte['mur'] == 'gauche' :
+            sommet1 = lieu_ferme.position + Vec2d (0, porte['position'] * lieu_ferme.hauteur - porte['largeur'] /2 )
+            sommet2 = lieu_ferme.position + Vec2d (0, porte['position'] * lieu_ferme.hauteur + porte['largeur'] /2)
+            
+        if porte['mur'] == 'haut' :
+            sommet1 = lieu_ferme.position + Vec2d (porte['position'] * lieu_ferme.largeur - porte['largeur'] /2, lieu_ferme.hauteur )
+            sommet2 = lieu_ferme.position + Vec2d (porte['position'] * lieu_ferme.largeur + porte['largeur'] /2, lieu_ferme.hauteur )
+        
+        if porte['mur'] == 'droite' :
+            sommet1 = lieu_ferme.position + Vec2d (lieu_ferme.largeur, porte['position'] * lieu_ferme.hauteur - porte['largeur'] /2 )
+            sommet2 = lieu_ferme.position + Vec2d (lieu_ferme.largeur, porte['position'] * lieu_ferme.hauteur + porte['largeur'] /2)
+            
+        return sommet1, sommet2
+    
     def ajouterLieuFerme(self, lieu_ferme):
+        
         self.lieu_ferme = lieu_ferme
+        
+        s_bg = lieu_ferme.position
+        s_bd = lieu_ferme.position + Vec2d(lieu_ferme.largeur, 0)
+        s_hg = lieu_ferme.position + Vec2d(0, lieu_ferme.hauteur)
+        s_hd = lieu_ferme.position + Vec2d(lieu_ferme.largeur, lieu_ferme.hauteur)
+        sommets = { "gauche" : [s_bg, s_hg] , "droite": [s_bd, s_hd] , "haut" : [s_hg, s_hd] , "bas" : [s_bg, s_bd]}
+        
+        
+        for porte in lieu_ferme.liste_portes :
+            
+            sommet1, sommet2 = self.recupererSommets(porte)
+            
+            sommets[porte['mur']].append(sommet1)
+            sommets[porte['mur']].append(sommet2)
+        
+        sommets['gauche'].sort()
+        sommets['droite'].sort()
+        sommets['bas'].sort()
+        sommets['haut'].sort()
+        
+        for k in range (0,len(sommets['bas'])-1, 2):
 
-        sommet_bas_gauche = lieu_ferme.position
-        sommet_bas_droit = lieu_ferme.position + Vec2d(lieu_ferme.largeur, 0)
-        sommet_haut_gauche = lieu_ferme.position + Vec2d(0, lieu_ferme.hauteur)
-        sommet_haut_droit = lieu_ferme.position + Vec2d(lieu_ferme.largeur, lieu_ferme.hauteur)
-        sommet_porte_gauche = lieu_ferme.position + Vec2d(lieu_ferme.largeur * lieu_ferme.position_porte - lieu_ferme.largeur_porte / 2, 0)
-        sommet_porte_droit = lieu_ferme.position + Vec2d(lieu_ferme.largeur * lieu_ferme.position_porte + lieu_ferme.largeur_porte /2, 0)
+            segment_bas = pymunk.Body(body_type=pymunk.Body.STATIC)
+            mur_segment_bas = pymunk.Segment(segment_bas, sommets['bas'][k], sommets['bas'][k+1], 0.0)
+            self.add(segment_bas, mur_segment_bas)
 
-
-        corps_mur_haut = pymunk.Body(body_type=pymunk.Body.STATIC)
-        mur_haut = pymunk.Segment(corps_mur_haut, sommet_haut_gauche, sommet_haut_droit, 0.0)
-        self.add(corps_mur_haut, mur_haut)
-
-        corps_mur_gauche = pymunk.Body(body_type=pymunk.Body.STATIC)
-        mur_gauche = pymunk.Segment(corps_mur_gauche, sommet_haut_gauche, sommet_bas_gauche, 0.0)
-        self.add(corps_mur_gauche, mur_gauche)
-
-        corps_mur_droit = pymunk.Body(body_type=pymunk.Body.STATIC)
-        mur_droit = pymunk.Segment(corps_mur_droit, sommet_bas_droit, sommet_haut_droit, 0.0)
-        self.add(corps_mur_droit, mur_droit)
-
-        corps_mur_bas_droit = pymunk.Body(body_type=pymunk.Body.STATIC)
-        mur_bas_droit = pymunk.Segment(corps_mur_bas_droit, sommet_bas_droit, sommet_porte_droit, 0.0)
-        self.add(corps_mur_bas_droit, mur_bas_droit)
-
-        corps_mur_bas_gauche = pymunk.Body(body_type=pymunk.Body.STATIC)
-        mur_bas_gauche = pymunk.Segment(corps_mur_bas_gauche ,sommet_bas_gauche, sommet_porte_gauche, 0.0)
-        self.add(corps_mur_bas_gauche, mur_bas_gauche)
+        for k in range (0, len(sommets['gauche'])-1, 2):
+            
+            segment_gauche = pymunk.Body(body_type=pymunk.Body.STATIC)
+            mur_segment_gauche = pymunk.Segment(segment_gauche, sommets['gauche'][k], sommets['gauche'][k+1], 0.0)
+            self.add(segment_gauche, mur_segment_gauche)
+        
+        for k in range (0, len(sommets['haut'])-1, 2):
+            
+            segment_haut = pymunk.Body(body_type=pymunk.Body.STATIC)
+            mur_segment_haut = pymunk.Segment(segment_haut, sommets['haut'][k], sommets['haut'][k+1], 0.0)
+            self.add(segment_haut, mur_segment_haut)
+            
+        for k in range (0, len(sommets['droite'])-1,2):
+            
+            segment_droite = pymunk.Body(body_type=pymunk.Body.STATIC)
+            mur_segment_droite = pymunk.Segment(segment_droite, sommets['droite'][k], sommets['droite'][k+1], 0.0)
+            self.add(segment_droite, mur_segment_droite)
+            
+  
     
     
