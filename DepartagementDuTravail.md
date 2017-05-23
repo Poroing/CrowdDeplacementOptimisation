@@ -27,5 +27,3 @@ Après la discussion avec Mercat :
 	A. trouver le débit optimal que l'on peut espérer obternir selon la taille des portes
 	B. établir le meilleur rapport taille de porte/débit réaliste que l'on peut avoir
 	C. Essayer de décomplexifier l'algo
-	D. faire des vitesses plus réalistes avec débit et tout v = 1,3- min{1,d^(-0.8)}
-	
