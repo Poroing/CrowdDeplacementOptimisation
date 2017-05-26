@@ -11,12 +11,13 @@ from mpl_toolkits.mplot3d import Axes3D
 afficheur = Afficheur()
 
 configuration = convertirJsonPython(
-    '../FichiersConfiguration/MPSI2_obstacle_devant_porte_une_personne.json')
+    '../FichiersConfiguration/MPSI2_obstacle_devant_porte.json')
         
 recuperation = RecuperationDeDonnees(
     configuration,
     arreter_apres_temps=True,
     temps_maximal=15,
     action_mise_a_jour_secondaire=afficheur.dessinerEspaceEtAttendre)
+
 
 recuperation.lancer()

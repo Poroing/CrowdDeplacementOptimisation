@@ -1,10 +1,13 @@
 {
 	"lieu_ferme":
 	{
-		"salle_hauteur" : 750,
-		"salle_largeur" : 850,
-		"porte_position" : 0.5,
-		"porte_largeur" : 75
+		"salle": {
+			"salle_hauteur" : 800,
+			"salle_largeur" : 850
+		},
+		"porte": [
+			{"position" : 0.5, "largeur" : 75, "mur" : "bas"}
+        ]
 	},
 	"obstacles":
 	{

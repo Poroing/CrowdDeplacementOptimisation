@@ -1,9 +1,10 @@
 import pymunk
-from obstacle import ObstacleRectangulaire
-from representation_categories import RepresentationCategorie
+from obstacle import ObstacleRectangulaire, OsbtacleSegment
+from representation_categories import RepresentationCategorie, avoirMasqueSansValeur
 from personne import Personne
 from pymunk.vec2d import Vec2d
 import time
+import geometrie
 
 class Espace(pymunk.Space):
 
@@ -15,6 +16,7 @@ class Espace(pymunk.Space):
         self.lieu_ferme = None
         self.ensemble_obstacle = []
         self.ensemble_personnes = []
+        self.ensemble_murs = []
 
         self.rappelle_personne_ajoute = lambda personne: None
         
@@ -30,7 +32,9 @@ class Espace(pymunk.Space):
 
     def avoirInfoSurLancerRayon(self, debut, fin, ignorer_personne=True):
         if ignorer_personne:
-            filtre = pymunk.ShapeFilter(mask=pymunk.ShapeFilter.ALL_MASKS ^ RepresentationCategorie.PERSONNE.value)
+            filtre = pymunk.ShapeFilter(mask=avoirMasqueSansValeur(
+                pymunk.ShapeFilter.ALL_MASKS,
+                RepresentationCategorie.PERSONNE.value))
         else:
             filtre = pymunk.ShapeFilter()
         epaisseur_rayon = 1
@@ -48,83 +52,51 @@ class Espace(pymunk.Space):
         self.ensemble_personnes.append(personne)
         self.add(personne.corps, personne)
         self.rappelle_personne_ajoute(personne)
-        
     
     def ajouterObstacle(self, obstacle):
         self.ensemble_obstacle.append(obstacle)
         self.add(obstacle.corps, obstacle)
-    
-    
-    
-    def recupererSommets(self, porte):
-        sommet1, sommet2 = 0,0
-        lieu_ferme = self.lieu_ferme
-        
-        if porte['mur'] == 'bas':
-            sommet1 = lieu_ferme.position + Vec2d (porte['position'] * lieu_ferme.largeur - porte['largeur'] /2, 0 )
-            sommet2 = lieu_ferme.position + Vec2d (porte['position'] * lieu_ferme.largeur + porte['largeur'] /2, 0 )
-        
-        if porte['mur'] == 'gauche' :
-            sommet1 = lieu_ferme.position + Vec2d (0, porte['position'] * lieu_ferme.hauteur - porte['largeur'] /2 )
-            sommet2 = lieu_ferme.position + Vec2d (0, porte['position'] * lieu_ferme.hauteur + porte['largeur'] /2)
             
-        if porte['mur'] == 'haut' :
-            sommet1 = lieu_ferme.position + Vec2d (porte['position'] * lieu_ferme.largeur - porte['largeur'] /2, lieu_ferme.hauteur )
-            sommet2 = lieu_ferme.position + Vec2d (porte['position'] * lieu_ferme.largeur + porte['largeur'] /2, lieu_ferme.hauteur )
-        
-        if porte['mur'] == 'droite' :
-            sommet1 = lieu_ferme.position + Vec2d (lieu_ferme.largeur, porte['position'] * lieu_ferme.hauteur - porte['largeur'] /2 )
-            sommet2 = lieu_ferme.position + Vec2d (lieu_ferme.largeur, porte['position'] * lieu_ferme.hauteur + porte['largeur'] /2)
-            
+    def recupererSommetsPorte(self, porte):
+        mur = self.lieu_ferme.avoirCote(porte['mur'])
+        largeur_porte_pourcentage = porte['largeur'] / mur.avoirLongueur()
+
+        pourcentage_sommet1 = porte['position'] - largeur_porte_pourcentage / 2
+        pourcentage_sommet2 = porte['position'] + largeur_porte_pourcentage / 2
+        sommet1 = mur.avoirPositionPourcentage(pourcentage_sommet1)
+        sommet2 = mur.avoirPositionPourcentage(pourcentage_sommet2)
         return sommet1, sommet2
-    
+
+    def ajouterMurEtPortes(self, sommets):
+        #Le tri étant lexicographique selon (x, y) et les sommets étant
+        #soit à x constant soit à y constant on fait un .sort() pour
+        #avoir leurs position sur le mur
+        sommets.sort()
+        for k in range (0, len(sommets) - 1, 2):
+            self.ajouterObstacle(OsbtacleSegment(
+                point1=sommets[k],
+                point2=sommets[k + 1]))
+        
+
     def ajouterLieuFerme(self, lieu_ferme):
-        
         self.lieu_ferme = lieu_ferme
+    
+        sommets = {
+            'gauche' :list(self.lieu_ferme.genererSommetsCote('gauche')),
+            'droite' :list(self.lieu_ferme.genererSommetsCote('droite')),
+            'bas' :list(self.lieu_ferme.genererSommetsCote('bas')),
+            'haut' :list(self.lieu_ferme.genererSommetsCote('haut')),
+        }
+
         
-        s_bg = lieu_ferme.position
-        s_bd = lieu_ferme.position + Vec2d(lieu_ferme.largeur, 0)
-        s_hg = lieu_ferme.position + Vec2d(0, lieu_ferme.hauteur)
-        s_hd = lieu_ferme.position + Vec2d(lieu_ferme.largeur, lieu_ferme.hauteur)
-        sommets = { "gauche" : [s_bg, s_hg] , "droite": [s_bd, s_hd] , "haut" : [s_hg, s_hd] , "bas" : [s_bg, s_bd]}
-        
-        
-        for porte in lieu_ferme.liste_portes :
+        for porte in self.lieu_ferme.liste_portes :
             
-            sommet1, sommet2 = self.recupererSommets(porte)
+            sommet1, sommet2 = self.recupererSommetsPorte(porte)
             
             sommets[porte['mur']].append(sommet1)
             sommets[porte['mur']].append(sommet2)
         
-        sommets['gauche'].sort()
-        sommets['droite'].sort()
-        sommets['bas'].sort()
-        sommets['haut'].sort()
-        
-        for k in range (0,len(sommets['bas'])-1, 2):
-
-            segment_bas = pymunk.Body(body_type=pymunk.Body.STATIC)
-            mur_segment_bas = pymunk.Segment(segment_bas, sommets['bas'][k], sommets['bas'][k+1], 0.0)
-            self.add(segment_bas, mur_segment_bas)
-
-        for k in range (0, len(sommets['gauche'])-1, 2):
-            
-            segment_gauche = pymunk.Body(body_type=pymunk.Body.STATIC)
-            mur_segment_gauche = pymunk.Segment(segment_gauche, sommets['gauche'][k], sommets['gauche'][k+1], 0.0)
-            self.add(segment_gauche, mur_segment_gauche)
-        
-        for k in range (0, len(sommets['haut'])-1, 2):
-            
-            segment_haut = pymunk.Body(body_type=pymunk.Body.STATIC)
-            mur_segment_haut = pymunk.Segment(segment_haut, sommets['haut'][k], sommets['haut'][k+1], 0.0)
-            self.add(segment_haut, mur_segment_haut)
-            
-        for k in range (0, len(sommets['droite'])-1,2):
-            
-            segment_droite = pymunk.Body(body_type=pymunk.Body.STATIC)
-            mur_segment_droite = pymunk.Segment(segment_droite, sommets['droite'][k], sommets['droite'][k+1], 0.0)
-            self.add(segment_droite, mur_segment_droite)
-            
-  
-    
-    
+        self.ajouterMurEtPortes(sommets['bas'])
+        self.ajouterMurEtPortes(sommets['haut'])
+        self.ajouterMurEtPortes(sommets['gauche'])
+        self.ajouterMurEtPortes(sommets['droite'])

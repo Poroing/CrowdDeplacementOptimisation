@@ -3,6 +3,7 @@ from pymunk.vec2d import Vec2d
 from math import pi
 from functools import partial
 import operator
+import geometrie
 
 class Representation(pymunk.Shape):
     '''Doit être instancié avec 
@@ -16,6 +17,9 @@ class Representation(pymunk.Shape):
         del kwargs['corps']
         self.corps = corps
         self.corps.position = Vec2d(position)
+
+    def avoirCoordoneeAbsolueDepuisRelative(self, point):
+        return self.position + point
 
     @property
     def corps(self):
@@ -53,16 +57,49 @@ class Polygon(Representation, pymunk.Poly):
 
     @property
     def sommets(self):
+        return list(map(
+            self.avoirCoordoneeAbsolueDepuisRelative,
+            self.avoirSommetsRelatif()))
+
+    def avoirSommetsRelatif(self):
         return self.get_vertices()
 
     def genererAretes(self):
         for i in range(len(self.sommets) - 1):
-             yield Segment(self.sommets[i], self.sommets[i + 1])
-        yield Segment(self.sommets[-1], self.sommets[0])
+             yield geometrie.SimpleSegment(self.sommets[i], self.sommets[i + 1])
+        yield geometrie.SimpleSegment(self.sommets[-1], self.sommets[0])
 
     def avoirBaryCentre(self):
         return (1 / len(self.sommets)) * sum(self.sommets)
 
+class Segment(Representation, pymunk.Segment):
+    '''Keywords Arguments: point1, point2, corps'''
+    
+
+    def __init__(self, **kwargs):
+        pymunk.Segment.__init__(self, None, kwargs['point1'], kwargs['point2'], 0)
+        del kwargs['point1']
+        del kwargs['point2']
+        #Le corps d'un segment ne prend apparement pas en compte la position
+        #On la met donc à 0 par défault
+        kwargs['position'] = Vec2d(0, 0)
+        super().__init__(**kwargs)
+
+    @property
+    def sommets(self):
+        return [self.point1, self.point2]
+
+    def genererAretes(self):
+        yield geometrie.SimpleSegment(*self.sommets)
+
+    @property
+    def point1(self):
+        return self.a
+
+    @property
+    def point2(self):
+        return self.b
+    
 
 class Rectangle(Polygon):
     '''Keyword Arguments: hauteur, largeur, position, corps'''
@@ -75,10 +112,6 @@ class Rectangle(Polygon):
         kwargs['position'] = kwargs['position'] + self.avoirCentreRelatif()
         kwargs['sommets'] = list(self.genererSommetsRelatifsPymunk())
         super().__init__(**kwargs)
-
-    @property
-    def position(self):
-        return super().position - self.avoirCentreRelatif()
 
     def genererSommetsRelatifs(self):
         return map(partial(operator.add, self.avoirCentreRelatif()),

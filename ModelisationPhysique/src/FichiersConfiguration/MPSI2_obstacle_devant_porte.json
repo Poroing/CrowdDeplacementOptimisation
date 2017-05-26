@@ -1,19 +1,14 @@
 {
-	"lieu_ferme":
-	{
-		"salle":
-		{
-			"salle_hauteur" : 850,
-			"salle_largeur" : 900
-			},
-		"porte": 
-		[
-			{"position" : 0.1, "largeur" : 75, "mur" : "bas"}
-			
-			]
+	"lieu_ferme": {
+		"salle": {
+			"salle_hauteur" : 800,
+			"salle_largeur" : 850
+		},
+		"porte": [
+			{"position" : 0.5, "largeur" : 75, "mur" : "bas"}
+		]
 	},
-	"obstacles":
-	{
+	"obstacles": {
         "rangs" : {
             "hauteur" : 45,
             "distance_intermediaire" : 50,
@@ -30,7 +25,7 @@
             "cercles" : [
             ],
             "polygones": [
-                { "position": [ 475, 100 ], "sommets": [ [-50, -10], [0, 10], [50, -10] ] }
+                { "position": [ 475, 100 ], "sommets": [ [-50, -10], [5, 10], [50, -10] ] }
             ]
         }
 	},
