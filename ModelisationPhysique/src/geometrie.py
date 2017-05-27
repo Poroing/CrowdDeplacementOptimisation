@@ -1,8 +1,12 @@
 from pymunk.vec2d import Vec2d
+import base
+import math
 
 IDENTIDIANT_COTE = [ 'gauche', 'haut', 'droite', 'bas' ]
 
 class SimpleSegment(object):
+    #Permet de travailler avec aise sur les segments sans devoir instancier
+    #une representation qui demande plus de place
 
     def __init__(self, point1, point2):
         self.point1 = point1
@@ -22,11 +26,20 @@ class SimpleSegment(object):
 
 
 class SimpleRectangle(object):
+    #Permet de travailler avec aise sur les rectangles sans devoir instancier
+    #une representation qui demande plus de place
 
     def __init__(self, position, largeur, hauteur):
         self.largeur = largeur
         self.hauteur = hauteur
         self.position = Vec2d(position)
+
+    @property
+    def sommets(self):
+        ajouterPosition = lambda sommet: sommet + self.position
+        return list(map(
+            ajouterPosition,
+            self.genererSommetsRelatifSensHoraireDepuisPosition()))
 
     def genererSommetsCote(self, identifiant_cote):
         ajouterPosition = lambda sommet: sommet + self.position
@@ -63,6 +76,78 @@ class SimpleRectangle(object):
     def pointEstAExterieur(self, point):
         return ( point.x > self.position.x + self.largeur or point.x < self.position.x
             or point.y > self.position.y + self.hauteur or point.y < self.position.y)
+
+
+class CalculateurDistanceAvecCache(object):
+    '''Sers a mettre en cache les valeurs calculées pour éviter
+        de calculer plusieurs fois la même distance
+    ''' 
+
+    def __init__(self):
+        self.distances = base.KeyPairDict()
+
+    def avoirDistanceEntre(self, polygon1, polygon2):
+        if (polygon1, polygon2) in self.distances:
+            return self.distances[(polygon1, polygon2)]
+        distance = self.calculerDistanceEntre(polygon1, polygon2)
+        self.distances[(polygon1, polygon2)] = distance
+        return distance
+
+    def calculerDistanceEntre(self, polygon1, polygon2):
+        distance_min = polygon1.sommets[0].get_distance(polygon2.sommets[0])
+        
+        for sommet1 in polygon1.sommets:
+            for sommet2 in polygon2.sommets:
+                distance_min = min(distance_min, sommet1.get_distance(sommet2))
+                
+
+        for sommet in polygon1.sommets:
+            for arete in polygon2.genererAretes():
+                projection = avoirProjectionSurSegment(sommet, arete)
+                if projection is None:
+                    continue
+                distance_min = min(distance_min, sommet.get_distance(projection))
+
+        for sommet in polygon2.sommets:
+            for arete in polygon1.genererAretes():
+                projection = avoirProjectionSurSegment(sommet, arete)
+                if projection is None:
+                    continue
+                distance_min = min(distance_min, sommet.get_distance(projection))
+
+        return distance_min
+
+def avoirDistanceAngulaire(angle, autre_angle):
+    angle_centre = angle % (2 * math.pi)
+    autre_angle_centre = autre_angle % (2 * math.pi)
+    if angle_centre > autre_angle_centre:
+        return avoirDistanceAngulaire(autre_angle, angle)
+    distance = abs(angle_centre - autre_angle_centre)
+    if distance > math.pi:
+        autre_angle_centre -= 2 * math.pi
+        distance = abs(autre_angle_centre - angle_centre)
+    return distance               
+
+def avoirMilieusAngulaire(angle1, angle2):
+    '''Renvoie le milieu proche suivie du milieu eloigne'''
+    angle1_centre = angle1 % (2 * math.pi)
+    angle2_centre = angle2 % (2 * math.pi)
+
+    milieu1 = (angle1_centre + angle2_centre) / 2
+    milieu2 = milieu1 + math.pi
+    if avoirDistanceAngulaire(milieu1, angle1) < math.pi / 2:
+        milieu_proche = milieu1
+        milieu_eloigne = milieu2
+    else:
+        milieu_proche = milieu2
+        milieu_eloigne = milieu1
+    return (milieu_proche, milieu_eloigne)
+
+def avoirMilieuEloigne(angle1, angle2):
+    return avoirMilieusAngulaire(angle1, angle2)[1]
+
+def avoirMilieuProche(angle1, angle2):
+    return avoirMilieusAngulaire(angle1, angle2)[0]
 
 def centrerPoint(point, centre):
     return point - centre

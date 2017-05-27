@@ -1,6 +1,7 @@
 from functools import partial
 import matplotlib.pyplot as plt
 from simulation import Simulation, ConstructeurSimulation
+import math
 
 class RecuperationDeDonnees(object):
     
@@ -54,11 +55,11 @@ class TraitementDeDonnees(object):
     def rendreTempsSortieUnique(self):
         nouveau_ensemble_temps_sortie = []
         for temps_sortie in self.ensemble_temps_sortie:
-            if (nouveau_ensemble_temps_sortie != [] and temps_sortie == nouveau_ensemble_temps_sortie[-1]):
+            if (nouveau_ensemble_temps_sortie != []
+                    and temps_sortie == nouveau_ensemble_temps_sortie[-1]):
                 continue
             nouveau_ensemble_temps_sortie.append(temps_sortie)
         self.ensemble_temps_sortie = nouveau_ensemble_temps_sortie
-        
     
     def personnes_en_fonction_du_temps(self):
         plt.plot([0] + self.ensemble_temps_sortie, list(range(len(self.ensemble_temps_sortie)+1)))
@@ -71,8 +72,6 @@ class TraitementDeDonnees(object):
             
         return derivee + [0]
         
-    
-    
     def debit_ordre_quatre(self):
         derivee = [0]
         derivee.append((1/self.ensemble_temps_sortie[1]-self.ensemble_temps_sortie[0]))
@@ -85,9 +84,22 @@ class TraitementDeDonnees(object):
         derivee.append(1/(self.ensemble_temps_sortie[self.nombre-1]-self.ensemble_temps_sortie[self.nombre-2]))
         return derivee + [0]
 
-    def avoirDebitMoyen(self):
+    def avoirEcartTypeEtMoyenne(self, ensemble):
+        moyenne = sum(ensemble) / len(ensemble)
+        moyenne_carree = sum(x**2 for x in ensemble) / len(ensemble)
+        return math.sqrt(moyenne_carree - moyenne**2), moyenne
+
+    def avoirEnsembleSansValeurIninteressante(self, ensemble):
+        ecart_type, moyenne= self.avoirEcartTypeEtMoyenne(ensemble)
+        return [ x for x in ensemble if abs(x - moyenne) < 2 * ecart_type ]
+
+    def avoirDebitMoyen(self, remove_irelevant_value=True):
         if self.nombre == 0:
             return 0
         ensemble_debits = self.debit_ordre_quatre()
-        return sum(ensemble_debits) / len(ensemble_debits)
-        
+        if remove_irelevant_value:
+            ensemble_debits = (
+                self.avoirEnsembleSansValeurIninteressante(ensemble_debits))
+
+        moyenne = sum(ensemble_debits) / len(ensemble_debits)
+        return moyenne

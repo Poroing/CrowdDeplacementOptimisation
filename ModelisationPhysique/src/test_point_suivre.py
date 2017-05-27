@@ -3,7 +3,7 @@ import pymunk
 from representation import Rectangle
 import math
 import functools
-import math
+import geometrie
 
 
 class TestBase(object):
@@ -42,147 +42,182 @@ class TestBase(object):
 class TestLanceRayon(TestBase):
     '''Keywords Arguments: position, rayon, position_voulue, obstacle
 
-        Toute sous classe doit être redéfinir `rayonEstAcceptable` selon
-        ses besoins
+        Aide pour la contruction de test essayant d'éviter un obstacle
+        bloquant l'accès à la sortie.
+
+        Dans le code quelque chose est acceptable si aller dans sa direction
+        permer d'éviter l'obstacle bloquant.
+
+        Toute sous classe doit redéfinir les fonction `est<...>Acceptable` selon
+        ses besoins.
     '''
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    COEFFICIENT_LONGUEUR_INITIAL = 4
 
     def update(self, position):
         super().update(position)
-        self.representation_bloquante = self.avoirRepresentationBloquante()
+        self.longueur_rayon = self.rayon * TestLanceRayon.COEFFICIENT_LONGUEUR_INITIAL
+        self.ininitialiserObstacleBloquant()
 
-    def avoirPointVersLequelLancer(self, angle):
-        direction_dans_laquel_lancer = self.position_voulue - self.position
-        direction_dans_laquel_lancer.rotate(angle)
-        return direction_dans_laquel_lancer + self.position
+    def avoirPositionVersAngle(self, angle):
+        direction = (self.position_voulue - self.position)
+        direction.length = self.longueur_rayon
+        direction.rotate(angle)
+        return direction + self.position
 
     def avoirLancerAvecAngle(self, angle):
-        point_vers_lequel_lancer = self.avoirPointVersLequelLancer(angle)
+        point_vers_lequel_lancer = self.avoirPositionVersAngle(angle)
         return self.espace.avoirInfoSurLancerRayon(
             self.position,
             point_vers_lequel_lancer)
 
-    def avoirRepresentationBloquante(self):
-        info_lancer_rayon = self.avoirLancerAvecAngle(0)
+    def avoirObjetToucheParRayon(self, info_lancer_rayon):
         if info_lancer_rayon is None:
             return None
         return info_lancer_rayon.shape
 
-    def rayonEstAcceptable(self, info_lancer_rayon):
-        return info_lancer_rayon is None
+    def avoirObjetVersAngle(self, angle):
+        return self.avoirObjetToucheParRayon(self.avoirLancerAvecAngle(angle))
 
-#TODO: Peut être éviter les mise à jour lorsque l'obstacle est loing
-class TestDichotomie(TestLanceRayon):
-    '''Keywords Arguments: position, position_voulue, rayon, espace
-
-        Toute sous classe doit redéfinir `zoneSupe
-    '''
-
-    GAUCHE = 0
-    DROITE = 1
-
-    PRECISION = math.pi / 100
-
-    def update(self, position):
-        super().update(position)
-
-        if self.representation_bloquante is None:
-            self.point_a_suivre = self.position_voulue
+    def ininitialiserObstacleBloquant(self):
+        info_lancer_rayon = self.avoirLancerAvecAngle(0)
+        if info_lancer_rayon is None:
+            self.obstacle_bloquant = None
         else:
-            angle_inferieur, angle_superieur = self.avoirBornesDichotomie(info_lancer_rayon)
+            self.obstacle_bloquant = info_lancer_rayon.shape
 
-            while abs(angle_superieur - angle_inferieur) > TestDichotomie.PRECISION:
-                millieu = (angle_inferieur + angle_superieur) / 2
-                info_lancer_rayon = self.avoirLancerAvecAngle(millieu)
+    def estAngleAcceptable(self, angle):
+        objet_vers_angle = self.avoirObjetVersAngle(angle)
+        return self.estObjetAcceptable(objet_vers_angle)
 
-                if self.zoneSuperieurEstMeilleure(
-                        info_lancer_rayon,
-                        representation_bloquante):
+    def estObjetAcceptable(self, objet):
+        return objet is None or objet is not self.obstacle_bloquant
 
-                    angle_inferieur = millieu
-                else:
-                    angle_superieur = millieu
+    def estRayonAcceptable(self, info_lancer_rayon):
+        return self.estObjetAcceptable(
+            self.avoirObjetToucheParRayon(info_lancer_rayon))
 
-            self.point_a_suivre = self.avoirPointVersLequelLancer(angle_superieur)
+    def angleEstPlusProcheDeSortie(self, angle, autre_angle):
+        return (geometrie.avoirDistanceAngulaire(angle, 0)
+            < geometrie.avoirDistanceAngulaire(autre_angle, 0))
 
-    def zoneSuperieurEstMeilleure(self, info_lancer_rayon, representation_bloquante):
-            return (info_lancer_rayon is not None
-                and info_lancer_rayon.shape is representation_bloquante)
-
-    def avoirBornesDichotomie(self, info_lancer_rayon):
-        return (self.avoirPremiereBorneDichotomie(info_lancer_rayon),
-             self.avoirSecondeBorneDichotomie(info_lancer_rayon))
-
-    def avoirPremiereBorneDichotomie(self, info_lancer_rayon):
-        return -math.pi / 2
-
-    def avoirSecondeBorneDichotomie(self, info_lancer_rayon):
-        return math.pi / 2
-
-    def avoirSecondeBorneDichotomieParRapportAuBarycentre(self,
-        info_lancer_rayon):
-
-        bary_centre_obstacle = info_lancer_rayon.shape.avoirBaryCentre()
-        cote_barycentre = self.avoirCotePointParRapportALigne(
-            bary_centre_obstacle,
-            self.position,
-            self.position_voulue)
-
-        if cote_barycentre == TestDichotomie.GAUCHE:
-            return - math.pi / 2
-        return math.pi / 2
-
-
-    def avoirCotePointParRapportALigne(self, point, point_1_ligne, point_2_ligne):
-        if (point - point_1_ligne).cross(point_2_ligne - point) > 0:
-            return TestDichotomie.GAUCHE
-        return TestDichotomie.DROITE
+    def avoirMeilleureAngleEntre(self, angle1, angle2):
+        if self.angleEstPlusProcheDeSortie(angle1, angle2):
+            return angle1
+        return angle2
 
 
 class TestLineaire(TestLanceRayon):
-    '''Keyword Arguments: position, rayon, position_voulue, espace'''
+    '''Keyword Arguments: position, rayon, position_voulue, espace
+
+        Les sous classes ne doivent pas redéfinir `update` sinon
+        elles doivent appeler `TestLanceRayon.update(self, position)`
+        au début de leur `update` au lieu de `super().update(position)`
+    '''
 
     PRECISION = math.pi / 100
 
     def update(self, position):
         super().update(position)
-        meileur_point_a_suivre = None
+        
         meilleur_angle = math.pi
 
         for i in range(0, self.avoirNombreRayon()):
             angle_courant = i * TestLineaire.PRECISION
             if self.angleEstPlusProcheDeSortie(meilleur_angle, angle_courant):
                 continue
-            info_lancer_rayon = self.avoirLancerAvecAngle(angle_courant)
-            if self.rayonEstAcceptable(info_lancer_rayon):
-                meileur_point_a_suivre = self.avoirPointVersLequelLancer(angle_courant)
+            if self.estAngleAcceptable(angle_courant):
                 meilleur_angle = angle_courant
 
         if meileur_point_a_suivre is None:
             meileur_point_a_suivre = self.position_voulue
 
-        self.point_a_suivre = meileur_point_a_suivre
+        self.point_a_suivre = self.avoirPositionVersAngle(meilleur_angle)
+
         self.fin_update()
 
     def avoirNombreRayon(self):
         return math.floor((2 * math.pi) / TestLineaire.PRECISION)
 
-    def angleEstPlusProcheDeSortie(self, angle, autre_angle):
-        return (self.avoirDistanceAngulaire(angle, 0)
-            < self.avoirDistanceAngulaire(autre_angle, 0))
+class TestRetiensObjet(TestLanceRayon):
+    '''Permet le retient des objet présent dans la direction
+        d'un angle pendant le temps d'une update,
+        a utiliser pour les tests devant accéder plusieurs fois à cette
+        information
+    '''
 
-    def avoirDistanceAngulaire(self, angle, autre_angle):
-        angle_centre = angle % (2 * math.pi)
-        autre_angle_centre = autre_angle % (2 * math.pi)
-        if angle_centre > autre_angle_centre:
-            return self.avoirDistanceAngulaire(autre_angle, angle)
-        distance = abs(angle_centre - autre_angle_centre)
-        if distance > math.pi:
-            autre_angle_centre -= 2 * math.pi
-            distance = abs(autre_angle_centre - angle_centre)
-        return distance               
+    def update(self, position):
+        super().update(position)
+        self.ininitialiserObjetVersAngle()
+
+    def ininitialiserObjetVersAngle(self):
+        self.objet_vers_angle = dict()
+
+    def avoirObjetVersAngle(self, angle):
+        if angle not in self.objet_vers_angle:
+            info_lancer_rayon = self.avoirLancerAvecAngle(angle)
+            objet = self.avoirObjetToucheParRayon(info_lancer_rayon)
+            self.objet_vers_angle[angle] = objet
+        return self.objet_vers_angle[angle]
+
+
+class TestDichotomie(TestRetiensObjet):
+
+    PRECISION = math.pi / 100
+
+    def update(self, position):
+        super().update(position)
+
+        if self.obstacle_bloquant is None:
+            self.point_a_suivre = self.position_voulue
+            self.fin_update()
+            return
+
+        #Il faut ajouter un décalage avec précision pour être sur que le
+        #milieu se trouvera au bon endroit dans la dichotomie
+        meilleur_angle = self.avoirMeilleureAngleEntre(
+            self.avoirMeilleureAngleDansIntervalle(
+                0, math.pi - TestDichotomie.PRECISION),
+            self.avoirMeilleureAngleDansIntervalle(
+                0, math.pi + TestDichotomie.PRECISION))
+
+        self.point_a_suivre = self.avoirPositionVersAngle(meilleur_angle)
+
+        self.fin_update()
+
+    def avoirMeilleureAngleDansIntervalle(self, angle1, angle2):
+        if (geometrie.avoirDistanceAngulaire(angle1, angle2) 
+                < TestDichotomie.PRECISION):
+            return angle1
+
+        if geometrie.avoirDistanceAngulaire(angle1, angle2) > math.pi:
+            raise ValueError('''Une dichotomie doit se faire sur des angles
+                proche d'au moint pi''')
+
+        if (self.estAngleAcceptable(angle1) 
+                and self.estAngleAcceptable(angle2)):
+            raise RuntimeError('Il n\'est pas possible d\'avoir des objet '
+                + 'acceptable sur les deux borne de la dichotomie')
+
+        milieu = geometrie.avoirMilieuProche(angle1, angle2)
+
+        if (not self.estAngleAcceptable(angle1)
+                and not self.estAngleAcceptable(angle2)):
+            return self.avoirMeilleureAngleEntre(
+                self.avoirMeilleureAngleDansIntervalle(angle1, milieu),
+                self.avoirMeilleureAngleDansIntervalle(milieu, angle2))
+
+        if self.estAngleAcceptable(angle1):
+            if self.estAngleAcceptable(milieu):
+                return self.avoirMeilleureAngleDansIntervalle(milieu, angle2)
+            else:
+                return self.avoirMeilleureAngleDansIntervalle(angle1, milieu)
+        else:
+            if self.estAngleAcceptable(milieu):
+                return self.avoirMeilleureAngleDansIntervalle(milieu, angle1)
+            else:
+                return self.avoirMeilleureAngleDansIntervalle(angle2, milieu)
+
 
 class TestCompactageObstacle(TestBase):
     '''Keyword Arguments: position, rayon, espace, position_voulue
@@ -195,34 +230,37 @@ class TestCompactageObstacle(TestBase):
         super().__init__(**kwargs)
         self.initialiserObstacleCompacte()
 
+    def sontConsidererMemeObstacle(self, obstacle1, obstacle2):
+        return not self.espace.peutPasserEntre(
+            self.rayon,
+            obstacle1,
+            obstacle2)
+
     def initialiserObstacleCompacte(self):
         self.obstacle_compactes = dict()
         for obstacle in self.espace.ensemble_obstacle:
             ensemble_compacte = set()
             for autre_obstacle in self.espace.ensemble_obstacle:
-                if not obstacle.peutEtrePasserEntre(self.rayon, autre_obstacle):
+                if (autre_obstacle is obstacle
+                        or self.sontConsidererMemeObstacle(obstacle, autre_obstacle)):
                     ensemble_compacte.add(autre_obstacle)
             self.obstacle_compactes[obstacle] = frozenset(ensemble_compacte)
 
 
 class TestLanceCompactageObstacle(TestLanceRayon, TestCompactageObstacle):
 
-    def obstacleEstCompacteAvecRepresentanteBloquante(self, obstacle):
-        return obstacle in self.obstacle_compactes[self.representation_bloquante]
+    def obstacleEstCompacteAvecObstacleBloquant(self, obstacle):
+        return obstacle in self.obstacle_compactes[self.obstacle_bloquant]
+
+    def estObjetAcceptable(self, objet):
+        return (objet is None
+            or not self.obstacleEstCompacteAvecObstacleBloquant(objet))
 
 class TestLineaireCompactageObstacle(TestLanceCompactageObstacle, TestLineaire):
-
-    def rayonEstAcceptable(self, info_lancer_rayon):
-        return not (info_lancer_rayon is not None
-            and self.obstacleEstCompacteAvecRepresentanteBloquante(
-                info_lancer_rayon.shape))
-
+    pass
                 
 class TestDichotomieCompactageObstacle(TestLanceCompactageObstacle, TestDichotomie):
-            
-    def zoneSuperieurEstMeilleure(self, info_lancer_rayon, representation_bloquante):
-        return (info_lancer_rayon is not None
-            and self.obstacleEstCompacteAvecRepresentanteBloquante(info_lancer_rayon.shape))
+    pass
 
 
 class TestBordsObstacle(TestBase):

@@ -5,7 +5,7 @@ from personne import Personne
 
 from obstacle import ObstacleRectangulaire, ObstacleCirculaire
 from obstacle import ObstaclePolygonale
-from rappelle import EnsembleRappelle
+import base
 
 from ecouteur import EcouteurPersonne
 
@@ -168,7 +168,7 @@ class Simulation(object):
 
         self.creer_ecouteur = creer_ecouteur
 
-        self.espace.rappelle_personne_ajoute = EnsembleRappelle()
+        self.espace.rappelle_personne_ajoute = base.EnsembleRappelle()
         self.espace.rappelle_personne_ajoute.ajouter(self.ajouterEcouteurPourPersonne)
 
     @property

@@ -3,6 +3,7 @@ from representation_categories import RepresentationCategorie
 from representation import Representation, Rectangle, Cercle, Polygon, Segment
 import pymunk
 import geometrie
+import collections
 
 class Obstacle(Representation):
     '''Keyword Arguments: position'''
@@ -14,35 +15,13 @@ class Obstacle(Representation):
         self.filter = pymunk.ShapeFilter(
             categories=RepresentationCategorie.OBSTACLE.value)
 
-    def peutEtrePasserEntre(self, rayon, autre):
-        for autre_sommet in autre.sommets:
-            for sommet in self.sommets:
-                if autre_sommet.get_distance(sommet) < rayon:
-                    return False
-
-        for sommet in self.sommets:
-            for arete in autre.genererAretes():
-                projection = geometrie.avoirProjectionSurSegment(sommet, arete)
-                if projection is None:
-                    continue
-                distance_arrete = sommet.get_distance(projection)
-                if distance_arrete < rayon:
-                    return False
-
-        for sommet in autre.sommets:
-            for arete in self.genererAretes():
-                projection = geometrie.avoirProjectionSurSegment(sommet, arete)
-                if projection is None:
-                    continue
-                distance_arrete = sommet.get_distance(projection)
-                if distance_arrete < rayon:
-                    return False
-
-        return True
 
 class OsbtacleSegment(Obstacle, Segment):
     '''Keywords Arguments: position, point1, point2'''
-    pass
+
+    def __repr__(self):
+        return 'ObstacleSegment({}, {})'.format(self.point1, self.point2)
+
     
 
 class ObstaclePolygonale(Obstacle, Polygon):

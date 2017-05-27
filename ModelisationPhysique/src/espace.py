@@ -18,6 +18,9 @@ class Espace(pymunk.Space):
         self.ensemble_personnes = []
         self.ensemble_murs = []
 
+        #Pour eviter les calculs répété de distances entre des obstacles
+        self.calculateur_distance = geometrie.CalculateurDistanceAvecCache()
+
         self.rappelle_personne_ajoute = lambda personne: None
         
     def avancer(self, delta):
@@ -25,6 +28,18 @@ class Espace(pymunk.Space):
         
         for personne in self.ensemble_personnes:
             personne.update()
+
+    def avoirDistanceEntre(self, obstacle1, obstacle2):
+        return self.calculateur_distance.avoirDistanceEntre(
+            obstacle1,
+            obstacle2)
+
+    def peutPasserEntre(self, rayon, obstacle1, obstacle2):
+        return (
+            self.calculateur_distance.avoirDistanceEntre(
+                obstacle1,
+                obstacle2)
+            > rayon)
 
     def cercleEstEnDehorsDeLieuFerme(self, position, rayon):
         return any(map(self.lieu_ferme.pointEstAExterieur,
