@@ -29,5 +29,3 @@ Après la discussion avec Mercat :
 	C. Essayer de décomplexifier l'algo
 	D. faire des vitesses plus réalistes avec débit et tout v = 1,3- min{1,d^(-0.8)}
 	
-Optionnel :
-	1.Faire plusieurs portes
