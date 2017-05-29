@@ -14,7 +14,7 @@ class Personne(CercleDynamique):
 
     VITESSE_MAXIMALE = convertirMetresPixels(2)
     COEFFICIENT_EVITEMENT = 0.4
-    RAYON_DE_PROXIMITE = convertirMetresPixels(1.5)
+    RAYON_DE_PROXIMITE = convertirMetresPixels(2)
 
     def __init__(self,
             masse_surfacique,
@@ -39,13 +39,12 @@ class Personne(CercleDynamique):
         
     
     def sortieLaPlusProche(self):
-        position = self.position
         liste_centres = self.espace.lieu_ferme.avoirCentrePortes()
-        distmin = position.get_distance(liste_centres[0])
+        distmin = self.position.get_distance(liste_centres[0])
         centre_min = liste_centres[0]
         
         for centre in (liste_centres):
-            dist = position.get_distance(centre)
+            dist = self.position.get_distance(centre)
             if dist < distmin :
                 distmin, centre_min = dist, centre
                 
@@ -64,11 +63,26 @@ class Personne(CercleDynamique):
 
     def estSortie(self):
         return self.espace.lieu_ferme.pointEstAExterieur(self.position)
-
+    
+    def carreProximite(self):
+        
+        gauche = self.position.x - Personne.RAYON_DE_PROXIMITE
+        droite = self.position.x + Personne.RAYON_DE_PROXIMITE
+        haut = self.position.y + Personne.RAYON_DE_PROXIMITE
+        bas = self.position.y - Personne.RAYON_DE_PROXIMITE
+        
+        return pymunk.BB(gauche,bas,droite,haut)
+        
+        
     def avoirNombreDePersonnesAProximite(self):
+        
+        personnes_proches = self.espace.bb_query(
+            self.carreProximite(),
+            pymunk.ShapeFilter(mask=RepresentationCategorie.PERSONNE.value))
+        
         nombre_de_personnes_a_proximite = 0
         
-        for agent in self.espace.ensemble_personnes:
+        for agent in personnes_proches:
             if (self.position.get_distance(agent.position)
                 < Personne.RAYON_DE_PROXIMITE):
                 nombre_de_personnes_a_proximite += 1
