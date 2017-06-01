@@ -12,7 +12,6 @@ afficheur = Afficheur()
 
 configuration = convertirJsonPython(
     '../FichiersConfiguration/MPSI2_obstacle_devant_porte.json')
-        
 recuperation = RecuperationDeDonnees(
     configuration,
     arreter_apres_temps=True,
