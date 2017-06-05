@@ -43,4 +43,10 @@ class KeyPairDict(collections.UserDict):
         elif self.transpose(key) in self.data:
             del self.data[self.transpose(key)]
         raise KeyError()
+        
+def fusioner_dictionnaires(dic1, dic2):
+    sortie = {}
+    sortie.update(dic1)
+    sortie.update(dic2)
+    return sortie
 

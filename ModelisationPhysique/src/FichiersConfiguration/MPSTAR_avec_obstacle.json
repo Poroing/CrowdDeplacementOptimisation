@@ -1,4 +1,6 @@
 {
+	"type": "salle_de_classe",
+	
 	"lieu_ferme":
 	{
 		"salle":
@@ -8,7 +10,7 @@
 			},
 		"porte": 
 		[
-			{"position" : 0.1, "largeur" : 75, "mur" : "bas"}
+			{"position" : 0.5, "largeur" : 350, "mur" : "haut"}
 			
 			]
 	},
