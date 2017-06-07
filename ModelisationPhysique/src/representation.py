@@ -1,9 +1,9 @@
 import pymunk
-from pymunk.vec2d import Vec2d
 from math import pi
 from functools import partial
 import operator
 import geometrie
+from pymunk.vec2d import Vec2d
 
 class Representation(pymunk.Shape):
     '''Doit être instancié avec 

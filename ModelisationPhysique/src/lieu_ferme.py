@@ -1,5 +1,3 @@
-from pymunk.vec2d import Vec2d
-import pymunk
 import geometrie
 
 class LieuFerme(geometrie.SimpleRectangle):

@@ -1,9 +1,14 @@
-from pymunk.vec2d import Vec2d
 import pymunk
 from representation import Rectangle
+from fonctions_annexes import convertirMetresPixels
 import math
 import functools
 import geometrie
+import collections
+import space_hash
+from pymunk import Vec2d
+import base
+import itertools
 
 
 class TestBase(object):
@@ -32,13 +37,255 @@ class TestBase(object):
 
         super().__init__(**kwargs)
 
-
     def update(self, position):
         self.position = position
 
     def fin_update(self):
         self.rappelle_update(self)
 
+class TestGradient(TestBase):
+    #Ce test n'utilise pas la position_voulue
+
+    treillis_interet = dict()
+
+    @property
+    def treilli_interet(self):
+        return TestGradient.treillis_interet[self.espace]
+
+    def avoirDirectionASuivre(self):
+        return TestGradient.treillis_interet[self.espace].avoirGradiantPosition(
+            self.position)
+
+    def update(self, position):
+        super().update(position)
+
+        direction = self.avoirDirectionASuivre()
+        
+        #Si la direction est nul la personne s'est retrouvé dans un obstacle
+        #On lui donne une direction arbitraire pour le sortire
+        if direction == Vec2d(0, 0):
+            direction = Vec2d(0, 1)
+
+        direction.length = 25
+
+        self.point_a_suivre = direction + self.position
+
+        self.fin_update()
+
+class TestParcoursLargeur(TestBase):
+    '''Keywords Arguments: precision, valeur_defaut, cls_tableau, rayon,
+            position, position_voulue, espace
+
+        Permet de faciliter l'utilisation d'un parcours en largeur sur des
+        QuadrillageEspace
+
+        toute sous classe doivent definire
+            `genererCaseAdjacentes`
+            `genererDebutsEtValeurs`
+            `assignerValeurCase`
+    '''
+
+    def __init__(self, **kwargs):
+        self.precision = kwargs['precision']
+        del kwargs['precision']
+
+        self.valeur_defaut = kwargs['valeur_defaut']
+        del kwargs['valeur_defaut']
+
+        self.cls_tableau = kwargs['cls_tableau']
+        del kwargs['cls_tableau']
+
+        super().__init__(**kwargs)
+
+    def initialiserTableau(self):
+        tableau = self.cls_tableau(
+            position=self.espace.lieu_ferme.position
+                - 2 * Vec2d(self.precision, self.precision),
+            hauteur=self.espace.lieu_ferme.hauteur + 4 * self.precision,
+            largeur=self.espace.lieu_ferme.largeur + 4 * self.precision,
+            precision=self.precision,
+            valeur_defaut=self.valeur_defaut)
+
+        debuts, debuts_valeur = base.unzip(self.genererDebutsEtValeurs(tableau))
+
+        base.parcoursEnLargeur(
+            debuts,
+            debuts_valeur,
+            self.genererCaseAdjacentesParcoursLargeur,
+            self.assignerValeurCase,
+            tableau)
+
+        return tableau
+
+    def caseEstAccessible(self, case_depart, case, tableau):
+        info_lancer_rayon = self.espace.avoirInfoSurLancerRayon(
+            tableau.avoirCentreCase(case_depart),
+            tableau.avoirCentreCase(case))
+
+        return info_lancer_rayon is None
+
+    def genererCaseAdjacentesParcoursLargeur(self, case, tableau):
+        '''Generes les cases adjacentes en prenant en comptes des obstacles'''
+        for case_adjacentes in self.genererCaseAdjacentes(case):
+            if self.caseEstAccessible(case, case_adjacentes, tableau):
+                yield case_adjacentes
+        
+    def genererCaseAdjacentes(self, case):
+        '''Generes les cases adjacentes sans prendre en comptes des obstacles'''
+        pass
+
+    def assignerValeurCase(self, case_voisine, case_courante, tableau):
+        pass
+
+    def genererDebutsEtValeurs(self, tableau):
+        pass
+
+class TestGradientObstacle(TestGradient):
+
+    DISTANCE_CHARACTERISITQUE = convertirMetresPixels(0.05)
+    DISTANCE_MAX_INFLUENCE = 3 * DISTANCE_CHARACTERISITQUE
+    
+    def transformetChampParRapportObstacle(self, tableau):
+        valeur_characteristique = min(tableau.genererValeurs())
+
+        for case in tableau.genererCases():
+            info_point = self.espace.avoirInfoPoint(
+                tableau.avoirCentreCase(case),
+                TestGradientObstacle.DISTANCE_MAX_INFLUENCE)
+            if info_point is None:
+                continue
+            valeur = valeur_characteristique * math.exp(-info_point.distance
+                / TestGradientObstacle.DISTANCE_CHARACTERISITQUE)
+
+            tableau[case] += valeur
+
+class TestGradientLargeur(TestGradient, TestParcoursLargeur):
+
+    PRECISION_CHAMP = convertirMetresPixels(0.1)
+    INACCESSIBLE_VALEUR = -5e2
+
+    def __init__(self, **kwargs):
+        kwargs['precision'] = TestGradientLargeur.PRECISION_CHAMP
+        kwargs['valeur_defaut'] = TestGradientLargeur.INACCESSIBLE_VALEUR
+        kwargs['cls_tableau'] = space_hash.InterpolationChampScalaire
+
+        super().__init__(**kwargs)
+
+        self.initialiserTreillisInteretSiNecessaire()
+
+    def genererDebutsEtValeurs(self, tableau):
+        return zip(
+            map(
+                tableau.avoirCasePlusProche,
+                self.espace.lieu_ferme.avoirCentrePortes()),
+            itertools.cycle([0]))
+
+    def genererCaseAdjacentes(self, case):
+        pass
+
+    def assignerValeurCase(self, case_voisine, case_courante, tableau):
+        tableau[case_voisine] = tableau[case_courante] - 1
+
+    def initialiserTreillisInteretSiNecessaire(self):
+        if self.espace not in TestGradientLargeur.treillis_interet:
+            self.initialiserTreillisInteret()
+
+    def initialiserTreillisInteret(self):
+        TestGradientLargeur.treillis_interet[self.espace] = self.initialiserTableau()
+
+
+class TestGradientLargeurObstacle(TestGradientLargeur, TestGradientObstacle):
+
+    def initialiserTreillisInteret(self):
+        super().initialiserTreillisInteret()
+        self.transformetChampParRapportObstacle(self.treilli_interet)
+    
+class TestChampVecteur(TestParcoursLargeur):
+    '''Choisit le mouvement des agents après avoir créer un champ
+        de vecteur vers la position voulue
+
+        Toute sous classe doivent redéfinir la fonction `avoirCaseAdjacentes`
+    '''
+
+    champs = dict()
+    PRECISION_CHAMP = convertirMetresPixels(0.05)
+
+    def __init__(self, **kwargs):
+        kwargs['precision'] = TestChampVecteur.PRECISION_CHAMP
+        kwargs['valeur_defaut'] = Vec2d(1, 0)
+        kwargs['cls_tableau'] = Champ
+
+        super().__init__(**kwargs)
+
+        self.initialiserChampsSiNecessaire()
+
+    def update(self, position):
+        super().update(position)
+
+        direction = self.champ.avoirValeurPlusProche(self.position)
+        self.point_a_suivre = direction + self.position
+
+        self.fin_update()
+
+    @property
+    def champ(self):
+        return TestChampVecteur.champs[self.espace]
+
+    def initialiserChampsSiNecessaire(self):
+        if self.espace not in TestChampVecteur.champs:
+            TestChampVecteur.champs[self.espace] = self.initialiserTableau()
+
+    def genererCaseAdjacentes(self, case):
+        pass
+
+    def assignerValeurCase(self, case_voisine, case_courante, tableau):
+        return tableau.dirigerVecteurVers(
+            case_voisine,
+            tableau.avoirCentreCase(case_courante))
+
+    def genererDebutsEtValeurs(self, tableau):
+        for centre_sortie in self.espace.lieu_ferme.avoirCentrePortes():
+            case_sortie = tableau.avoirCaseAvecCentrePlusProche(centre_sortie)
+            vecteur = centre_sortie - tableau.avoirCentreCase(case_sortie)
+            yield case_sortie, vecteur
+
+
+class TestLargeurQuatreDirections(TestParcoursLargeur):
+
+    def genererCaseAdjacentes(self, case):
+        return case.genererCaseAdjacentes(base.Case.genererQuatreDirections())
+
+
+class TestLargeurHuitDirections(TestParcoursLargeur):
+
+    def genererCaseAdjacentes(self, case):
+        return case.genererCaseAdjacentes(base.Case.genererHuitDirections())
+
+class TestChampVecteurQuatreDirections(
+        TestChampVecteur,
+        TestLargeurQuatreDirections):
+    pass
+
+class TestChampVecteurHuitDirections(
+        TestChampVecteur,
+        TestLargeurHuitDirections):
+    pass
+
+class TestGradientLargeurQuatreDirections(
+        TestLargeurQuatreDirections,
+        TestGradientLargeur):
+    pass
+
+class TestGradientLargeurHuitDirections(
+        TestLargeurHuitDirections,
+        TestGradientLargeur):
+    pass
+
+class TestGradientLargeurObstacleQuatreDirections(
+        TestLargeurQuatreDirections,
+        TestGradientLargeurObstacle):
+    pass
+        
 class TestLanceRayon(TestBase):
     '''Keywords Arguments: position, rayon, position_voulue, obstacle
 
@@ -52,11 +299,9 @@ class TestLanceRayon(TestBase):
         ses besoins.
     '''
 
-    COEFFICIENT_LONGUEUR_INITIAL = 4
-
     def update(self, position):
         super().update(position)
-        self.longueur_rayon = self.rayon * TestLanceRayon.COEFFICIENT_LONGUEUR_INITIAL
+        self.longueur_rayon = self.espace.lieu_ferme.avoirLongueurDiagonale() / 2
         self.ininitialiserObstacleBloquant()
 
     def avoirPositionVersAngle(self, angle):
@@ -76,15 +321,19 @@ class TestLanceRayon(TestBase):
             return None
         return info_lancer_rayon.shape
 
+    def avoirPointImpactRayon(self, info_lancer_rayon):
+        if info_lancer_rayon is None:
+            return None
+        return info_lancer_rayon.point
+
+    def avoirPointImpactVersAngle(self, angle):
+        return self.avoirPointImpactRayon(self.avoirLancerAvecAngle(0))
+
     def avoirObjetVersAngle(self, angle):
         return self.avoirObjetToucheParRayon(self.avoirLancerAvecAngle(angle))
 
     def ininitialiserObstacleBloquant(self):
-        info_lancer_rayon = self.avoirLancerAvecAngle(0)
-        if info_lancer_rayon is None:
-            self.obstacle_bloquant = None
-        else:
-            self.obstacle_bloquant = info_lancer_rayon.shape
+        self.obstacle_bloquant = self.avoirObjetVersAngle(0)
 
     def estAngleAcceptable(self, angle):
         objet_vers_angle = self.avoirObjetVersAngle(angle)
@@ -106,6 +355,19 @@ class TestLanceRayon(TestBase):
             return angle1
         return angle2
 
+
+class Champ(space_hash.SpaceHash):
+    '''Keywords argument: precision, position, hauteur, largeur'''
+
+    def __init__(self, **kwargs):
+        kwargs['valeur_defaut'] = Vec2d(1, 0)
+        super().__init__(**kwargs)
+
+    def dirigerVecteurVers(self, case, point):
+        centre = self.avoirCentreCase(case)
+        longueur_actuelle = self[case].length
+        self[case] = point - centre
+        self[case].length = longueur_actuelle
 
 class TestLineaire(TestLanceRayon):
     '''Keyword Arguments: position, rayon, position_voulue, espace
@@ -147,8 +409,8 @@ class TestRetiensObjet(TestLanceRayon):
     '''
 
     def update(self, position):
-        super().update(position)
         self.ininitialiserObjetVersAngle()
+        super().update(position)
 
     def ininitialiserObjetVersAngle(self):
         self.objet_vers_angle = dict()
@@ -263,7 +525,7 @@ class TestDichotomieCompactageObstacle(TestLanceCompactageObstacle, TestDichotom
     pass
 
 
-class TestBordsObstacle(TestBase):
+class TestBordsObstacle(TestLanceRayon):
 
     def sommetEstAccessible(self, sommet):
         return not self.espace.cercleEstEnDehorsDeLieuFerme(sommet, self.rayon * 2)
@@ -271,22 +533,17 @@ class TestBordsObstacle(TestBase):
     def update(self, position):
         super().update(position)
 
-        info_lancer_rayon = self.espace.avoirInfoSurLancerRayon(position,
-            self.position_voulue)
-
-        if info_lancer_rayon is None:
+        if self.obstacle_bloquant is None:
             self.point_a_suivre = self.position_voulue
         else:
-            avoirDistanceAPointRayon = lambda sommet: sommet.get_distance(info_lancer_rayon.point)
-            transformerEnCoordoneeGlobal = lambda sommet: info_lancer_rayon.shape.body.local_to_world(sommet)
+            point_impact = self.avoirPointImpactVersAngle(0)
+            avoirDistanceAPointImpact = lambda sommet: sommet.get_distance(point_impact)
 
-            #Les segments n'on pas de sommets dont il faut faire une disjonction de cas 
-            if isinstance(info_lancer_rayon.shape, pymunk.Segment):
-                self.point_a_suivre = self.position_voulue
-            elif isinstance(info_lancer_rayon.shape, Rectangle):
-                sommets = list(map(transformerEnCoordoneeGlobal, info_lancer_rayon.shape.get_vertices()))
-                sommets_accessible = filter(self.sommetEstAccessible, sommets)
-                self.point_a_suivre = min(sommets_accessible, key=avoirDistanceAPointRayon, default=sommets[0])
+            sommets_accessible = filter(self.sommetEstAccessible, self.obstacle_bloquant.sommets)
+            self.point_a_suivre = min(
+                sommets_accessible,
+                key=avoirDistanceAPointImpact,
+                default=self.obstacle_bloquant.sommets[0])
 
         self.fin_update()
 

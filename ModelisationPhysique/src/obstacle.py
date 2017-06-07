@@ -1,9 +1,6 @@
-from pymunk.vec2d import Vec2d
 from representation_categories import RepresentationCategorie
 from representation import Representation, Rectangle, Cercle, Polygon, Segment
 import pymunk
-import geometrie
-import collections
 
 class Obstacle(Representation):
     '''Keyword Arguments: position'''

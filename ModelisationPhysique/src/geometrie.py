@@ -34,6 +34,19 @@ class SimpleRectangle(object):
         self.hauteur = hauteur
         self.position = Vec2d(position)
 
+    def avoirLongueurDiagonale(self):
+        return math.sqrt(self.largeur**2 + self.hauteur**2)
+
+    def avoirPositionScalaire(identifiant_cote):
+        if identifiant_cote == 'bas':
+            return self.position.y
+        if identifiant_cote == 'gauche':
+            return self.position.x
+        if identifiant_cote == 'droite':
+            return self.position.x + self.largeur
+        if identifiant_cote == 'haut':
+            return self.position.y + self.hauteur
+
     @property
     def sommets(self):
         ajouterPosition = lambda sommet: sommet + self.position

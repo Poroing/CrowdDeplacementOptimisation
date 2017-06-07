@@ -2,9 +2,9 @@ import pymunk
 from obstacle import ObstacleRectangulaire, OsbtacleSegment
 from representation_categories import RepresentationCategorie, avoirMasqueSansValeur
 from personne import Personne
-from pymunk.vec2d import Vec2d
 import time
 import geometrie
+from pymunk import Vec2d
 
 
 class Espace(pymunk.Space):
@@ -46,16 +46,24 @@ class Espace(pymunk.Space):
         return any(map(self.lieu_ferme.pointEstAExterieur,
             map(lambda direction: position + rayon * direction, Espace.DIRECTIONS)))
 
-    def avoirInfoSurLancerRayon(self, debut, fin, ignorer_personne=True):
+    def avoirFiltre(self, ignorer_personne):
         if ignorer_personne:
             filtre = pymunk.ShapeFilter(mask=avoirMasqueSansValeur(
                 pymunk.ShapeFilter.ALL_MASKS,
                 RepresentationCategorie.PERSONNE.value))
         else:
             filtre = pymunk.ShapeFilter()
+        return filtre
+
+    def avoirInfoSurLancerRayon(self, debut, fin, ignorer_personne=True):
+        filtre = self.avoirFiltre(ignorer_personne)
         epaisseur_rayon = 1
 
         return self.segment_query_first(debut, fin, epaisseur_rayon, filtre)
+
+    def avoirInfoPoint(self, point, max_distance, ignorer_personne=True):
+        filtre = self.avoirFiltre(ignorer_personne)
+        return self.point_query_nearest(point, max_distance, filtre)
 
     def pointEstDansObstacle(self, point):
         return (self.lieu_ferme.pointEstAExterieur(point)

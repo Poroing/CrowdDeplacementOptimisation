@@ -1,4 +1,5 @@
 import collections
+import numpy as np
 
 class EnsembleRappelle():
 
@@ -13,34 +14,174 @@ class EnsembleRappelle():
             rappele(*args, **kwargs)
 
 class KeyPairDict(collections.UserDict):
+    '''Une table de hachage avec des pair pour clefs
 
-    #On évite de prendre trop de place en ne gardant que une pair
-    #et non une pair et sa transposée car les dictionnaires peuvent
-    #rapidement prendre de la place
+        A utiliser surtout dans le cas d'un petit nombre
+        d'insertions et d'un grand nombre de recuperation
+        de valeurs
+    '''
+
+    #Lorsque peut d'insertions sont faites on peut s'autoriser
+    #de stocker toutes les permutations des clefs avec la valeur
+    #associée pour ainsi éviter de devoir faire deux recherche
+    #à chaque recherche d'une clefs dans la table
 
     def transpose(self, pair):
         element1, element2 = pair
         return element2, element1
 
-    def __contains__(self, key):
-        return key in self.data or self.transpose(key) in self.data
-
     def __setitem__(self, key, value):
-        if self.transpose(key) in self.data:
-            return self.__setitem__(self.transpose(key), value)
         self.data[key] = value
-
-    def __getitem__(self, key):
-        if key in self.data:
-            return self.data[key]
-        elif self.transpose(key) in self.data:
-            return self.data[self.transpose(key)]
-        raise KeyError()
+        self.data[self.transpose(key)] = value
 
     def __delitem__(self, key):
-        if key in self.data:
-            del self.data[key]
-        elif self.transpose(key) in self.data:
-            del self.data[self.transpose(key)]
-        raise KeyError()
+        del self.data[key]
+        del self.data[self.transpose(key)]
 
+class KeyIterableDict(collections.UserDict):
+    '''Dictionaire pouvant avoir n'importe quelle iterable comme clefs
+
+        deux iterable a, b sont considérées comme égaux lorsque
+        all(v == w for v, w in zip(a, b))
+
+    '''
+
+    #tuple est le seul type iterable qui est hachable est vérifie
+    #all(v == w for v, w in zip(a, b)) => hash(a) == hash(b)
+    #pour avoir la propriété recherché on convertie toutes les clefs
+    #en tuple
+
+    def avoirTuple(self, iterable):
+        if isinstance(iterable, collections.Iterable):
+            return tuple(map(self.avoirTuple, iterable))
+        return iterable
+
+    def __contains__(self, key):
+        return self.avoirTuple(key) in self.data
+
+    def __setitem__(self, key, value):
+        self.data[self.avoirTuple(key)] = value
+
+    def __getitem__(self, key):
+        return self.data[self.avoirTuple(key)]
+
+    def __delitem__(self, key):
+        del self.data[self.avoirTuple(key)]
+
+def creerListeDoubleDimension(hauteur, largeur, valeur_defaut=None):
+    return [ [ valeur_defaut for _ in range(largeur) ] for _ in range(hauteur) ]
+
+class Case(object):
+
+    @staticmethod
+    def genererQuatreDirections():
+        yield Case(1, 0)
+        yield Case(-1, 0)
+        yield Case(0, 1)
+        yield Case(0, -1)
+
+    def genererHuitDirections():
+        yield Case(1, 0)
+        yield Case(-1, 0)
+        yield Case(0, 1)
+        yield Case(0, -1)
+        yield Case(1, 1)
+        yield Case(-1, -1)
+        yield Case(-1, 1)
+        yield Case(1, -1)
+
+    def __init__(self, ligne, colonne):
+        self.ligne = ligne
+        self.colonne = colonne
+
+    def __add__(self, other):
+        return Case(self.ligne + other.ligne, self.colonne + other.colonne)
+
+    def genererCaseAdjacentes(self, directions):
+        for direction in directions:
+            yield direction + self
+
+    def __repr__(self):
+        return 'Case({}, {})'.format(self.ligne, self.colonne)
+
+class TableauDeuxDimension(object):
+
+    def __init__(self, **kwargs):
+        self.nombre_lignes = kwargs['nombre_lignes']
+        del kwargs['nombre_lignes']
+
+        self.nombre_colonnes = kwargs['nombre_colonnes']
+        del kwargs['nombre_colonnes']
+
+        if 'valeur_defaut' not in kwargs:
+            kwargs['valeur_defaut'] = None
+
+        self.donnee = creerListeDoubleDimension(
+            self.nombre_lignes,
+            self.nombre_colonnes,
+            valeur_defaut=kwargs['valeur_defaut'])
+        del kwargs['valeur_defaut']
+            
+        super().__init__(**kwargs)
+
+    def __getitem__(self, case):
+        return self.donnee[case.ligne][case.colonne]
+
+    def __setitem__(self, case, valeur):
+        self.donnee[case.ligne][case.colonne] = valeur
+
+    def __contains__(self, case):
+        return (case.ligne >= 0
+            and case.colonne >= 0
+            and case.ligne < self.nombre_lignes
+            and case.colonne < self.nombre_colonnes)
+
+    def __repr__(self):
+        return 'TableauDeuxDimension({}, {})'.format(
+            self.nombre_lignes, self.nombre_colonnes)
+
+    def genererValeurs(self):
+        return map(self.__getitem__, self.genererCases())
+
+    def genererCases(self):
+        for ligne in range(self.nombre_lignes):
+            for colonne in range(self.nombre_colonnes):
+                yield Case(ligne, colonne)
+
+def parcoursEnLargeur(debuts, debuts_valeur, voisins, assigner_valeur, tableau_finale):
+    '''Functions Arguments:
+            voisins(case_courante, tableau_finale),
+            valeur_case(case_voisise, case_courante, tableu_finale)
+    '''
+
+    deja_vue = TableauDeuxDimension(
+        nombre_lignes=tableau_finale.nombre_lignes,
+        nombre_colonnes=tableau_finale.nombre_colonnes,
+        valeur_defaut=False)
+
+    queue = collections.deque()
+
+    for debut, valeur in zip(debuts, debuts_valeur):
+        queue.append(debut)
+        deja_vue[debut] = True
+        tableau_finale[debut] = valeur
+
+    while len(queue) > 0:
+        case_courante = queue.popleft()
+        for case_voisine in voisins(case_courante, tableau_finale):
+            if case_voisine not in tableau_finale or deja_vue[case_voisine]:
+                continue
+            deja_vue[case_voisine] = True
+            queue.append(case_voisine)
+            assigner_valeur(case_voisine, case_courante, tableau_finale)
+    
+def unzip(iterable):
+    lefts = []
+    rights = []
+    for left, right in iterable:
+        lefts.append(left)
+        rights.append(right)
+    return lefts, rights
+
+def mapMatrix(function, matrix):
+    return np.matrix(list(map(function, matrix.flat))).reshape(matrix.shape)

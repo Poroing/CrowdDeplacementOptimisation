@@ -3,12 +3,16 @@ import pymunk
 import pygame.locals
 import pygame
 import pygame.font
+import copy
+import math
+import base
 
 class DebugDrawOptions(pymunk.pygame_util.DrawOptions):
     
     def __init__(self, ecran, police='monospace', taille_police=15):
         super().__init__(ecran)
         self.couleur_texte = pygame.color.THECOLORS['white']
+        self.couleur_champ = pygame.color.THECOLORS['green']
         self.police = pygame.font.SysFont(police, taille_police)
         self.antialias = False
 
@@ -20,6 +24,31 @@ class DebugDrawOptions(pymunk.pygame_util.DrawOptions):
         label = self.police.render(texte, self.antialias, self.couleur_texte)
         self.ecran.blit(label, pymunk.pygame_util.to_pygame(position, self.ecran))
 
+    def drawChamp(self, longueur_vecteur, champ, profondeur=None):
+        if profondeur is None:
+            profondeur = base.TableauDeuxDimension(
+                nombre_lignes=champ.nombre_lignes,
+                nombre_colonnes=champ.nombre_colonnes,
+                valeur_defaut=0)
+
+        for case in champ.genererCases():
+            debut = champ.avoirCentreCase(case)
+            direction = copy.copy(champ[case])
+            direction.length = longueur_vecteur
+            fin = debut + direction
+
+            debut = pymunk.pygame_util.to_pygame(debut, self.ecran)
+            fin = pymunk.pygame_util.to_pygame(fin, self.ecran)
+
+            self.drawText(str(profondeur[case]), debut)
+
+            pygame.draw.line(self.ecran, self.couleur_texte, debut, fin)
+            pygame.draw.circle(
+                self.ecran,
+                self.couleur_champ,
+                list(map(math.floor, fin)),
+                longueur_vecteur // 2)
+
 class Afficheur(object):
 
     def __init__(self):
@@ -29,6 +58,14 @@ class Afficheur(object):
 
         self.ecran = pygame.display.set_mode((1000, 900))
         self.option_dessin = DebugDrawOptions(self.ecran)
+
+    def dessinerPremierChamp(self, simulation):
+        #TODO: rendre cela moin dégueulasse
+        from test_point_suivre import TestChampVecteur
+        longueur_vecteur = 5
+        self.option_dessin.drawChamp(
+            longueur_vecteur,
+            next(iter(TestChampVecteur.champs.values())))
 
     def dessinerAdresseObstacles(self, simulation):
         for obstacle in simulation.espace.ensemble_obstacle:
@@ -69,6 +106,7 @@ class Afficheur(object):
         self.dessinerIdentifiantsEcouteurs(simulation)
         self.dessinerPointSuiviePersonne(simulation)
         self.dessinerAdresseObstacles(simulation)
+        #self.dessinerPremierChamp(simulation)
         
         pygame.display.flip()   
         self.horloge.tick(simulation.mise_a_jour_par_seconde)

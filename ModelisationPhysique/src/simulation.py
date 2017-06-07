@@ -10,11 +10,11 @@ import base
 from ecouteur import EcouteurPersonne
 
 from espace import Espace
-from pymunk.vec2d import Vec2d
 from random import randint
 import pygame
 import pymunk.pygame_util
 from source_personne import Source
+from pymunk.vec2d import Vec2d
 
 #TODO: éviter les constante tout à fait arbitraire
 

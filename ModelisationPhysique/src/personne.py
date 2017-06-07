@@ -1,14 +1,11 @@
-from pymunk.vec2d import Vec2d
 from representation_categories import RepresentationCategorie
 from representation import CercleDynamique
 import test_point_suivre
-from fonctions_annexes import convertirMetresPixels
+from fonctions_annexes import convertirMetresPixels, convertirSurfacePixelsSurfaceMetres
 import math
 import pymunk
-import operator
-import itertools
-from random import randint
 import math
+from pymunk.vec2d import Vec2d
 
 class Personne(CercleDynamique):
 
@@ -21,10 +18,9 @@ class Personne(CercleDynamique):
             rayon,
             position,
             espace,
-            test_direction_cls=test_point_suivre.TestDichotomieCompactageObstacle):
+            test_direction_cls=test_point_suivre.TestGradientLargeurObstacleQuatreDirections):
 
         super().__init__(masse_surfacique = masse_surfacique, rayon=rayon, position=position)
-        
         
         self.force_deplacement = self.rayon * 10**4
         self.filter = pymunk.ShapeFilter(categories=RepresentationCategorie.PERSONNE.value)
@@ -34,9 +30,7 @@ class Personne(CercleDynamique):
             espace=espace,
             rayon=self.rayon,
             position_voulue=self.sortieLaPlusProche())
-        self.densite = self.avoirNouvelleDensite()
         self.vitesse_maximale_propre = Personne.VITESSE_MAXIMALE
-        
     
     def sortieLaPlusProche(self):
         liste_centres = self.espace.lieu_ferme.avoirCentrePortes()
@@ -64,7 +58,7 @@ class Personne(CercleDynamique):
     def estSortie(self):
         return self.espace.lieu_ferme.pointEstAExterieur(self.position)
     
-    def carreProximite(self):
+    def avoirCarreProximite(self):
         
         gauche = self.position.x - Personne.RAYON_DE_PROXIMITE
         droite = self.position.x + Personne.RAYON_DE_PROXIMITE
@@ -75,33 +69,28 @@ class Personne(CercleDynamique):
         
         
     def avoirNombreDePersonnesAProximite(self):
-        
         personnes_proches = self.espace.bb_query(
-            self.carreProximite(),
+            self.avoirCarreProximite(),
             pymunk.ShapeFilter(mask=RepresentationCategorie.PERSONNE.value))
         
-        nombre_de_personnes_a_proximite = 0
-        
-        for agent in personnes_proches:
-            if (self.position.get_distance(agent.position)
-                < Personne.RAYON_DE_PROXIMITE):
-                nombre_de_personnes_a_proximite += 1
-        
-        return nombre_de_personnes_a_proximite
+        return len(personnes_proches)
 
     def avoirSurfaceZoneDeProximite(self):
-        return math.pi * Personne.RAYON_DE_PROXIMITE**2
+        return self.avoirCarreProximite().area()
 
-    def avoirNouvelleDensite(self):
-        return (self.avoirNombreDePersonnesAProximite()
-            / self.avoirSurfaceZoneDeProximite())
+    def mettreAJourDensite(self):
+        #Densite en personne par metres carrés
+        surface_proximite = convertirSurfacePixelsSurfaceMetres(
+            self.avoirSurfaceZoneDeProximite())
+        self.densite = (self.avoirNombreDePersonnesAProximite()
+            / surface_proximite)
             
     def miseAJourVitesseMax(self):
         if self.densite == 0 :
             self.vitesse_maximale_propre =  Personne.VITESSE_MAXIMALE
         else :
             self.vitesse_maximale_propre = (
-                convertirMetresPixels( 2 - min(1, self.densite**(-0.8))))
+                Personne.VITESSE_MAXIMALE * min(1, self.densite**(-0.8)))
         
     def traiterVitesse(self):
         if self.corps.velocity.length > self.vitesse_maximale_propre :
@@ -109,11 +98,11 @@ class Personne(CercleDynamique):
             self.corps.velocity *= self.vitesse_maximale_propre / self.body.velocity.length 
 
     def update(self):
-        self.avoirNouvelleDensite()
+        self.mettreAJourDensite()
         self.miseAJourVitesseMax()
         self.traiterVitesse()
         if not self.estSortie():
-            self.test_direction.update(self.body.position)
+            self.test_direction.update(self.position)
             force = (self.test_direction.point_a_suivre - self.body.position).normalized()
             force.length = self.force_deplacement
             self.body.apply_force_at_local_point(force, Vec2d(0, 0))
