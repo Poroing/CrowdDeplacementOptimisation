@@ -1,0 +1,61 @@
+{
+	"type": "salle_en_T",
+	
+	"lieu_ferme":
+	{
+		"salle":
+		{
+			"salle_hauteur" : 850,
+			"salle_largeur" : 900
+			},
+		"porte": 
+		[
+			{"position" : 0.2, "largeur" : 75, "mur" : "haut"},
+			{"position" : 0.8, "largeur" : 75, "mur" : "haut"}
+			
+			],
+		"salle_couloir":
+		{
+			"largeur_horizontale" : 0.3,
+			"largeur_verticale" : 0.25
+			}
+	},
+	"obstacles":
+	{
+        "rangs" : {
+        },
+
+        "particulier" : {
+		
+            "rectangles": [
+            ],
+            "cercles" : [
+            ],
+			"polygones": [
+			]
+        }
+	},
+	"personnes":
+		{
+		"zone_apparition" : {
+			"x_min" : 0,
+			"x_max" : 0,
+			"y_min" : 0,
+			"y_max" : 0
+			},
+		
+		"sources": [
+		
+		],
+	    
+		"caracteristiques": {
+			"rayon_min" : 18,
+			"rayon_max" : 21,
+			"masse_surfacique" : 1.8
+		},
+		
+		"nombre" : 50
+	},
+    "mise_a_jour_par_seconde": 60
+}
+   

@@ -1,4 +1,6 @@
 {
+	"type": "salle_de_classe",
+	
 	"lieu_ferme":
 	{
 		"salle":
@@ -8,9 +10,6 @@
 			},
 		"porte": 
 		[
-			{"position" : 0.1, "largeur" : 75, "mur" : "droite"},
-			{"position" : 0.9, "largeur" : 75, "mur" : "gauche"},
-			{"position" : 0.5, "largeur" : 75, "mur" : "gauche"},
 			{"position" : 0.5, "largeur" : 350, "mur" : "haut"}
 			
 			]
@@ -29,16 +28,26 @@
         },
 
         "particulier" : {
+		
             "rectangles": [
             ],
             "cercles" : [
-            ]
+            ],
+			"polygones" : [
+			]
         }
 	},
 	"personnes":
-	{
+		{
+		"zone_apparition" : {
+			"x_min" : 0,
+			"x_max" : 0,
+			"y_min" : 0,
+			"y_max" : 0
+			},
 		
 		"sources": [
+		
 		],
 	    
 		"caracteristiques": {
@@ -50,4 +59,4 @@
 		"nombre" : 50
 	},
     "mise_a_jour_par_seconde": 60
- }
+}

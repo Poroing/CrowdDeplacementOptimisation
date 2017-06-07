@@ -7,12 +7,11 @@ from affichage import Afficheur
 afficheur = Afficheur()
 
 configuration = convertirJsonPython(
-    '../FichiersConfiguration/MPSTAR.json')
-        
+    '../FichiersConfiguration/salle_en_Y.json')
 recuperation = RecuperationDeDonnees(
     configuration,
     arreter_apres_temps=True,
-    temps_maximal=20,
+    temps_maximal=15,
     action_mise_a_jour_secondaire=afficheur.dessinerEspaceEtAttendre)
 
 recuperation.lancer()

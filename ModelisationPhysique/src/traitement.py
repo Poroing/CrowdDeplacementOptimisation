@@ -75,7 +75,7 @@ class TraitementDeDonnees(object):
     def debit_ordre_quatre(self):
         derivee = [0]
         derivee.append((1/self.ensemble_temps_sortie[1]-self.ensemble_temps_sortie[0]))
-        for x in range (2, self.nombre - 2):
+        for x in range  (2, self.nombre - 2):
             
             derivee.append(- 12/( -self.ensemble_temps_sortie[x-2] + 8 * self.ensemble_temps_sortie[x-1]
                 - 8 * self.ensemble_temps_sortie[x+1] + self.ensemble_temps_sortie[x+2]))

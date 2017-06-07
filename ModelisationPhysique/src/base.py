@@ -66,6 +66,7 @@ class KeyIterableDict(collections.UserDict):
         return self.data[self.avoirTuple(key)]
 
     def __delitem__(self, key):
+<<<<<<< HEAD
         del self.data[self.avoirTuple(key)]
 
 def creerListeDoubleDimension(hauteur, largeur, valeur_defaut=None):
@@ -182,6 +183,19 @@ def unzip(iterable):
         lefts.append(left)
         rights.append(right)
     return lefts, rights
+=======
+        if key in self.data:
+            del self.data[key]
+        elif self.transpose(key) in self.data:
+            del self.data[self.transpose(key)]
+        raise KeyError()
+        
+def fusioner_dictionnaires(dic1, dic2):
+    sortie = {}
+    sortie.update(dic1)
+    sortie.update(dic2)
+    return sortie
+>>>>>>> 8df7e9185fec515ea87c0b549859e755d37fbfba
 
 def mapMatrix(function, matrix):
     return np.matrix(list(map(function, matrix.flat))).reshape(matrix.shape)

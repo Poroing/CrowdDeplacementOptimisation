@@ -5,7 +5,7 @@ from convertir_json_python import convertirJsonPython
 
 if __name__ == '__main__':
     configuration = convertirJsonPython(
-        '../FichiersConfiguration/MPSI2_obstacle_devant_porte.json')
+        '../FichiersConfiguration/MPSTAR.json')
 
     for debit in threaded_simulations.avoirDebitsMoyenSimulation(
             1000,
