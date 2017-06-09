@@ -1,4 +1,4 @@
-Identifiant ????, taille(longxlarg), type de salle, nombre personnes de départ, (sorties,taille des sorties) , (générateurs de personnes, debit de personnes)
+Identifiant ????, taille(longxlarg), type de salle, nombre personnes de départ , (sorties,taille des sorties) , (générateurs de personnes, debit de personnes)
 --> identifiant -> % -> debit
 
 
@@ -59,7 +59,7 @@ def recupererMoyenne(configuration) :
     traitement = TraitementDeDonnees(recuperation.temps_de_sortie)
     return traitement.avoirDebitMoyen()
     
-def fonction_de_transfert(infos,nb_simul):
+def pregeneration_debit(infos,nb_simul):
     sortie = [[] for _ in range (len(infos))]
     for salle in info :
         

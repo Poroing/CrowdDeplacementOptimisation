@@ -4,9 +4,10 @@ from convertir_json_python import convertirJsonPython
 from traitement import RecuperationDeDonnees, TraitementDeDonnees
 from affichage import Afficheur
 
+afficheur = Afficheur()
 
 configuration = convertirJsonPython(
-    '../FichiersConfiguration/salle_en_Y.json')
+    '../FichiersConfiguration/MPSTAR.json')
 recuperation = RecuperationDeDonnees(
     configuration,
     arreter_apres_temps=True,
