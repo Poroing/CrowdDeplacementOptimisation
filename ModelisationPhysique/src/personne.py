@@ -18,7 +18,7 @@ class Personne(CercleDynamique):
             rayon,
             position,
             espace,
-            test_direction_cls=test_point_suivre.TestGradientLargeurObstacleQuatreDirections):
+            test_direction_cls=test_point_suivre.TestChampVecteurQuatreDirections):
 
         super().__init__(masse_surfacique = masse_surfacique, rayon=rayon, position=position)
         
