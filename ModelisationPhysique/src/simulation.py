@@ -192,7 +192,7 @@ class ConstructeurSalle(object):
 
             position_droit_y += distance_intermediaire + hauteur
             
-        zone_apparition.update({y_max :  50 + min(position_droit_y, position_gauche_y) - distance_intermediaire - hauteur})
+        zone_apparition.update({'y_max' :  50 + min(position_droit_y, position_gauche_y) - distance_intermediaire - hauteur})
 
 
 class ConstructeurSimulation(object):
