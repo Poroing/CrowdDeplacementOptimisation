@@ -4,7 +4,6 @@ from convertir_json_python import convertirJsonPython
 from traitement import RecuperationDeDonnees, TraitementDeDonnees
 from affichage import Afficheur
 
-afficheur = Afficheur()
 
 configuration = convertirJsonPython(
     '../FichiersConfiguration/salle_en_Y.json')

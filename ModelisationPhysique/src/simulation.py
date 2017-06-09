@@ -64,10 +64,10 @@ class ConstructeurSalle(object):
             porte_largeur=None,
             porte_position=None):
 
-        zone_apparition['x_min'] = 50
-        zone_apparition['x_max'] = 50 + salle_largeur
-        zone_apparition['y_min'] = 50
-        zone_apparition['y_max'] = 50 + salle_hauteur
+        zone_apparition.update({'x_min' :  50})
+        zone_apparition.update({'x_max' : 50 + salle_largeur })
+        zone_apparition.update({'y_min' :  50 })
+        zone_apparition.update({'y_max' :  50 + salle_hauteur })
         
         
         espace.ajouterLieuFerme(LieuFerme(
@@ -90,10 +90,10 @@ class ConstructeurSalle(object):
         rectangles.append({"largeur" : largeur, "hauteur" : hauteur,"position" : coin_inferieur1})
         rectangles.append({"largeur" : largeur, "hauteur" : hauteur,"position" : coin_inferieur2 })
         
-        zone_apparition['x_min'] = 50 + largeur
-        zone_apparition['x_max'] = coin_inferieur2[0]
-        zone_apparition['y_min'] = 50
-        zone_apparition['y_max'] = (50 + hauteur)*(2/3)
+        zone_apparition.update({'x_min' :  50 + largeur})
+        zone_apparition.update({'x_max' :  coin_inferieur2[0]})
+        zone_apparition.update({'y_min' :  50})
+        zone_apparition.update({'y_max' :  (50 + hauteur)*(2/3)})
         
         
         
@@ -123,14 +123,14 @@ class ConstructeurSalle(object):
         
         polygones.append({'position' : origine, 'sommets' : bordDroit})
        
-        triangle = [[x,l],[d-x,l],[d/2,k]]
+        triangle = [[x,l],[d-x,l],[d/2,l-k]]
         
         polygones.append({'position' : origine, 'sommets' : triangle})
         
-        zone_apparition['x_min'] = 50 + c
-        zone_apparition['x_max'] = 50 + c+a
-        zone_apparition['y_min'] = 50
-        zone_apparition['y_max'] = (50 + b)*(2/3)
+        zone_apparition.update({'x_min' : 50 + c} )
+        zone_apparition.update({'x_max' : 50 + c+a} )
+        zone_apparition.update({'y_min' : 50} )
+        zone_apparition.update({'y_max' : (50 + b)*(2/3)})
         
     
     def ajouterObstacles(self, espace, particulier):
@@ -160,10 +160,10 @@ class ConstructeurSalle(object):
         position_droit_y = position_debut_droit
         
         #on définit la zone d'apparition des personnes
-        zone_apparition['x_min'] = 50 
-        zone_apparition['x_max'] = 50 + self.espace.lieu_ferme.largeur
-        zone_apparition['y_min'] = 50 + min(position_debut_gauche + hauteur, position_debut_droit + hauteur) 
-        zone_apparition['y_max'] = 50 + self.espace.lieu_ferme.hauteur
+        zone_apparition.update({'x_min' :  50})
+        zone_apparition.update({'x_max' :  50 + self.espace.lieu_ferme.largeur})
+        zone_apparition.update({'y_min' :  50 + min(position_debut_gauche + hauteur, position_debut_droit + hauteur)}) 
+        zone_apparition.update({'y_max' :  50 + self.espace.lieu_ferme.hauteur})
 
         #on ajoute les ranges de gauche
         while position_gauche_y + 50 <= self.espace.lieu_ferme.hauteur :
@@ -192,7 +192,7 @@ class ConstructeurSalle(object):
 
             position_droit_y += distance_intermediaire + hauteur
             
-        zone_apparition['y_max'] = 50 + min(position_droit_y, position_gauche_y) - distance_intermediaire - hauteur
+        zone_apparition.update({y_max :  50 + min(position_droit_y, position_gauche_y) - distance_intermediaire - hauteur})
 
 
 class ConstructeurSimulation(object):
