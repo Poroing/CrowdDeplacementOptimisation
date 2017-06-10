@@ -7,7 +7,7 @@ from affichage import Afficheur
 afficheur = Afficheur()
 
 configuration = convertirJsonPython(
-    '../FichiersConfiguration/salle_en_T.json')
+    '../FichiersConfiguration/MPSTAR.json')
 recuperation = RecuperationDeDonnees(
     configuration,
     arreter_apres_temps=True,

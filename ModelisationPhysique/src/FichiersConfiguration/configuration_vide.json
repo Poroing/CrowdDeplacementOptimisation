@@ -5,19 +5,15 @@
 	{
 		"salle":
 		{
-			"salle_hauteur" : 850,
-			"salle_largeur" : 900
+
 			},
 		"porte": 
 		[
-			{"position" : 0.15, "largeur" : 100, "mur" : "haut"},
-			{"position" : 0.85, "largeur" : 100, "mur" : "haut"}
-			
+		
 			],
 		"salle_couloir":
 		{
-			"largeur_horizontale" : 0.25,
-			"largeur_verticale" : 0.5
+
 			}
 	},
 	"obstacles":
@@ -38,6 +34,7 @@
 	"personnes":
 		{
 		"zone_apparition" : {
+
 			},
 		
 		"sources": [
@@ -50,7 +47,6 @@
 			"masse_surfacique" : 1.8
 		},
 		
-		"nombre" : 50
 	},
     "mise_a_jour_par_seconde": 60
 }
