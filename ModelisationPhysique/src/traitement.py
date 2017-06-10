@@ -1,6 +1,7 @@
 from functools import partial
 import matplotlib.pyplot as plt
-from simulation import Simulation, ConstructeurSimulation
+from simulation import Simulation
+from constructeur_simulation import ConstructeurSimulation
 import math
 
 class RecuperationDeDonnees(object):

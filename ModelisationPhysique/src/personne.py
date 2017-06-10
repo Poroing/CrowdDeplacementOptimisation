@@ -18,7 +18,7 @@ class Personne(CercleDynamique):
             rayon,
             position,
             espace,
-            test_direction_cls=test_point_suivre.TestChampVecteurQuatreDirections):
+            test_direction_cls=test_point_suivre.TestGradientLargeurQuatreDirections):
 
         super().__init__(masse_surfacique = masse_surfacique, rayon=rayon, position=position)
         
@@ -103,7 +103,8 @@ class Personne(CercleDynamique):
         self.traiterVitesse()
         if not self.estSortie():
             self.test_direction.update(self.position)
-            force = (self.test_direction.point_a_suivre - self.body.position).normalized()
-            force.length = self.force_deplacement
+            force = self.test_direction.point_a_suivre - self.body.position
+            if force != Vec2d(0, 0):
+                force.length = self.force_deplacement
             self.body.apply_force_at_local_point(force, Vec2d(0, 0))
 

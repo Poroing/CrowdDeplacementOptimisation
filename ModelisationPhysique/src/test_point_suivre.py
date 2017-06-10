@@ -106,11 +106,8 @@ class TestParcoursLargeur(TestBase):
             precision=self.precision,
             valeur_defaut=self.valeur_defaut)
 
-        debuts, debuts_valeur = base.unzip(self.genererDebutsEtValeurs(tableau))
-
         base.parcoursEnLargeur(
-            debuts,
-            debuts_valeur,
+            self.genererDebutsEtValeurs(tableau),
             self.genererCaseAdjacentesParcoursLargeur,
             self.assignerValeurCase,
             tableau)
@@ -132,13 +129,13 @@ class TestParcoursLargeur(TestBase):
         
     def genererCaseAdjacentes(self, case):
         '''Generes les cases adjacentes sans prendre en comptes des obstacles'''
-        pass
+        raise NotImplementedError()
 
     def assignerValeurCase(self, case_voisine, case_courante, tableau):
-        pass
+        raise NotImplementedError()
 
     def genererDebutsEtValeurs(self, tableau):
-        pass
+        raise NotImplementedError()
 
 class TestGradientObstacle(TestGradient):
 
@@ -181,7 +178,7 @@ class TestGradientLargeur(TestGradient, TestParcoursLargeur):
             itertools.cycle([0]))
 
     def genererCaseAdjacentes(self, case):
-        pass
+        raise NotImplementedError()
 
     def assignerValeurCase(self, case_voisine, case_courante, tableau):
         tableau[case_voisine] = tableau[case_courante] - 1
@@ -208,7 +205,7 @@ class TestChampVecteur(TestParcoursLargeur):
     '''
 
     champs = dict()
-    PRECISION_CHAMP = convertirMetresPixels(0.05)
+    PRECISION_CHAMP = convertirMetresPixels(0.2)
 
     def __init__(self, **kwargs):
         kwargs['precision'] = TestChampVecteur.PRECISION_CHAMP
@@ -236,7 +233,7 @@ class TestChampVecteur(TestParcoursLargeur):
             TestChampVecteur.champs[self.espace] = self.initialiserTableau()
 
     def genererCaseAdjacentes(self, case):
-        pass
+        raise NotImplementedError()
 
     def assignerValeurCase(self, case_voisine, case_courante, tableau):
         return tableau.dirigerVecteurVers(
@@ -262,13 +259,13 @@ class TestLargeurHuitDirections(TestParcoursLargeur):
         return case.genererCaseAdjacentes(base.Case.genererHuitDirections())
 
 class TestChampVecteurQuatreDirections(
-        TestChampVecteur,
-        TestLargeurQuatreDirections):
+        TestLargeurQuatreDirections,
+        TestChampVecteur):
     pass
 
 class TestChampVecteurHuitDirections(
-        TestChampVecteur,
-        TestLargeurHuitDirections):
+        TestLargeurHuitDirections,
+        TestChampVecteur):
     pass
 
 class TestGradientLargeurQuatreDirections(
@@ -364,9 +361,14 @@ class Champ(space_hash.SpaceHash):
         super().__init__(**kwargs)
 
     def dirigerVecteurVers(self, case, point):
+        if self[case] == Vec2d(0, 0):
+            return
+
         centre = self.avoirCentreCase(case)
         longueur_actuelle = self[case].length
         self[case] = point - centre
+        if self[case] == Vec2d(0, 0):
+            return 
         self[case].length = longueur_actuelle
 
 class TestLineaire(TestLanceRayon):

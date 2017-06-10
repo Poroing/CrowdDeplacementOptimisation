@@ -6,6 +6,11 @@ import pygame.font
 import copy
 import math
 import base
+import trajectoires
+import matplotlib.pyplot as plt
+import numpy as np
+import pymunk.pygame_util
+from pymunk.vec2d import Vec2d
 
 class DebugDrawOptions(pymunk.pygame_util.DrawOptions):
     
@@ -24,30 +29,53 @@ class DebugDrawOptions(pymunk.pygame_util.DrawOptions):
         label = self.police.render(texte, self.antialias, self.couleur_texte)
         self.ecran.blit(label, pymunk.pygame_util.to_pygame(position, self.ecran))
 
-    def drawChamp(self, longueur_vecteur, champ, profondeur=None):
-        if profondeur is None:
-            profondeur = base.TableauDeuxDimension(
-                nombre_lignes=champ.nombre_lignes,
-                nombre_colonnes=champ.nombre_colonnes,
-                valeur_defaut=0)
+class TraceurTrajectoire(trajectoires.Trajectoire):
 
-        for case in champ.genererCases():
-            debut = champ.avoirCentreCase(case)
-            direction = copy.copy(champ[case])
-            direction.length = longueur_vecteur
-            fin = debut + direction
+    def afficherTrajectoires(self):
+        for abscices, ordonees in self.genererXYArrays():
+            plt.plot(abscices, ordonees)
+        plt.show()
 
-            debut = pymunk.pygame_util.to_pygame(debut, self.ecran)
-            fin = pymunk.pygame_util.to_pygame(fin, self.ecran)
+def afficherChampVectorielle(champ):
+    X = np.array(list(map(champ.avoirPositionColonne, range(champ.nombre_colonnes))))
+    Y = np.array(list(map(champ.avoirPositionLigne, range(champ.nombre_lignes))))
 
-            self.drawText(str(profondeur[case]), debut)
+    U = np.array(base.creerListeDoubleDimension(
+            champ.nombre_lignes,
+            champ.nombre_colonnes)).astype(np.float)
+    V =  np.array(base.creerListeDoubleDimension(
+            champ.nombre_lignes,
+            champ.nombre_colonnes)).astype(np.float)
 
-            pygame.draw.line(self.ecran, self.couleur_texte, debut, fin)
-            pygame.draw.circle(
-                self.ecran,
-                self.couleur_champ,
-                list(map(math.floor, fin)),
-                longueur_vecteur // 2)
+    for i in range(champ.nombre_lignes):
+        for j in range(champ.nombre_colonnes):
+            U[i, j], V[i, j] = champ[base.Case(i, j)]
+
+    plt.streamplot(X, Y, U, V)
+    plt.show()
+
+def afficherChampGradient(champ):
+    X = np.array(list(map(champ.avoirPositionColonne, range(2, champ.nombre_colonnes - 3))))
+    Y = np.array(list(map(champ.avoirPositionLigne, range(2, champ.nombre_lignes - 3))))
+
+    U = np.array(base.creerListeDoubleDimension(
+            champ.nombre_lignes - 5,
+            champ.nombre_colonnes - 5)).astype(np.float)
+    V =  np.array(base.creerListeDoubleDimension(
+            champ.nombre_lignes - 5,
+            champ.nombre_colonnes - 5)).astype(np.float)
+
+    for i in range(champ.nombre_lignes - 5):
+        for j in range(champ.nombre_colonnes - 5):
+            try:
+                U[i, j], V[i, j] = champ.avoirGradiantPosition(Vec2d(Y[i], X[j]))
+            except IndexError:
+                pass
+    print(champ.nombre_lignes, champ.nombre_colonnes)
+
+    plt.streamplot(X, Y, U, V)
+    plt.show()
+    
 
 class Afficheur(object):
 
@@ -106,7 +134,6 @@ class Afficheur(object):
         self.dessinerIdentifiantsEcouteurs(simulation)
         self.dessinerPointSuiviePersonne(simulation)
         self.dessinerAdresseObstacles(simulation)
-        #self.dessinerPremierChamp(simulation)
         
         pygame.display.flip()   
         self.horloge.tick(simulation.mise_a_jour_par_seconde)

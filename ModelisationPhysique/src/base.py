@@ -1,7 +1,10 @@
 import collections
 import numpy as np
+import functools
+import operator
 
-class EnsembleRappelle():
+class EnsembleRappelle(object):
+    '''Regroupe plusieurs rappelle et renvoie l'ensemble des resultats'''
 
     def __init__(self):
         self.ensemble_rappelles = []
@@ -10,8 +13,21 @@ class EnsembleRappelle():
         self.ensemble_rappelles.append(rappele)
 
     def __call__(self, *args, **kwargs):
+        resultats = []
         for rappele in self.ensemble_rappelles:
-            rappele(*args, **kwargs)
+            resultats.append(rappele(*args, **kwargs))
+        return resultats
+
+class EnsembleRappelleRenvoyantCommande(EnsembleRappelle):
+
+    AUCUN = 0x0
+
+    def __call__(self, *args, **kwargs):
+        resultats = super().__call__(*args, **kwargs)
+        return functools.reduce(
+            operator.or_,
+            resultats,
+            EnsembleRappelleRenvoyantCommande.AUCUN)
 
 class KeyPairDict(collections.UserDict):
     '''Une table de hachage avec des pair pour clefs
@@ -67,6 +83,12 @@ class KeyIterableDict(collections.UserDict):
 
     def __delitem__(self, key):
         del self.data[self.avoirTuple(key)]
+
+class EmptyListDict(collections.UserDict):
+    '''Dictionnaire associant une liste vide à tout clefs non présente'''
+
+    def __getitem__(self, key):
+        return self.data.setdefault(key, [])
 
 def creerListeDoubleDimension(hauteur, largeur, valeur_defaut=None):
     return [ [ valeur_defaut for _ in range(largeur) ] for _ in range(hauteur) ]
@@ -148,7 +170,7 @@ class TableauDeuxDimension(object):
             for colonne in range(self.nombre_colonnes):
                 yield Case(ligne, colonne)
 
-def parcoursEnLargeur(debuts, debuts_valeur, voisins, assigner_valeur, tableau_finale):
+def parcoursEnLargeur(debuts_et_valeurs, voisins, assigner_valeur, tableau_finale):
     '''Functions Arguments:
             voisins(case_courante, tableau_finale),
             valeur_case(case_voisise, case_courante, tableu_finale)
@@ -161,13 +183,15 @@ def parcoursEnLargeur(debuts, debuts_valeur, voisins, assigner_valeur, tableau_f
 
     queue = collections.deque()
 
-    for debut, valeur in zip(debuts, debuts_valeur):
+    for debut, valeur in debuts_et_valeurs:
         queue.append(debut)
         deja_vue[debut] = True
         tableau_finale[debut] = valeur
 
     while len(queue) > 0:
         case_courante = queue.popleft()
+        #print(tableau_finale.avoirCentreCase(case_courante))
+        #input()
         for case_voisine in voisins(case_courante, tableau_finale):
             if case_voisine not in tableau_finale or deja_vue[case_voisine]:
                 continue

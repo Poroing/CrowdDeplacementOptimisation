@@ -30,7 +30,16 @@ class QuadrillageEspace(base.TableauDeuxDimension):
         super().__init__(**kwargs)
 
     def avoirCentreCase(self, case):
-        pass
+        return Vec2d(
+            self.avoirPositionColonne(case.colonne),
+            self.avoirPositionLigne(case.ligne))
+
+    def avoirPositionLigne(self, ligne):
+        raise NotImplementedError()
+
+    def avoirPositionColonne(self, colonne):
+        raise NotImplementedError()
+
 
 class Treillis(QuadrillageEspace):
 
@@ -38,9 +47,6 @@ class Treillis(QuadrillageEspace):
         return min(
             self.genererCasesEncadrante(point),
             key=lambda case: point.get_distance(self.avoirPositionCase(case)))
-
-    def avoirCentreCase(self, case):
-        return self.avoirPositionCase(case)
 
     def avoirPositionCase(self, case):
         position_relative = Vec2d(
@@ -267,10 +273,11 @@ class SpaceHash(QuadrillageEspace):
     def avoirValeurPlusProche(self, point):
         return self[self.avoirCaseAvecCentrePlusProche(point)]
 
-    def avoirCentreCase(self, case):
-        return self.position + Vec2d(
-            (case.colonne + 1 / 2) * self.precision,
-            (case.ligne + 1 / 2) * self.precision)
+    def avoirPositionLigne(self, ligne):
+        return self.position.y + (ligne + 1 / 2) * self.precision
+
+    def avoirPositionColonne(self, colonne):
+        return self.position.x + (colonne + 1 / 2) * self.precision
 
     def avoirCaseAvecCentrePlusProche(self, point):
         case_point = self.avoirCasePoint(point)

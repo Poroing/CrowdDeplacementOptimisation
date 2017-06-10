@@ -2,12 +2,14 @@ import sys
 sys.path.append('..')
 from convertir_json_python import convertirJsonPython
 from traitement import RecuperationDeDonnees, TraitementDeDonnees
-from affichage import Afficheur
+from affichage import Afficheur, TraceurTrajectoire
+from base import EnsembleRappelle
 
 afficheur = Afficheur()
+traceur_trajectoire = TraceurTrajectoire
 
 configuration = convertirJsonPython(
-    '../FichiersConfiguration/salle_en_T.json')
+    '../FichiersConfiguration/salle_en_Y.json')
 recuperation = RecuperationDeDonnees(
     configuration,
     arreter_apres_temps=True,
