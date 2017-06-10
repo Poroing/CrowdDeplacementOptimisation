@@ -1,4 +1,6 @@
 {
+    "type": "salle_de_classe",
+
 	"lieu_ferme":
 	{
 		"salle":
@@ -37,6 +39,8 @@
 	],
 	"personnes":
 	{
+		"zone_apparition" : {
+		},
 		
 		"sources": [
 		],

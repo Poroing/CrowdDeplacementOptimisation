@@ -31,10 +31,9 @@ class DebugDrawOptions(pymunk.pygame_util.DrawOptions):
 
 class TraceurTrajectoire(trajectoires.Trajectoire):
 
-    def afficherTrajectoires(self):
+    def tracerTrajectoires(self):
         for abscices, ordonees in self.genererXYArrays():
             plt.plot(abscices, ordonees)
-        plt.show()
 
 def afficherChampVectorielle(champ):
     X = np.array(list(map(champ.avoirPositionColonne, range(champ.nombre_colonnes))))
@@ -79,21 +78,14 @@ def afficherChampGradient(champ):
 
 class Afficheur(object):
 
-    def __init__(self):
+    def __init__(self, debug=True):
         pygame.font.init()
 
         self.horloge = pygame.time.Clock()
+        self.debug = debug
 
-        self.ecran = pygame.display.set_mode((1000, 900))
+        self.ecran = pygame.display.set_mode((1000, 950))
         self.option_dessin = DebugDrawOptions(self.ecran)
-
-    def dessinerPremierChamp(self, simulation):
-        #TODO: rendre cela moin dégueulasse
-        from test_point_suivre import TestChampVecteur
-        longueur_vecteur = 5
-        self.option_dessin.drawChamp(
-            longueur_vecteur,
-            next(iter(TestChampVecteur.champs.values())))
 
     def dessinerAdresseObstacles(self, simulation):
         for obstacle in simulation.espace.ensemble_obstacle:
@@ -131,9 +123,10 @@ class Afficheur(object):
         self.ecran.fill(pygame.color.THECOLORS['black'])
         simulation.espace.debug_draw(self.option_dessin)
 
-        self.dessinerIdentifiantsEcouteurs(simulation)
-        self.dessinerPointSuiviePersonne(simulation)
-        self.dessinerAdresseObstacles(simulation)
+        if self.debug:
+            self.dessinerIdentifiantsEcouteurs(simulation)
+            self.dessinerPointSuiviePersonne(simulation)
+            self.dessinerAdresseObstacles(simulation)
         
         pygame.display.flip()   
         self.horloge.tick(simulation.mise_a_jour_par_seconde)

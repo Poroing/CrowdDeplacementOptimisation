@@ -563,7 +563,7 @@ class TestProximite(TestBase):
         super().__init__(**kwargs)
         
         self.ensemble_point = list(
-            self.genererEnsemblePoint(rayon * TestProximite.COEFFICIENT_TEST))
+            self.genererEnsemblePoint(self.rayon * TestProximite.COEFFICIENT_TEST))
         self.point_a_suivre = self.ensemble_point[0]
 
     def genererEnsemblePoint(self, rayon):

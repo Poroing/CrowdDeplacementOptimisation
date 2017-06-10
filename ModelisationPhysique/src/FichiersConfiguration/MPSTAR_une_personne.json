@@ -39,10 +39,13 @@
 	},
 	"personnes": {
 		"zone_apparition" : {
+			"x_min" : 0,
+			"x_max" : 0,
+			"y_min" : 0,
+			"y_max" : 0
 		},
 		
 		"sources": [
-		
 		],
 	    
 		"caracteristiques": {
@@ -51,7 +54,7 @@
 			"masse_surfacique" : 1.8
 		},
 		
-		"nombre" : 50
+		"nombre" : 1
 	},
     "mise_a_jour_par_seconde": 60
 }

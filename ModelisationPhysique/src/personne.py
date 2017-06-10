@@ -13,19 +13,20 @@ class Personne(CercleDynamique):
     COEFFICIENT_EVITEMENT = 0.4
     RAYON_DE_PROXIMITE = convertirMetresPixels(2)
 
+    TEST_DIRECTION = test_point_suivre.TestDichotomieCompactageObstacle
+
     def __init__(self,
             masse_surfacique,
             rayon,
             position,
-            espace,
-            test_direction_cls=test_point_suivre.TestGradientLargeurQuatreDirections):
+            espace):
 
         super().__init__(masse_surfacique = masse_surfacique, rayon=rayon, position=position)
         
         self.force_deplacement = self.rayon * 10**4
         self.filter = pymunk.ShapeFilter(categories=RepresentationCategorie.PERSONNE.value)
         self.espace = espace
-        self.test_direction = test_direction_cls(
+        self.test_direction = Personne.TEST_DIRECTION(
             position=position,
             espace=espace,
             rayon=self.rayon,

@@ -66,11 +66,8 @@ class Espace(pymunk.Space):
         return self.point_query_nearest(point, max_distance, filtre)
 
     def pointEstDansObstacle(self, point):
-        return (self.lieu_ferme.pointEstAExterieur(point)
-            or any(map(lambda obstacle: obstacle.pointEstAInterieur(point),
-                self.ensemble_obstacle))
-            or any(map(lambda obstacle: obstacle.pointEstAInterieur(point),
-                self.ensemble_personnes)))
+        return (self.avoirInfoPoint(point, 0) is not None
+            or self.lieu_ferme.pointEstAExterieur(point))
     
     def ajouterPersonne(self, personne):
         self.ensemble_personnes.append(personne)
@@ -100,7 +97,6 @@ class Espace(pymunk.Space):
             self.ajouterObstacle(OsbtacleSegment(
                 point1=sommets[k],
                 point2=sommets[k + 1]))
-        
 
     def ajouterLieuFerme(self, lieu_ferme):
         self.lieu_ferme = lieu_ferme

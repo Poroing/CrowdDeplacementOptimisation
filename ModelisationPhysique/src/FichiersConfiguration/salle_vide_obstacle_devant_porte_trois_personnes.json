@@ -1,4 +1,6 @@
 {
+    "type": "salle_vide",
+
 	"lieu_ferme": {
 		"salle": {
 			"salle_hauteur" : 800,
@@ -10,13 +12,6 @@
 	},
 	"obstacles": {
         "rangs" : {
-            "hauteur" : 45,
-            "distance_intermediaire" : 50,
-            "distance_au_mur" : 0,
-            "largeur_gauche" : 390,
-            "largeur_droit" : 260,
-            "position_debut_gauche" : 250,
-            "position_debut_droit" : 250
         },
 
         "particulier" : {
@@ -51,7 +46,7 @@
 			"masse_surfacique" : 1.8
 		},
 		
-		"nombre" : 50
+		"nombre" : 3
 	},
     "mise_a_jour_par_seconde": 45 
 }

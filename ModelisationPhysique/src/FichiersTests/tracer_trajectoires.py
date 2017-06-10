@@ -13,7 +13,7 @@ mise_a_jour.ajouter(afficheur.dessinerEspaceEtAttendre)
 mise_a_jour.ajouter(traceur_trajectoire.mettreAJourTrajectoires)
 
 configuration = convertirJsonPython(
-    '../FichiersConfiguration/salle_en_T.json')
+    '../FichiersConfiguration/MPSTAR_trois_personne.json')
 
 recuperation = RecuperationDeDonnees(
     configuration,
