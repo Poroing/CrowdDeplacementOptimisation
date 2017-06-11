@@ -7,7 +7,7 @@ from affichage import Afficheur
 afficheur = Afficheur(debug=False)
 
 configuration = convertirJsonPython(
-    '../FichiersConfiguration/salle_vide_obstacle_devant_porte_trois_personnes.json')
+    '../FichiersConfiguration/salle_vide.json')
 recuperation = RecuperationDeDonnees(
     configuration,
     arreter_apres_temps=True,

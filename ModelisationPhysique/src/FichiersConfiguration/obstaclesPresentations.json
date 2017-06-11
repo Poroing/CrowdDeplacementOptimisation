@@ -18,10 +18,18 @@
         },
         "particulier" : {
             "rectangles": [
+                { "position": [150, 150], "hauteur": 100, "largeur": 150 }
             ],
             "cercles" : [
             ],
 			"polygones": [
+                { "position": [400, 400], "sommets": [
+                    [-50, -50],
+                    [-50, -20],
+                    [-20, 10],
+                    [20, 35],
+                    [47, 20],
+                    [50, -30] ]}
 			]
         }
 	},
