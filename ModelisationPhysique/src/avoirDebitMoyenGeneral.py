@@ -1,8 +1,11 @@
-Identifiant ????, taille(longxlarg), type de salle, nombre personnes de départ , (sorties,taille des sorties) , (générateurs de personnes, debit de personnes)
---> identifiant -> % -> debit
+import sys
+sys.path.append('..')
+from convertir_json_python import convertirJsonPython
+from traitement import RecuperationDeDonnees, TraitementDeDonnees
+from affichage import Afficheur
+from fonctions_annexes import convertirMetresPixels
 
 
-##
 
 def obtenir_position_sortie(position_sortie):
     
@@ -22,9 +25,10 @@ def obtenir_position_sortie(position_sortie):
     
 def obtenir_position_source(position_source, rayon_personne_max, hauteur_salle, largeur_salle):
     hauteur, largeur = position_source.split('_')
-    x,y=0,0
+    y,x=0,0
+    
     if hauteur == 'haut':
-        y = 50 + hauteur_salle - 2* rayon_personne_max
+        y = 50 + hauteur_salle - rayon_personne_max
         
     if hauteur == 'milieu' :
         y =50 + hauteur_salle/2
@@ -39,9 +43,10 @@ def obtenir_position_source(position_source, rayon_personne_max, hauteur_salle, 
         x = 50 + largeur_salle/2
         
     if largeur == 'bas' :
-        x = 50 + largeur_salle - 2*rayon_personne_max
+        x = 50 + largeur_salle - rayon_personne_max
         
-        
+    print(x,y)
+    return x,y
         
         
 
@@ -76,22 +81,40 @@ def creerConfiguration(parametre, proportion_personnes):
         "mise_a_jour_par_seconde": 60
     }
     
-    configuration.update({'type' : parametre[1] })
+    largeur_salle = convertirMetresPixels(parametre[0][0])
+    hauteur_salle = convertirMetresPixels(parametre[0][1])
+    type = parametre[1]
+    nombre_de_personnes = parametre[2]
+    sorties = parametre[3]
+    sources = parametre[4]
     
-    configuration['lieu_ferme']['salle'].update({'salle_hauteur' : convertirMetresPixels(parametre[0][0]) , 'salle_largeur' : convertirMetresPixels(parametre[0][1])})
+    configuration.update({'type' : type })
     
-    configuration['personnes'].update({'nombre' : (parametre[2] * proportion_personnes)})
+    if type == 'salle_de_classe':
+        
+        configuration['obstacles'].update({"rangs" : {
+            "hauteur" : 45,
+            "distance_intermediaire" : configuration['personnes']['caracteristiques']['rayon_max'],
+            "distance_au_mur" : 2*configuration['personnes']['caracteristiques']['rayon_max'],
+            "largeur_gauche" : largeur_salle/3,
+            "largeur_droit" : largeur_salle/3,
+            "position_debut_gauche" : hauteur_salle/3,
+            "position_debut_droit" : hauteur_salle/3 }})
+    print(configuration)
     
-    for numero_sortie, info_sortie in parametre[3].items() :
+    configuration['lieu_ferme']['salle'].update({'salle_hauteur' : hauteur_salle , 'salle_largeur' : largeur_salle})
+    
+    configuration['personnes'].update({'nombre' : (int(nombre_de_personnes * proportion_personnes/100))})
+    
+    for numero_sortie, info_sortie in sorties.items() :
         
         mur, position = obtenir_position_sortie(info_sortie[0])
         configuration['lieu_ferme']['porte'].append({'position' : position , 'largeur' : info_sortie[1]*convertirMetresPixels(0.75) , 'mur' : mur})
         
-    for identifiant_source, info_sources in parametre[4].items() : 
-    
+    for identifiant_source, info_sources in sources.items() :
         pers = configuration['personnes']['caracteristiques']
         
-        position = obtenir_position_source(info_sources[0], pers['rayon_max'], parametre[0][0], parametre[0][1])
+        position = obtenir_position_source(info_sources[0], pers['rayon_max'], hauteur_salle, largeur_salle)
         
         configuration['personnes']['sources'].append({'position' : position,
                                                     'periode' : info_sources[1],
@@ -102,10 +125,12 @@ def creerConfiguration(parametre, proportion_personnes):
     return configuration
 
 def recupererMoyenne(configuration) :
+    afficheur = Afficheur()
     recuperation = RecuperationDeDonnees(
         configuration,
         arreter_apres_temps=True,
-        temps_maximal=15)
+        temps_maximal=15,
+        action_mise_a_jour_secondaire=afficheur.dessinerEspaceEtAttendre)
     recuperation.lancer()
     traitement = TraitementDeDonnees(recuperation.temps_de_sortie)
     return traitement.avoirDebitMoyen()
@@ -116,8 +141,10 @@ def pregeneration_debit(salles,nb_simul):
     
     for identifiants,parametres in salles.items() :
         sortie.update({identifiants : {}})
-        ratio = 1
+        ratio = 100
+    
         while ratio != 0 :
+            print(identifiants, ratio)
             configuration = creerConfiguration(parametres, ratio)
             for _ in range(nb_simul):
                 
@@ -125,10 +152,11 @@ def pregeneration_debit(salles,nb_simul):
                 debit += recupererMoyenne(configuration)
                 
             debit /= nb_simul
+            sortie[identifiants].update({ratio : {0 : debit}})
             
-            sortie['identifiants'].update({ratio : {0 : debit}})
             
-            ratio -= 0.2
+            ratio -= 20
+            
     return sortie
         
             

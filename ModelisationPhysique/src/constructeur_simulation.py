@@ -104,10 +104,10 @@ class ConstructeurSalle(object):
         #cf ficher annexe
         d = self.espace.lieu_ferme.largeur  
         l = self.espace.lieu_ferme.hauteur
-        a = d * largeur_horizontale
-        b = l * largeur_verticale
+        a = largeur_horizontale
+        b = largeur_verticale
         c = (d-a)/2
-        y = l-b-c
+        y = 0
         x = sqrt(a**2 - y**2)
         h = ((d-2*x)/2) * sqrt(2)
         k = sqrt(h**2 - ((d-2*x)/2)**2)
