@@ -1,0 +1,6 @@
+# vim: set ft=markdown:
+
+This project aim to develop two crowd simulation, a multi-agents simulation at the
+room scale and a flux-based simulation at the floor scale, and to create a flow of
+data between the two simulations so that the flux-based simulation can produce
+precise result while being efficient.
