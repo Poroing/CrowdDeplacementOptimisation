@@ -9,9 +9,9 @@ from pymunk.vec2d import Vec2d
 
 class Personne(CercleDynamique):
 
-    VITESSE_MAXIMALE = convertirMetresPixels(2)
+    VITESSE_MAXIMALE = convertirMetresPixels(1.3)
     COEFFICIENT_EVITEMENT = 0.4
-    RAYON_DE_PROXIMITE = convertirMetresPixels(2)
+    RAYON_DE_PROXIMITE = VITESSE_MAXIMALE # Distance maximale parcouru par l'agent en une seconde
 
     TEST_DIRECTION = test_point_suivre.TestDichotomieCompactageObstacle
 
