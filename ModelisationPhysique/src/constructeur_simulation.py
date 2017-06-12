@@ -80,18 +80,19 @@ class ConstructeurSalle(object):
             largeur_horizontale=None,
             largeur_verticale=None):
         
-        largeur = self.espace.lieu_ferme.largeur *(1-largeur_horizontale)/2
-        hauteur = self.espace.lieu_ferme.hauteur * (1-largeur_verticale)
-
-        coin_inferieur1 = [50,50]
-        coin_inferieur2 = [50+largeur+(self.espace.lieu_ferme.largeur*largeur_horizontale) ,50]
-        rectangles.append({"largeur" : largeur, "hauteur" : hauteur,"position" : coin_inferieur1})
-        rectangles.append({"largeur" : largeur, "hauteur" : hauteur,"position" : coin_inferieur2 })
+        largeur_couloir = largeur_horizontale
+        hauteur_obstacle = largeur_verticale
+        largeur_obstacle = (self.espace.lieu_ferme.largeur - largeur_couloir)/2
         
-        zone_apparition.update({'x_min' :  50 + largeur})
+        coin_inferieur1 = [50,50]
+        coin_inferieur2 = [50 + largeur_couloir + largeur_obstacle  ,50]
+        rectangles.append({"largeur" : largeur_obstacle, "hauteur" : hauteur_obstacle,"position" : coin_inferieur1})
+        rectangles.append({"largeur" : largeur_obstacle, "hauteur" : hauteur_obstacle,"position" : coin_inferieur2 })
+        
+        zone_apparition.update({'x_min' :  50 + largeur_obstacle})
         zone_apparition.update({'x_max' :  coin_inferieur2[0]})
         zone_apparition.update({'y_min' :  50})
-        zone_apparition.update({'y_max' :  (50 + hauteur)*(2/3)})
+        zone_apparition.update({'y_max' :  (50 + hauteur_obstacle)*(2/3)})
         
         
         
