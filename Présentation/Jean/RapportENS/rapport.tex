@@ -76,7 +76,9 @@ plus de Pymunk la librairie graphique Pygame pour afficher la simulation.
 
 La structure de donnée utiliser par Pymunk pour ses calculs est une
 hiérarchie de volumes englobants, une structure couramment utilisé pour la
-détection de collisions dans un espace, c'est un arbre binaire dont chaque
+détection de collisions dans un espace et le lancé de rayon -- j'utilise
+cette disposition pour les lancé de rayons --,
+c'est un arbre binaire dont chaque
 nœuds est un volume qui englobe les volumes des nœuds enfants, les feuilles
 de cette arbre sont les objets de l'espace \autoref{fig:BVH}. Ainsi pour chercher les
 objets intersectant un objet donnée il suffit de rechercher récursivement
@@ -135,7 +137,7 @@ ont grossièrement la forme d'ellipse et peuvent prendre plus ou moins de place
 selon la pression qui leurs est appliqué -- ils plient les bras pour laisser de
 la place par exemple --. Mais une ellipse est une forme qui engendre des calculs
 de géométrie compliqué et lent à exécuté d'autant plus si l'ellipse est souple.
-Nous avons donc choisis de représenter les agents par des disques rigides \autoref{fig:agent},
+Nous avons donc choisi de représenter les agents par des disques rigides \autoref{fig:agent},
 cela permet d'avoir une simulation rapide sans perdre trop de réalisme, les
 disques étant une assez bonne approximation d'une ellipse et la différence
 de rayons entre les cas extrêmes et petite par rapport au rayon moyen.
@@ -151,8 +153,39 @@ de rayons entre les cas extrêmes et petite par rapport au rayon moyen.
 
 \section{Modélisation du mouvement d'un agent}
 
-En situation réelle les agents ne prenant pas en compte ce qui se trouve
-loin d'eux et ce qui
-ne se trouve pas dans leurs champs de vision, ainsi 
+Mon objectif pour modéliser le mouvement d'un agent et de développer
+un algorithmes qui trouve la direction à suivre pour atteindre
+une certaine position étant donnée toutes les informations sur les
+obstacles et les autres agents tout en gardant un bon réalisme.
+
+\subsection{Mouvement en fonction du voisinage}
+
+En situation réelle les agents ne prennent pas en compte ce qui se trouve
+loin d'eux et ce qui ne se trouve pas dans leur champ de vision, le premier
+algorithme place donc des points autours de l'agent à une distance de un pas
+-- trois fois le rayon de l'agent --on retire ensuite dans ces points l'ensemble
+des points étant inaccessibles, puis on choisi parmi les points restants le
+point le plus proche de la sortie. La distance caractéristique d'un pas permet
+aux points de bien prendre en compte du voisinage de l'agent tout en
+évitant les obstacles avant de rentrer en collision avec ce qui est plus réaliste
+
+Le dernier point choisi est retenue après chaque choix de direction et
+l'agent continus à avancer dans cette direction jusqu'au prochain choix,
+l'algorithme fait un nouveau choix lorsque le dernier point choisi se
+retrouve bloqué. 
+
+Cette algorithme n'est pas du tout efficace pour amener l'agent en dehors
+de la sortie même si l'agent sort la plupart du temps, le chemin pris
+est loin d'être optimale, et contrairement à ce qui était recherché
+l'algorithme n'est pas du tout recherché, cela est du au manque de choix
+possibles de directions qui est limité au nombre de points et est du à la
+prise en compte de seulement le voisinage beaucoup trop proche qui était
+forcé par le choix des points comme détection d'obstacle.
+
+\subsection{Mouvement en fonction du champ de vision}
+
+Pour remédier aux lacunes qu'as le choix de la direction par utilisation
+de points pour détecter les obstacles, j'ai choisi de détecter les 
+
 
 \end{document}
