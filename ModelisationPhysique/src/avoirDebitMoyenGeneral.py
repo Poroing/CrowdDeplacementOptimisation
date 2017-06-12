@@ -44,8 +44,7 @@ def obtenir_position_source(position_source, rayon_personne_max, hauteur_salle, 
         
     if largeur == 'bas' :
         x = 50 + largeur_salle - rayon_personne_max
-        
-    print(x,y)
+
     return x,y
         
         
@@ -81,12 +80,39 @@ def creerConfiguration(parametre, proportion_personnes):
         "mise_a_jour_par_seconde": 60
     }
     
-    largeur_salle = convertirMetresPixels(parametre[0][0])
-    hauteur_salle = convertirMetresPixels(parametre[0][1])
+    
     type = parametre[1]
     nombre_de_personnes = parametre[2]
     sorties = parametre[3]
     sources = parametre[4]
+    
+    largeur_salle = convertirMetresPixels(parametre[0][0])
+    
+    
+    if type == 'salle_en_Y':
+        
+        couloir_horizontal = convertirMetresPixels(parametre[5][0])
+        couloir_vertical = convertirMetresPixels(parametre[5][1])
+        
+        hauteur_salle = couloir_vertical + (largeur_salle - couloir_horizontal)/2
+        
+        configuration['lieu_ferme']['salle_couloir'].update({'largeur_horizontale' : couloir_horizontal, 'largeur_verticale' : couloir_vertical})
+        
+    if type == 'salle_en_T':
+        
+        couloir_horizontal = convertirMetresPixels(parametre[5][0])
+        couloir_vertical = convertirMetresPixels(parametre[5][1])
+        
+        hauteur_salle = couloir_vertical + couloir_horizontal
+        
+        configuration['lieu_ferme']['salle_couloir'].update({'largeur_horizontale' : couloir_horizontal, 'largeur_verticale' : couloir_vertical})
+        
+    
+    else :
+        hauteur_salle = convertirMetresPixels(parametre[0][1])
+        
+    
+
     
     configuration.update({'type' : type })
     
@@ -94,13 +120,15 @@ def creerConfiguration(parametre, proportion_personnes):
         
         configuration['obstacles'].update({"rangs" : {
             "hauteur" : 45,
-            "distance_intermediaire" : configuration['personnes']['caracteristiques']['rayon_max'],
-            "distance_au_mur" : 2*configuration['personnes']['caracteristiques']['rayon_max'],
+            "distance_intermediaire" : 2*configuration['personnes']['caracteristiques']['rayon_max'],
+            "distance_au_mur" : 4*configuration['personnes']['caracteristiques']['rayon_max'],
             "largeur_gauche" : largeur_salle/3,
             "largeur_droit" : largeur_salle/3,
             "position_debut_gauche" : hauteur_salle/3,
             "position_debut_droit" : hauteur_salle/3 }})
-    print(configuration)
+            
+    
+        
     
     configuration['lieu_ferme']['salle'].update({'salle_hauteur' : hauteur_salle , 'salle_largeur' : largeur_salle})
     

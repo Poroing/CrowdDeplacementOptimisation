@@ -17,7 +17,7 @@ def recupererNDebitMoyenPourConfiguration(configuration, n, afficher_numero_simu
 configuration_obstacle = convertirJsonPython(
     '../FichiersConfiguration/salle_vide.json')
 configuration_sans_obstacle = convertirJsonPython(
-    '../FichiersConfiguration/salle_vide_avec_obstacle.json')
+    '../FichiersConfiguration/salle_vide_obstacle_devant_porte.json')
 
 debits_moyens_obstacle = recupererNDebitMoyenPourConfiguration(
     configuration_obstacle,
@@ -27,9 +27,10 @@ debits_moyens_sans_obstacle = recupererNDebitMoyenPourConfiguration(
     configuration_sans_obstacle,
     100,
     afficher_numero_simulation=True)
+##
 
 plt.subplot(121)
-plt.hist(debits_moyens_obstacle, 20, range=(0, 13))
+plt.hist(debits_moyens_obstacle, 20, range=(0, 3))
 plt.subplot(122)
-plt.hist(debits_moyens_sans_obstacle, 20, range=(0, 13))
+plt.hist(debits_moyens_sans_obstacle, 20, range=(0, 3))
 plt.show()
