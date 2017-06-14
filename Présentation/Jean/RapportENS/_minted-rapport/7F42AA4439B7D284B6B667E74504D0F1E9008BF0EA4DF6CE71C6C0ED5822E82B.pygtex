@@ -1,0 +1,161 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{pymunk}
+\PYG{k+kn}{from} \PYG{n+nn}{math} \PYG{k+kn}{import} \PYG{n}{pi}
+\PYG{k+kn}{from} \PYG{n+nn}{functools} \PYG{k+kn}{import} \PYG{n}{partial}
+\PYG{k+kn}{import} \PYG{n+nn}{operator}
+\PYG{k+kn}{import} \PYG{n+nn}{geometrie}
+\PYG{k+kn}{from} \PYG{n+nn}{pymunk.vec2d} \PYG{k+kn}{import} \PYG{n}{Vec2d}
+
+\PYG{k}{class} \PYG{n+nc}{Representation}\PYG{p}{(}\PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Shape}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Doit être instancié avec }
+
+\PYG{l+s+sd}{    Keyword Arguments: position, corps\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{position} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]}
+        \PYG{n}{corps} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}corps\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}corps\PYGZsq{}}\PYG{p}{]}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{corps} \PYG{o}{=} \PYG{n}{corps}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{corps}\PYG{o}{.}\PYG{n}{position} \PYG{o}{=} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirCoordoneeAbsolueDepuisRelative}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position} \PYG{o}{+} \PYG{n}{point}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{corps}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{body}
+
+    \PYG{n+nd}{@corps.setter}
+    \PYG{k}{def} \PYG{n+nf}{corps}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{value}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{body} \PYG{o}{=} \PYG{n}{value}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{position}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{corps}\PYG{o}{.}\PYG{n}{position}
+
+\PYG{k}{class} \PYG{n+nc}{RepresentationDynamique}\PYG{p}{(}\PYG{n}{Representation}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword Arguments: position, masse, moment\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{masse} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}masse\PYGZsq{}}\PYG{p}{]}
+        \PYG{n}{moment} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}moment\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}masse\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}moment\PYGZsq{}}\PYG{p}{]}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}corps\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Body}\PYG{p}{(}\PYG{n}{masse}\PYG{p}{,} \PYG{n}{moment}\PYG{p}{)}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+
+\PYG{k}{class} \PYG{n+nc}{Polygon}\PYG{p}{(}\PYG{n}{Representation}\PYG{p}{,} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Poly}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keywords Arguments: sommets, position, corps\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{}Forcé d\PYGZsq{}appeler de cette façon car la représentation doit être}
+        \PYG{c+c1}{\PYGZsh{}créé après poly pour que le corps soit initialisé correctement}
+        \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Poly}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}sommets\PYGZsq{}}\PYG{p}{])}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}sommets\PYGZsq{}}\PYG{p}{]}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{sommets}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb}{map}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCoordoneeAbsolueDepuisRelative}\PYG{p}{,}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirSommetsRelatif}\PYG{p}{()))}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirSommetsRelatif}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{get\PYGZus{}vertices}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{genererAretes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{):}
+             \PYG{k}{yield} \PYG{n}{geometrie}\PYG{o}{.}\PYG{n}{SimpleSegment}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{[}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{])}
+        \PYG{k}{yield} \PYG{n}{geometrie}\PYG{o}{.}\PYG{n}{SimpleSegment}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirBaryCentre}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{/} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{))} \PYG{o}{*} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{)}
+
+\PYG{k}{class} \PYG{n+nc}{Segment}\PYG{p}{(}\PYG{n}{Representation}\PYG{p}{,} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Segment}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keywords Arguments: point1, point2, corps\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Segment}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}point1\PYGZsq{}}\PYG{p}{],} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}point2\PYGZsq{}}\PYG{p}{],} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}point1\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}point2\PYGZsq{}}\PYG{p}{]}
+        \PYG{c+c1}{\PYGZsh{}Le corps d\PYGZsq{}un segment ne prend apparement pas en compte la position}
+        \PYG{c+c1}{\PYGZsh{}On la met donc à 0 par défault}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{sommets}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point1}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point2}\PYG{p}{]}
+
+    \PYG{k}{def} \PYG{n+nf}{genererAretes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{yield} \PYG{n}{geometrie}\PYG{o}{.}\PYG{n}{SimpleSegment}\PYG{p}{(}\PYG{o}{*}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{)}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{point1}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{a}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{point2}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{b}
+    
+
+\PYG{k}{class} \PYG{n+nc}{Rectangle}\PYG{p}{(}\PYG{n}{Polygon}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword Arguments: hauteur, largeur, position, corps\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}largeur\PYGZsq{}}\PYG{p}{]}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}hauteur\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}largeur\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}hauteur\PYGZsq{}}\PYG{p}{]}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCentreRelatif}\PYG{p}{()}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}sommets\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererSommetsRelatifsPymunk}\PYG{p}{())}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{genererSommetsRelatifs}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{map}\PYG{p}{(}\PYG{n}{partial}\PYG{p}{(}\PYG{n}{operator}\PYG{o}{.}\PYG{n}{add}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCentreRelatif}\PYG{p}{()),}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererSommetsRelatifsPymunk}\PYG{p}{())}
+
+    \PYG{k}{def} \PYG{n+nf}{genererSommetsRelatifsPymunk}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{yield} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{o}{+}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{o}{+}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{o}{+}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{o}{+}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirCentreRelatif}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)}
+
+\PYG{k}{class} \PYG{n+nc}{Cercle}\PYG{p}{(}\PYG{n}{Representation}\PYG{p}{,} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Circle}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword aruments: position, corps, rayon\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{rayon} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}rayon\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}rayon\PYGZsq{}}\PYG{p}{]}
+        \PYG{c+c1}{\PYGZsh{}Forcé d\PYGZsq{}appeler de cette façon car la représentation doit être}
+        \PYG{c+c1}{\PYGZsh{}créé après circle pour que le corps soit initialisé correctement}
+        \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Circle}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{rayon}\PYG{p}{)}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{rayon}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{radius}
+
+
+\PYG{k}{class} \PYG{n+nc}{CercleDynamique}\PYG{p}{(}\PYG{n}{RepresentationDynamique}\PYG{p}{,} \PYG{n}{Cercle}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword Arguments: position, masse, rayon\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        
+       
+        \PYG{n}{rayon} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}rayon\PYGZsq{}}\PYG{p}{]}
+        \PYG{n}{masse} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{pi}\PYG{o}{*} \PYG{p}{(}\PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}masse\PYGZus{}surfacique\PYGZsq{}}\PYG{p}{])}\PYG{o}{**}\PYG{l+m+mi}{2}
+        
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}masse\PYGZus{}surfacique\PYGZsq{}}\PYG{p}{]}
+        
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}masse\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{masse}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}moment\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{moment\PYGZus{}for\PYGZus{}circle}\PYG{p}{(}\PYG{n}{masse}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{rayon}\PYG{p}{)}
+        
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+\end{Verbatim}

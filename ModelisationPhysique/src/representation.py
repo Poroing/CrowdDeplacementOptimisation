@@ -49,7 +49,7 @@ class Polygon(Representation, pymunk.Poly):
     '''Keywords Arguments: sommets, position, corps'''
     
     def __init__(self, **kwargs):
-        #Forcer d'appeler de cette façon car la représentation doit être
+        #Forcé d'appeler de cette façon car la représentation doit être
         #créé après poly pour que le corps soit initialisé correctement
         pymunk.Poly.__init__(self, None, kwargs['sommets'])
         del kwargs['sommets']
@@ -132,7 +132,7 @@ class Cercle(Representation, pymunk.Circle):
     def __init__(self, **kwargs):
         rayon = kwargs['rayon']
         del kwargs['rayon']
-        #Forcer d'appeler de cette façon car la représentation doit être
+        #Forcé d'appeler de cette façon car la représentation doit être
         #créé après circle pour que le corps soit initialisé correctement
         pymunk.Circle.__init__(self, None, rayon)
         super().__init__(**kwargs)

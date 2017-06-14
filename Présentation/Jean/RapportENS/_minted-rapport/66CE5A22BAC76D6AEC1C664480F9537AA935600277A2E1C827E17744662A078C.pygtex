@@ -1,0 +1,217 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{collections}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k+kn}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{import} \PYG{n+nn}{functools}
+\PYG{k+kn}{import} \PYG{n+nn}{operator}
+
+\PYG{k}{class} \PYG{n+nc}{EnsembleRappelle}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Regroupe plusieurs rappelles et renvoie l\PYGZsq{}ensemble des resultats\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}rappelles} \PYG{o}{=} \PYG{p}{[]}
+
+    \PYG{k}{def} \PYG{n+nf}{ajouter}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{rappele}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}rappelles}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{rappele}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{resultats} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{k}{for} \PYG{n}{rappele} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}rappelles}\PYG{p}{:}
+            \PYG{n}{resultats}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{rappele}\PYG{p}{(}\PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{))}
+        \PYG{k}{return} \PYG{n}{resultats}
+
+\PYG{k}{class} \PYG{n+nc}{EnsembleRappelleRenvoyantCommande}\PYG{p}{(}\PYG{n}{EnsembleRappelle}\PYG{p}{):}
+
+    \PYG{n}{AUCUN} \PYG{o}{=} \PYG{l+m+mh}{0x0}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{resultats} \PYG{o}{=} \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{functools}\PYG{o}{.}\PYG{n}{reduce}\PYG{p}{(}
+            \PYG{n}{operator}\PYG{o}{.}\PYG{n}{or\PYGZus{}}\PYG{p}{,}
+            \PYG{n}{resultats}\PYG{p}{,}
+            \PYG{n}{EnsembleRappelleRenvoyantCommande}\PYG{o}{.}\PYG{n}{AUCUN}\PYG{p}{)}
+
+\PYG{k}{class} \PYG{n+nc}{KeyPairDict}\PYG{p}{(}\PYG{n}{collections}\PYG{o}{.}\PYG{n}{UserDict}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Une table de hachage dont les clefs sont des pairs}
+
+\PYG{l+s+sd}{        A utiliser surtout dans le cas d\PYGZsq{}un petit nombre}
+\PYG{l+s+sd}{        d\PYGZsq{}insertions et d\PYGZsq{}un grand nombre de recuperation}
+\PYG{l+s+sd}{        de valeurs}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{c+c1}{\PYGZsh{}Lorsque peut d\PYGZsq{}insertions sont faites on peut s\PYGZsq{}autoriser}
+    \PYG{c+c1}{\PYGZsh{}de stocker toutes les permutations des clefs avec la valeur}
+    \PYG{c+c1}{\PYGZsh{}associée pour ainsi éviter de devoir faire deux recherches}
+    \PYG{c+c1}{\PYGZsh{}à chaque recherche d\PYGZsq{}une clefs dans la table}
+
+    \PYG{k}{def} \PYG{n+nf}{transpose}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{pair}\PYG{p}{):}
+        \PYG{n}{element1}\PYG{p}{,} \PYG{n}{element2} \PYG{o}{=} \PYG{n}{pair}
+        \PYG{k}{return} \PYG{n}{element2}\PYG{p}{,} \PYG{n}{element1}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}setitem\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{,} \PYG{n}{value}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data}\PYG{p}{[}\PYG{n}{key}\PYG{p}{]} \PYG{o}{=} \PYG{n}{value}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{transpose}\PYG{p}{(}\PYG{n}{key}\PYG{p}{)]} \PYG{o}{=} \PYG{n}{value}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}delitem\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{):}
+        \PYG{k}{del} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data}\PYG{p}{[}\PYG{n}{key}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{transpose}\PYG{p}{(}\PYG{n}{key}\PYG{p}{)]}
+
+\PYG{k}{class} \PYG{n+nc}{KeyIterableDict}\PYG{p}{(}\PYG{n}{collections}\PYG{o}{.}\PYG{n}{UserDict}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Dictionaire pouvant avoir n\PYGZsq{}importe quelle iterable comme clefs}
+
+\PYG{l+s+sd}{        deux iterable a, b sont considérées comme égaux lorsque}
+\PYG{l+s+sd}{        all(v == w for v, w in zip(a, b))}
+
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{c+c1}{\PYGZsh{}tuple est le seul type iterable qui est hachable est vérifie}
+    \PYG{c+c1}{\PYGZsh{}all(v == w for v, w in zip(a, b)) =\PYGZgt{} hash(a) == hash(b)}
+    \PYG{c+c1}{\PYGZsh{}pour avoir la propriété recherché on convertie toutes les clefs}
+    \PYG{c+c1}{\PYGZsh{}en tuple}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirTuple}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{iterable}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{iterable}\PYG{p}{,} \PYG{n}{collections}\PYG{o}{.}\PYG{n}{Iterable}\PYG{p}{):}
+            \PYG{k}{return} \PYG{n+nb}{tuple}\PYG{p}{(}\PYG{n+nb}{map}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirTuple}\PYG{p}{,} \PYG{n}{iterable}\PYG{p}{))}
+        \PYG{k}{return} \PYG{n}{iterable}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}contains\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirTuple}\PYG{p}{(}\PYG{n}{key}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}setitem\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{,} \PYG{n}{value}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirTuple}\PYG{p}{(}\PYG{n}{key}\PYG{p}{)]} \PYG{o}{=} \PYG{n}{value}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}getitem\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirTuple}\PYG{p}{(}\PYG{n}{key}\PYG{p}{)]}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}delitem\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{):}
+        \PYG{k}{del} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirTuple}\PYG{p}{(}\PYG{n}{key}\PYG{p}{)]}
+
+\PYG{k}{class} \PYG{n+nc}{EmptyListDict}\PYG{p}{(}\PYG{n}{collections}\PYG{o}{.}\PYG{n}{UserDict}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Dictionnaire associant une liste vide à tout clefs non présente\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}getitem\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{key}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data}\PYG{o}{.}\PYG{n}{setdefault}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{p}{[])}
+
+\PYG{k}{def} \PYG{n+nf}{creerListeDoubleDimension}\PYG{p}{(}\PYG{n}{hauteur}\PYG{p}{,} \PYG{n}{largeur}\PYG{p}{,} \PYG{n}{valeur\PYGZus{}defaut}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{):}
+    \PYG{k}{return} \PYG{p}{[} \PYG{p}{[} \PYG{n}{valeur\PYGZus{}defaut} \PYG{k}{for} \PYG{n}{\PYGZus{}} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{largeur}\PYG{p}{)} \PYG{p}{]} \PYG{k}{for} \PYG{n}{\PYGZus{}} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{hauteur}\PYG{p}{)} \PYG{p}{]}
+
+\PYG{k}{class} \PYG{n+nc}{Case}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+
+    \PYG{n+nd}{@staticmethod}
+    \PYG{k}{def} \PYG{n+nf}{genererQuatreDirections}\PYG{p}{():}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{genererHuitDirections}\PYG{p}{():}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{ligne}\PYG{p}{,} \PYG{n}{colonne}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ligne} \PYG{o}{=} \PYG{n}{ligne}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{colonne} \PYG{o}{=} \PYG{n}{colonne}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}add\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{other}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{Case}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ligne} \PYG{o}{+} \PYG{n}{other}\PYG{o}{.}\PYG{n}{ligne}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{colonne} \PYG{o}{+} \PYG{n}{other}\PYG{o}{.}\PYG{n}{colonne}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{genererCaseAdjacentes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{directions}\PYG{p}{):}
+        \PYG{k}{for} \PYG{n}{direction} \PYG{o+ow}{in} \PYG{n}{directions}\PYG{p}{:}
+            \PYG{k}{yield} \PYG{n}{direction} \PYG{o}{+} \PYG{n+nb+bp}{self}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}repr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}Case(\PYGZob{}\PYGZcb{}, \PYGZob{}\PYGZcb{})\PYGZsq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ligne}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{colonne}\PYG{p}{)}
+
+\PYG{k}{class} \PYG{n+nc}{TableauDeuxDimension}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}lignes} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}nombre\PYGZus{}lignes\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}nombre\PYGZus{}lignes\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}colonnes} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}nombre\PYGZus{}colonnes\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}nombre\PYGZus{}colonnes\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}valeur\PYGZus{}defaut\PYGZsq{}} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{kwargs}\PYG{p}{:}
+            \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}valeur\PYGZus{}defaut\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{None}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnee} \PYG{o}{=} \PYG{n}{creerListeDoubleDimension}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}lignes}\PYG{p}{,}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}colonnes}\PYG{p}{,}
+            \PYG{n}{valeur\PYGZus{}defaut}\PYG{o}{=}\PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}valeur\PYGZus{}defaut\PYGZsq{}}\PYG{p}{])}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}valeur\PYGZus{}defaut\PYGZsq{}}\PYG{p}{]}
+            
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}getitem\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnee}\PYG{p}{[}\PYG{n}{case}\PYG{o}{.}\PYG{n}{ligne}\PYG{p}{][}\PYG{n}{case}\PYG{o}{.}\PYG{n}{colonne}\PYG{p}{]}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}setitem\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{,} \PYG{n}{valeur}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnee}\PYG{p}{[}\PYG{n}{case}\PYG{o}{.}\PYG{n}{ligne}\PYG{p}{][}\PYG{n}{case}\PYG{o}{.}\PYG{n}{colonne}\PYG{p}{]} \PYG{o}{=} \PYG{n}{valeur}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}contains\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(}\PYG{n}{case}\PYG{o}{.}\PYG{n}{ligne} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{0}
+            \PYG{o+ow}{and} \PYG{n}{case}\PYG{o}{.}\PYG{n}{colonne} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{0}
+            \PYG{o+ow}{and} \PYG{n}{case}\PYG{o}{.}\PYG{n}{ligne} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}lignes}
+            \PYG{o+ow}{and} \PYG{n}{case}\PYG{o}{.}\PYG{n}{colonne} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}colonnes}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}repr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}TableauDeuxDimension(\PYGZob{}\PYGZcb{}, \PYGZob{}\PYGZcb{})\PYGZsq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}lignes}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}colonnes}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{genererValeurs}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{map}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}getitem\PYGZus{}\PYGZus{}}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererCases}\PYG{p}{())}
+
+    \PYG{k}{def} \PYG{n+nf}{genererCases}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{for} \PYG{n}{ligne} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}lignes}\PYG{p}{):}
+            \PYG{k}{for} \PYG{n}{colonne} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}colonnes}\PYG{p}{):}
+                \PYG{k}{yield} \PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne}\PYG{p}{,} \PYG{n}{colonne}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{parcoursEnLargeur}\PYG{p}{(}\PYG{n}{debuts\PYGZus{}et\PYGZus{}valeurs}\PYG{p}{,} \PYG{n}{voisins}\PYG{p}{,} \PYG{n}{assigner\PYGZus{}valeur}\PYG{p}{,} \PYG{n}{tableau\PYGZus{}finale}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Functions Arguments:}
+\PYG{l+s+sd}{            voisins(case\PYGZus{}courante, tableau\PYGZus{}finale),}
+\PYG{l+s+sd}{            valeur\PYGZus{}case(case\PYGZus{}voisise, case\PYGZus{}courante, tableu\PYGZus{}finale)}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{n}{deja\PYGZus{}vue} \PYG{o}{=} \PYG{n}{TableauDeuxDimension}\PYG{p}{(}
+        \PYG{n}{nombre\PYGZus{}lignes}\PYG{o}{=}\PYG{n}{tableau\PYGZus{}finale}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}lignes}\PYG{p}{,}
+        \PYG{n}{nombre\PYGZus{}colonnes}\PYG{o}{=}\PYG{n}{tableau\PYGZus{}finale}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}colonnes}\PYG{p}{,}
+        \PYG{n}{valeur\PYGZus{}defaut}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+
+    \PYG{n}{queue} \PYG{o}{=} \PYG{n}{collections}\PYG{o}{.}\PYG{n}{deque}\PYG{p}{()}
+
+    \PYG{k}{for} \PYG{n}{debut}\PYG{p}{,} \PYG{n}{valeur} \PYG{o+ow}{in} \PYG{n}{debuts\PYGZus{}et\PYGZus{}valeurs}\PYG{p}{:}
+        \PYG{n}{queue}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{debut}\PYG{p}{)}
+        \PYG{n}{deja\PYGZus{}vue}\PYG{p}{[}\PYG{n}{debut}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{True}
+        \PYG{n}{tableau\PYGZus{}finale}\PYG{p}{[}\PYG{n}{debut}\PYG{p}{]} \PYG{o}{=} \PYG{n}{valeur}
+
+    \PYG{k}{while} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{queue}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{:}
+        \PYG{n}{case\PYGZus{}courante} \PYG{o}{=} \PYG{n}{queue}\PYG{o}{.}\PYG{n}{popleft}\PYG{p}{()}
+        \PYG{k}{for} \PYG{n}{case\PYGZus{}voisine} \PYG{o+ow}{in} \PYG{n}{voisins}\PYG{p}{(}\PYG{n}{case\PYGZus{}courante}\PYG{p}{,} \PYG{n}{tableau\PYGZus{}finale}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{case\PYGZus{}voisine} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{tableau\PYGZus{}finale} \PYG{o+ow}{or} \PYG{n}{deja\PYGZus{}vue}\PYG{p}{[}\PYG{n}{case\PYGZus{}voisine}\PYG{p}{]:}
+                \PYG{k}{continue}
+            \PYG{n}{deja\PYGZus{}vue}\PYG{p}{[}\PYG{n}{case\PYGZus{}voisine}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{True}
+            \PYG{n}{queue}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{case\PYGZus{}voisine}\PYG{p}{)}
+            \PYG{n}{assigner\PYGZus{}valeur}\PYG{p}{(}\PYG{n}{case\PYGZus{}voisine}\PYG{p}{,} \PYG{n}{case\PYGZus{}courante}\PYG{p}{,} \PYG{n}{tableau\PYGZus{}finale}\PYG{p}{)}
+    
+\PYG{k}{def} \PYG{n+nf}{unzip}\PYG{p}{(}\PYG{n}{iterable}\PYG{p}{):}
+    \PYG{n}{lefts} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{n}{rights} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{k}{for} \PYG{n}{left}\PYG{p}{,} \PYG{n}{right} \PYG{o+ow}{in} \PYG{n}{iterable}\PYG{p}{:}
+        \PYG{n}{lefts}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{left}\PYG{p}{)}
+        \PYG{n}{rights}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{right}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{lefts}\PYG{p}{,} \PYG{n}{rights}
+        
+\PYG{k}{def} \PYG{n+nf}{fusioner\PYGZus{}dictionnaires}\PYG{p}{(}\PYG{n}{dic1}\PYG{p}{,} \PYG{n}{dic2}\PYG{p}{):}
+    \PYG{n}{sortie} \PYG{o}{=} \PYG{p}{\PYGZob{}\PYGZcb{}}
+    \PYG{n}{sortie}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{dic1}\PYG{p}{)}
+    \PYG{n}{sortie}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{dic2}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{sortie}
+
+\PYG{k}{def} \PYG{n+nf}{mapMatrix}\PYG{p}{(}\PYG{n}{function}\PYG{p}{,} \PYG{n}{matrix}\PYG{p}{):}
+    \PYG{k}{return} \PYG{n}{np}\PYG{o}{.}\PYG{n}{matrix}\PYG{p}{(}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb}{map}\PYG{p}{(}\PYG{n}{function}\PYG{p}{,} \PYG{n}{matrix}\PYG{o}{.}\PYG{n}{flat}\PYG{p}{)))}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{n}{matrix}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{)}
+\end{Verbatim}

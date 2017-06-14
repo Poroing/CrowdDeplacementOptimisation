@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{RAPPORT\PYGZus{}PIXEL\PYGZus{}METTRES} \PYG{o}{=} \PYG{l+m+mi}{75}
+
+\PYG{k}{def} \PYG{n+nf}{convertirMetresPixels}\PYG{p}{(}\PYG{n}{mesure}\PYG{p}{):}
+    \PYG{k}{return} \PYG{n}{mesure} \PYG{o}{*} \PYG{n}{RAPPORT\PYGZus{}PIXEL\PYGZus{}METTRES}
+
+\PYG{k}{def} \PYG{n+nf}{convertirSurfacePixelsSurfaceMetres}\PYG{p}{(}\PYG{n}{surface}\PYG{p}{):}
+    \PYG{k}{return} \PYG{n}{surface} \PYG{o}{/} \PYG{n}{RAPPORT\PYGZus{}PIXEL\PYGZus{}METTRES}\PYG{o}{**}\PYG{l+m+mi}{2}
+\end{Verbatim}

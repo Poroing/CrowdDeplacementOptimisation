@@ -1,0 +1,28 @@
+\select@language {french}
+\contentsline {section}{\numberline {1}\IeC {\'E}tude des foules et \IeC {\'e}vacuation}{2}{section.1}
+\contentsline {section}{\numberline {2}Objectifs}{2}{section.2}
+\contentsline {section}{\numberline {3}Simulation multi-agents}{2}{section.3}
+\contentsline {section}{\numberline {4}Outils utilis\IeC {\'e}s}{3}{section.4}
+\contentsline {section}{\numberline {5}Description d'une salle}{3}{section.5}
+\contentsline {section}{\numberline {6}Description des agents}{4}{section.6}
+\contentsline {section}{\numberline {7}Mod\IeC {\'e}lisation du mouvement d'un agent}{5}{section.7}
+\contentsline {subsection}{\numberline {7.1}Mouvement en fonction du voisinage}{5}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Mouvement en fonction du champ de vision}{6}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}Mouvement par un champ vectoriel}{8}{subsection.7.3}
+\contentsline {section}{\numberline {8}Recherche d'optimisations gr\IeC {\^a}ce \IeC {\`a} la mod\IeC {\'e}lisation}{12}{section.8}
+\contentsline {section}{\numberline {9}Conclusion}{12}{section.9}
+\contentsline {section}{\numberline {A}Listings}{14}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}\texttt {simulation.py}}{14}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}\texttt {constructeur\_simulation.py}}{16}{subsection.A.2}
+\contentsline {subsection}{\numberline {A.3}\texttt {espace.py}}{21}{subsection.A.3}
+\contentsline {subsection}{\numberline {A.4}\texttt {personne.py}}{24}{subsection.A.4}
+\contentsline {subsection}{\numberline {A.5}\texttt {test\_point\_suivre.py} (Mod\IeC {\'e}lisation du mouvement)}{27}{subsection.A.5}
+\contentsline {subsection}{\numberline {A.6}\texttt {space\_hash.py} (Hachage de l'espace et Treillis)}{40}{subsection.A.6}
+\contentsline {subsection}{\numberline {A.7}\texttt {ecouteur.py}}{46}{subsection.A.7}
+\contentsline {subsection}{\numberline {A.8}\texttt {lieu\_ferme.py}}{47}{subsection.A.8}
+\contentsline {subsection}{\numberline {A.9}\texttt {obstacle.py}}{48}{subsection.A.9}
+\contentsline {subsection}{\numberline {A.10}\texttt {representation.py}}{49}{subsection.A.10}
+\contentsline {subsection}{\numberline {A.11}\texttt {geometrie.py}}{52}{subsection.A.11}
+\contentsline {subsection}{\numberline {A.12}\texttt {base.py}}{56}{subsection.A.12}
+\contentsline {subsection}{\numberline {A.13}\texttt {fonctions\_annexes.py}}{61}{subsection.A.13}
+\contentsline {subsection}{\numberline {A.14}\texttt {representation\_categories.py}}{61}{subsection.A.14}

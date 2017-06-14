@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{geometrie}
+
+\PYG{k}{class} \PYG{n+nc}{LieuFerme}\PYG{p}{(}\PYG{n}{geometrie}\PYG{o}{.}\PYG{n}{SimpleRectangle}\PYG{p}{):}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}\PYG{n}{liste\PYGZus{}portes}\PYG{p}{,} \PYG{n}{largeur}\PYG{o}{=}\PYG{l+m+mi}{400}\PYG{p}{,} \PYG{n}{hauteur}\PYG{o}{=}\PYG{l+m+mi}{800}\PYG{p}{,} \PYG{n}{position}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)):}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n}{position}\PYG{p}{,} \PYG{n}{largeur}\PYG{p}{,} \PYG{n}{hauteur}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{liste\PYGZus{}portes} \PYG{o}{=} \PYG{n}{liste\PYGZus{}portes}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirCentrePorte}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{porte}\PYG{p}{):}
+        \PYG{n}{mur} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCote}\PYG{p}{(}\PYG{n}{porte}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}mur\PYGZsq{}}\PYG{p}{])}
+        \PYG{k}{return} \PYG{n}{mur}\PYG{o}{.}\PYG{n}{avoirPositionPourcentage}\PYG{p}{(}\PYG{n}{porte}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{])}
+    
+    \PYG{k}{def} \PYG{n+nf}{avoirCentrePortes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n}{sortie} \PYG{o}{=} \PYG{p}{[]}
+        
+        \PYG{k}{for} \PYG{n}{porte} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{liste\PYGZus{}portes} \PYG{p}{:}
+            \PYG{n}{sortie}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCentrePorte}\PYG{p}{(}\PYG{n}{porte}\PYG{p}{))}
+            
+        \PYG{k}{return} \PYG{n}{sortie}
+\end{Verbatim}

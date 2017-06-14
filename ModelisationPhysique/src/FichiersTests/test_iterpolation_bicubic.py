@@ -4,6 +4,7 @@ from convertir_json_python import convertirJsonPython
 from traitement import RecuperationDeDonnees, TraitementDeDonnees
 from affichage import Afficheur
 import test_point_suivre
+from personne import Personne
 
 from pymunk.vec2d import Vec2d
 
@@ -11,10 +12,12 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
 
+Personne.TEST_DIRECTION = test_point_suivre.TestGradientLargeurHuitDirections
+
 afficheur = Afficheur()
 
 configuration = convertirJsonPython(
-    '../FichiersConfiguration/MPSI2.json')
+    '../FichiersConfiguration/MPSTAR.json')
         
 recuperation = RecuperationDeDonnees(
     configuration,

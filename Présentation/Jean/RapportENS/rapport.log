@@ -1,6 +1,6 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2017.4.22)  11 JUN 2017 19:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Arch Linux) (preloaded format=pdflatex 2017.4.22)  14 JUN 2017 16:27
 entering extended mode
- restricted \write18 enabled.
+ \write18 enabled.
  %&-line parsing enabled.
 **rapport.tex
 (./rapport.tex
@@ -549,40 +549,437 @@ Package caption3 Info: TeX engine: e-TeX on input line 67.
 )
 \c@ContinuedFloat=\count106
 Package caption Info: hyperref package is loaded.
-) (./rapport.aux)
+)
+(/usr/share/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2016/11/05 v2.16a AMS math features
+\@mathmargin=\skip52
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01 AMS text
+
+(/usr/share/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks18
+\ex@=\dimen119
+))
+(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen120
+)
+(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count107
+LaTeX Info: Redefining \frac on input line 213.
+\uproot@=\count108
+\leftroot@=\count109
+LaTeX Info: Redefining \overline on input line 375.
+\classnum@=\count110
+\DOTSCASE@=\count111
+LaTeX Info: Redefining \ldots on input line 472.
+LaTeX Info: Redefining \dots on input line 475.
+LaTeX Info: Redefining \cdots on input line 596.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen121
+LaTeX Font Info:    Redeclaring font encoding OML on input line 712.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 713.
+\macc@depth=\count112
+\c@MaxMatrixCols=\count113
+\dotsspace@=\muskip11
+\c@parentequation=\count114
+\dspbrk@lvl=\count115
+\tag@help=\toks19
+\row@=\count116
+\column@=\count117
+\maxfields@=\count118
+\andhelp@=\toks20
+\eqnshift@=\dimen122
+\alignsep@=\dimen123
+\tagshift@=\dimen124
+\tagwidth@=\dimen125
+\totwidth@=\dimen126
+\lineht@=\dimen127
+\@envbody=\toks21
+\multlinegap=\skip53
+\multlinetaggap=\skip54
+\mathdisplay@stack=\toks22
+LaTeX Info: Redefining \[ on input line 2817.
+LaTeX Info: Redefining \] on input line 2818.
+)
+(/usr/share/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(/usr/share/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(/usr/share/texmf-dist/tex/latex/amscls/amsthm.sty
+Package: amsthm 2015/03/04 v2.20.2
+\thm@style=\toks23
+\thm@bodyfont=\toks24
+\thm@headfont=\toks25
+\thm@notefont=\toks26
+\thm@headpunct=\toks27
+\thm@preskip=\skip55
+\thm@postskip=\skip56
+\thm@headsep=\skip57
+\dth@everypar=\toks28
+)
+(/usr/share/texmf-dist/tex/latex/minted/minted.sty
+Package: minted 2016/10/31 v2.4.1 Yet another Pygments shim for LaTeX
+
+(/usr/share/texmf-dist/tex/latex/fvextra/fvextra.sty
+Package: fvextra 2016/09/02 v1.2.1 fvextra - extensions and patches for fancyvr
+b
+
+(/usr/share/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(/usr/share/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2017/01/02 v2.4 e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count119
+)
+(/usr/share/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2008/02/07
+
+Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
+<2008/02/07> (tvz)
+\FV@CodeLineNo=\count120
+\FV@InFile=\read1
+\FV@TabBox=\box28
+\c@FancyVerbLine=\count121
+\FV@StepNumber=\count122
+\FV@OutFile=\write3
+) (/usr/share/texmf-dist/tex/latex/upquote/upquote.sty
+Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
+tim
+
+(/usr/share/texmf-dist/tex/latex/base/textcomp.sty
+Package: textcomp 2017/02/22 v2.0g Standard LaTeX package
+Package textcomp Info: Sub-encoding information:
+(textcomp)               5 = only ISO-Adobe without \textcurrency
+(textcomp)               4 = 5 + \texteuro
+(textcomp)               3 = 4 + \textohm
+(textcomp)               2 = 3 + \textestimated + \textcurrency
+(textcomp)               1 = TS1 - \textcircled - \t
+(textcomp)               0 = TS1 (full)
+(textcomp)             Font families with sub-encoding setting implement
+(textcomp)             only a restricted character set as indicated.
+(textcomp)             Family '?' is the default used for unknown fonts.
+(textcomp)             See the documentation for details.
+Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 79.
+
+(/usr/share/texmf-dist/tex/latex/base/ts1enc.def
+File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
+Now handling font encoding TS1 ...
+... processing UTF-8 mapping file for font encoding TS1
+
+(/usr/share/texmf-dist/tex/latex/base/ts1enc.dfu
+File: ts1enc.dfu 2017/01/28 v1.1t UTF-8 support for inputenc
+   defining Unicode char U+00A2 (decimal 162)
+   defining Unicode char U+00A3 (decimal 163)
+   defining Unicode char U+00A4 (decimal 164)
+   defining Unicode char U+00A5 (decimal 165)
+   defining Unicode char U+00A6 (decimal 166)
+   defining Unicode char U+00A7 (decimal 167)
+   defining Unicode char U+00A8 (decimal 168)
+   defining Unicode char U+00A9 (decimal 169)
+   defining Unicode char U+00AA (decimal 170)
+   defining Unicode char U+00AC (decimal 172)
+   defining Unicode char U+00AE (decimal 174)
+   defining Unicode char U+00AF (decimal 175)
+   defining Unicode char U+00B0 (decimal 176)
+   defining Unicode char U+00B1 (decimal 177)
+   defining Unicode char U+00B2 (decimal 178)
+   defining Unicode char U+00B3 (decimal 179)
+   defining Unicode char U+00B4 (decimal 180)
+   defining Unicode char U+00B5 (decimal 181)
+   defining Unicode char U+00B6 (decimal 182)
+   defining Unicode char U+00B7 (decimal 183)
+   defining Unicode char U+00B9 (decimal 185)
+   defining Unicode char U+00BA (decimal 186)
+   defining Unicode char U+00BC (decimal 188)
+   defining Unicode char U+00BD (decimal 189)
+   defining Unicode char U+00BE (decimal 190)
+   defining Unicode char U+00D7 (decimal 215)
+   defining Unicode char U+00F7 (decimal 247)
+   defining Unicode char U+0192 (decimal 402)
+   defining Unicode char U+02C7 (decimal 711)
+   defining Unicode char U+02D8 (decimal 728)
+   defining Unicode char U+02DD (decimal 733)
+   defining Unicode char U+0E3F (decimal 3647)
+   defining Unicode char U+2016 (decimal 8214)
+   defining Unicode char U+2020 (decimal 8224)
+   defining Unicode char U+2021 (decimal 8225)
+   defining Unicode char U+2022 (decimal 8226)
+   defining Unicode char U+2030 (decimal 8240)
+   defining Unicode char U+2031 (decimal 8241)
+   defining Unicode char U+203B (decimal 8251)
+   defining Unicode char U+203D (decimal 8253)
+   defining Unicode char U+2044 (decimal 8260)
+   defining Unicode char U+204E (decimal 8270)
+   defining Unicode char U+2052 (decimal 8274)
+   defining Unicode char U+20A1 (decimal 8353)
+   defining Unicode char U+20A4 (decimal 8356)
+   defining Unicode char U+20A6 (decimal 8358)
+   defining Unicode char U+20A9 (decimal 8361)
+   defining Unicode char U+20AB (decimal 8363)
+   defining Unicode char U+20AC (decimal 8364)
+   defining Unicode char U+20B1 (decimal 8369)
+   defining Unicode char U+2103 (decimal 8451)
+   defining Unicode char U+2116 (decimal 8470)
+   defining Unicode char U+2117 (decimal 8471)
+   defining Unicode char U+211E (decimal 8478)
+   defining Unicode char U+2120 (decimal 8480)
+   defining Unicode char U+2122 (decimal 8482)
+   defining Unicode char U+2126 (decimal 8486)
+   defining Unicode char U+2127 (decimal 8487)
+   defining Unicode char U+212E (decimal 8494)
+   defining Unicode char U+2190 (decimal 8592)
+   defining Unicode char U+2191 (decimal 8593)
+   defining Unicode char U+2192 (decimal 8594)
+   defining Unicode char U+2193 (decimal 8595)
+   defining Unicode char U+2329 (decimal 9001)
+   defining Unicode char U+232A (decimal 9002)
+   defining Unicode char U+2422 (decimal 9250)
+   defining Unicode char U+25E6 (decimal 9702)
+   defining Unicode char U+25EF (decimal 9711)
+   defining Unicode char U+266A (decimal 9834)
+))
+LaTeX Info: Redefining \oldstylenums on input line 334.
+Package textcomp Info: Setting cmr sub-encoding to TS1/0 on input line 349.
+Package textcomp Info: Setting cmss sub-encoding to TS1/0 on input line 350.
+Package textcomp Info: Setting cmtt sub-encoding to TS1/0 on input line 351.
+Package textcomp Info: Setting cmvtt sub-encoding to TS1/0 on input line 352.
+Package textcomp Info: Setting cmbr sub-encoding to TS1/0 on input line 353.
+Package textcomp Info: Setting cmtl sub-encoding to TS1/0 on input line 354.
+Package textcomp Info: Setting ccr sub-encoding to TS1/0 on input line 355.
+Package textcomp Info: Setting ptm sub-encoding to TS1/4 on input line 356.
+Package textcomp Info: Setting pcr sub-encoding to TS1/4 on input line 357.
+Package textcomp Info: Setting phv sub-encoding to TS1/4 on input line 358.
+Package textcomp Info: Setting ppl sub-encoding to TS1/3 on input line 359.
+Package textcomp Info: Setting pag sub-encoding to TS1/4 on input line 360.
+Package textcomp Info: Setting pbk sub-encoding to TS1/4 on input line 361.
+Package textcomp Info: Setting pnc sub-encoding to TS1/4 on input line 362.
+Package textcomp Info: Setting pzc sub-encoding to TS1/4 on input line 363.
+Package textcomp Info: Setting bch sub-encoding to TS1/4 on input line 364.
+Package textcomp Info: Setting put sub-encoding to TS1/5 on input line 365.
+Package textcomp Info: Setting uag sub-encoding to TS1/5 on input line 366.
+Package textcomp Info: Setting ugq sub-encoding to TS1/5 on input line 367.
+Package textcomp Info: Setting ul8 sub-encoding to TS1/4 on input line 368.
+Package textcomp Info: Setting ul9 sub-encoding to TS1/4 on input line 369.
+Package textcomp Info: Setting augie sub-encoding to TS1/5 on input line 370.
+Package textcomp Info: Setting dayrom sub-encoding to TS1/3 on input line 371.
+Package textcomp Info: Setting dayroms sub-encoding to TS1/3 on input line 372.
+
+Package textcomp Info: Setting pxr sub-encoding to TS1/0 on input line 373.
+Package textcomp Info: Setting pxss sub-encoding to TS1/0 on input line 374.
+Package textcomp Info: Setting pxtt sub-encoding to TS1/0 on input line 375.
+Package textcomp Info: Setting txr sub-encoding to TS1/0 on input line 376.
+Package textcomp Info: Setting txss sub-encoding to TS1/0 on input line 377.
+Package textcomp Info: Setting txtt sub-encoding to TS1/0 on input line 378.
+Package textcomp Info: Setting lmr sub-encoding to TS1/0 on input line 379.
+Package textcomp Info: Setting lmdh sub-encoding to TS1/0 on input line 380.
+Package textcomp Info: Setting lmss sub-encoding to TS1/0 on input line 381.
+Package textcomp Info: Setting lmssq sub-encoding to TS1/0 on input line 382.
+Package textcomp Info: Setting lmvtt sub-encoding to TS1/0 on input line 383.
+Package textcomp Info: Setting lmtt sub-encoding to TS1/0 on input line 384.
+Package textcomp Info: Setting qhv sub-encoding to TS1/0 on input line 385.
+Package textcomp Info: Setting qag sub-encoding to TS1/0 on input line 386.
+Package textcomp Info: Setting qbk sub-encoding to TS1/0 on input line 387.
+Package textcomp Info: Setting qcr sub-encoding to TS1/0 on input line 388.
+Package textcomp Info: Setting qcs sub-encoding to TS1/0 on input line 389.
+Package textcomp Info: Setting qpl sub-encoding to TS1/0 on input line 390.
+Package textcomp Info: Setting qtm sub-encoding to TS1/0 on input line 391.
+Package textcomp Info: Setting qzc sub-encoding to TS1/0 on input line 392.
+Package textcomp Info: Setting qhvc sub-encoding to TS1/0 on input line 393.
+Package textcomp Info: Setting futs sub-encoding to TS1/4 on input line 394.
+Package textcomp Info: Setting futx sub-encoding to TS1/4 on input line 395.
+Package textcomp Info: Setting futj sub-encoding to TS1/4 on input line 396.
+Package textcomp Info: Setting hlh sub-encoding to TS1/3 on input line 397.
+Package textcomp Info: Setting hls sub-encoding to TS1/3 on input line 398.
+Package textcomp Info: Setting hlst sub-encoding to TS1/3 on input line 399.
+Package textcomp Info: Setting hlct sub-encoding to TS1/5 on input line 400.
+Package textcomp Info: Setting hlx sub-encoding to TS1/5 on input line 401.
+Package textcomp Info: Setting hlce sub-encoding to TS1/5 on input line 402.
+Package textcomp Info: Setting hlcn sub-encoding to TS1/5 on input line 403.
+Package textcomp Info: Setting hlcw sub-encoding to TS1/5 on input line 404.
+Package textcomp Info: Setting hlcf sub-encoding to TS1/5 on input line 405.
+Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 406.
+Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 407.
+Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
+Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
+))
+(/usr/share/texmf-dist/tex/latex/lineno/lineno.sty
+Package: lineno 2005/11/02 line numbers on paragraphs v4.41
+\linenopenalty=\count123
+\output=\toks29
+\linenoprevgraf=\count124
+\linenumbersep=\dimen128
+\linenumberwidth=\dimen129
+\c@linenumber=\count125
+\c@pagewiselinenumber=\count126
+\c@LN@truepage=\count127
+\c@internallinenumber=\count128
+\c@internallinenumbers=\count129
+\quotelinenumbersep=\dimen130
+\bframerule=\dimen131
+\bframesep=\dimen132
+\bframebox=\box29
+LaTeX Info: Redefining \\ on input line 3056.
+)
+\c@FV@TrueTabGroupLevel=\count130
+\c@FV@TrueTabCounter=\count131
+\FV@TabBox@Group=\box30
+\FV@TmpLength=\skip58
+\c@FV@HighlightLinesStart=\count132
+\c@FV@HighlightLinesStop=\count133
+\FV@BreakIndent=\dimen133
+\FV@BreakSymbolSepLeft=\dimen134
+\FV@BreakSymbolSepRight=\dimen135
+\FV@BreakSymbolIndentLeft=\dimen136
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 562.
+
+
+(/usr/share/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+\FV@BreakSymbolIndentRight=\dimen137
+\c@FancyVerbLineBreakLast=\count134
+\FV@LineBox=\box31
+\FV@LineIndentBox=\box32
+)
+(/usr/share/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count135
+\float@exts=\toks30
+\float@box=\box33
+\@float@everytoks=\toks31
+\@floatcapt=\box34
+)
+(/usr/share/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2014/10/28 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count136
+\calc@Bcount=\count137
+\calc@Adimen=\dimen138
+\calc@Bdimen=\dimen139
+\calc@Askip=\skip59
+\calc@Bskip=\skip60
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count138
+\calc@Cskip=\skip61
+)
+(/usr/share/texmf-dist/tex/latex/tools/shellesc.sty
+Package: shellesc 2016/06/07 v0.02a unified shell escape interface for LaTeX
+Package shellesc Info: Unrestricted shell escape enabled on input line 67.
+)
+(/usr/share/texmf-dist/tex/latex/ifplatform/ifplatform.sty
+Package: ifplatform 2010/10/22 v0.4 Testing for the operating system
+
+(/usr/share/texmf-dist/tex/generic/oberdiek/catchfile.sty
+Package: catchfile 2016/05/16 v1.7 Catch the contents of a file (HO)
+)
+runsystem(uname -s > "rapport.w18")...executed.
+
+ (./rapport.w18)
+runsystem(rm -- "rapport.w18")...executed.
+
+)
+(/usr/share/texmf-dist/tex/generic/xstring/xstring.sty
+(/usr/share/texmf-dist/tex/generic/xstring/xstring.tex
+\@xs@message=\write4
+\integerpart=\count139
+\decimalpart=\count140
+)
+Package: xstring 2013/10/13  v1.7c  String manipulations (C Tellechea)
+)
+(/usr/share/texmf-dist/tex/latex/framed/framed.sty
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip62
+\fb@frw=\dimen140
+\fb@frh=\dimen141
+\FrameRule=\dimen142
+\FrameSep=\dimen143
+)
+\minted@appexistsfile=\read2
+\minted@bgbox=\box35
+\minted@code=\write5
+\c@minted@FancyVerbLineTemp=\count141
+\c@minted@pygmentizecounter=\count142
+\@float@every@listing=\toks32
+\c@listing=\count143
+)
+runsystem(mkdir -p _minted-rapport)...executed.
+
+
+(/usr/share/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+
+(/usr/share/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1352.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+)
+runsystem(which pygmentize && touch rapport.aex)...executed.
+
+runsystem(rm rapport.aex)...executed.
+
+ (./rapport.aux)
 \openout1 = `rapport.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Info: Redefining \degres on input line 14.
-LaTeX Info: Redefining \dots on input line 14.
-LaTeX Info: Redefining \up on input line 14.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 31.
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 31.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 31.
+
+(/usr/share/texmf-dist/tex/latex/base/ts1cmr.fd
+File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    ... okay on input line 31.
+LaTeX Info: Redefining \degres on input line 31.
+LaTeX Info: Redefining \dots on input line 31.
+LaTeX Info: Redefining \up on input line 31.
 
 (/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count107
-\scratchdimen=\dimen119
-\scratchbox=\box26
-\nofMPsegments=\count108
-\nofMParguments=\count109
-\everyMPshowfont=\toks18
-\MPscratchCnt=\count110
-\MPscratchDim=\dimen120
-\MPnumerator=\count111
-\makeMPintoPDFobject=\count112
-\everyMPtoPDFconversion=\toks19
+\scratchcounter=\count144
+\scratchdimen=\dimen144
+\scratchbox=\box36
+\nofMPsegments=\count145
+\nofMParguments=\count146
+\everyMPshowfont=\toks33
+\MPscratchCnt=\count147
+\MPscratchDim=\dimen145
+\MPnumerator=\count148
+\makeMPintoPDFobject=\count149
+\everyMPtoPDFconversion=\toks34
 ) (/usr/share/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -600,8 +997,8 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\AtBeginShipoutBox=\box27
-Package hyperref Info: Link coloring OFF on input line 14.
+\AtBeginShipoutBox=\box37
+Package hyperref Info: Link coloring OFF on input line 31.
 
 (/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -609,95 +1006,356 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/share/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count113
+\c@section@level=\count150
 )
-LaTeX Info: Redefining \ref on input line 14.
-LaTeX Info: Redefining \pageref on input line 14.
-LaTeX Info: Redefining \nameref on input line 14.
+LaTeX Info: Redefining \ref on input line 31.
+LaTeX Info: Redefining \pageref on input line 31.
+LaTeX Info: Redefining \nameref on input line 31.
  (./rapport.out) (./rapport.out)
-\@outlinefile=\write3
-\openout3 = `rapport.out'.
+\@outlinefile=\write6
+\openout6 = `rapport.out'.
 
 Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 17.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 17.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 17.
+LaTeX Font Info:    Try loading font information for U+msa on input line 34.
+ (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 34.
 
+(/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) (./rapport.toc [1
 
-LaTeX Warning: No \author given.
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}])
+\tf@toc=\write7
+\openout7 = `rapport.toc'.
 
-[1
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-<img/BVH.pdf, id=42, 402.21732pt x 125.34865pt>
+ [2]
+<img/BVH.pdf, id=156, 402.21732pt x 125.34865pt>
 File: img/BVH.pdf Graphic file (type pdf)
  <use img/BVH.pdf>
-Package pdftex.def Info: img/BVH.pdf used on input line 91.
+Package pdftex.def Info: img/BVH.pdf used on input line 116.
 (pdftex.def)             Requested size: 365.20819pt x 113.81102pt.
 
-Overfull \hbox (20.20819pt too wide) in paragraph at lines 91--92
-[][] 
+Overfull \hbox (20.20819pt too wide) in paragraph at lines 116--117
+ [][] 
  []
 
-LaTeX Font Info:    Try loading font information for T1+cmtt on input line 93.
-(/usr/share/texmf-dist/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 93.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 93.
- [2 <./img/BVH.pdf>]
-<img/salle.png, id=61, 1003.75pt x 953.5625pt>
+<img/salle.png, id=160, 1003.75pt x 953.5625pt>
 File: img/salle.png Graphic file (type png)
  <use img/salle.png>
-Package pdftex.def Info: img/salle.png used on input line 104.
+Package pdftex.def Info: img/salle.png used on input line 130.
 (pdftex.def)             Requested size: 119.80153pt x 113.81102pt.
-
-<img/obstacles.png, id=64, 383.4325pt x 401.5pt>
+ [3 <./img/BVH.pdf>] <img/obstacles.png, id=178, 383.4325pt x 401.5pt>
 File: img/obstacles.png Graphic file (type png)
- <use img/obstacles.png>
-Package pdftex.def Info: img/obstacles.png used on input line 122.
-(pdftex.def)             Requested size: 108.68848pt x 113.81102pt.
 
-[3 <./img/salle.png> <./img/obstacles.png>]
-<img/agent.png, id=74, 94.85437pt x 75.28125pt>
+<use img/obstacles.png>
+Package pdftex.def Info: img/obstacles.png used on input line 149.
+(pdftex.def)             Requested size: 108.68848pt x 113.81102pt.
+ [4 <./img/salle.png> <./img/obstacles.png>]
+<img/agent.png, id=188, 94.85437pt x 75.28125pt>
 File: img/agent.png Graphic file (type png)
  <use img/agent.png>
-Package pdftex.def Info: img/agent.png used on input line 144.
+Package pdftex.def Info: img/agent.png used on input line 173.
 (pdftex.def)             Requested size: 143.41591pt x 113.81102pt.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 155.
- [4 <./img/agent.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 155.
+ [5 <./img/agent.png>] <img/choisrayons.pdf, id=199, 625.1611pt x 467.07494pt>
+File: img/choisrayons.pdf Graphic file (type pdf)
+
+<use img/choisrayons.pdf>
+Package pdftex.def Info: img/choisrayons.pdf used on input line 267.
+(pdftex.def)             Requested size: 152.33113pt x 113.81102pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[6] <img/monotnie.pdf, id=216, 524.50728pt x 282.12898pt>
+File: img/monotnie.pdf Graphic file (type pdf)
+
+<use img/monotnie.pdf>
+Package pdftex.def Info: img/monotnie.pdf used on input line 327.
+(pdftex.def)             Requested size: 211.58394pt x 113.81102pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<img/Trajets_MPSTAR_test_proximite.pdf, id=219, 643.74457pt x 527.04233pt>
+File: img/Trajets_MPSTAR_test_proximite.pdf Graphic file (type pdf)
+
+<use img/Trajets_MPSTAR_test_proximite.pdf>
+Package pdftex.def Info: img/Trajets_MPSTAR_test_proximite.pdf used on input li
+ne 346.
+(pdftex.def)             Requested size: 139.01138pt x 113.81102pt.
+
+<img/Trajet_MPSTAR_dicho.png, id=220, 642.14906pt x 575.14874pt>
+File: img/Trajet_MPSTAR_dicho.png Graphic file (type png)
+
+<use img/Trajet_MPSTAR_dicho.png>
+Package pdftex.def Info: img/Trajet_MPSTAR_dicho.png used on input line 347.
+(pdftex.def)             Requested size: 127.06555pt x 113.81102pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<img/blocagetotale.pdf, id=221, 690.56824pt x 292.52141pt>
+File: img/blocagetotale.pdf Graphic file (type pdf)
+
+<use img/blocagetotale.pdf>
+Package pdftex.def Info: img/blocagetotale.pdf used on input line 356.
+(pdftex.def)             Requested size: 268.67775pt x 113.81102pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[7 <./img/choisrayons.pdf>]
+<img/spacehash.pdf, id=234, 306.51305pt x 299.9903pt>
+File: img/spacehash.pdf Graphic file (type pdf)
+ <use img/spacehash.pdf>
+Package pdftex.def Info: img/spacehash.pdf used on input line 392.
+(pdftex.def)             Requested size: 116.28441pt x 113.81102pt.
+
+[8 <./img/monotnie.pdf> <./img/Trajets_MPSTAR_test_proximite.pdf
+
+pdfTeX warning: pdflatex (file ./img/Trajets_MPSTAR_test_proximite.pdf): PDF in
+clusion: multiple pdfs with page group included in a single page
+> <./img/Trajet_MPSTAR_dicho.png>]
+<img/champvectorielle.pdf, id=252, 291.13312pt x 291.13309pt>
+File: img/champvectorielle.pdf Graphic file (type pdf)
+
+<use img/champvectorielle.pdf>
+Package pdftex.def Info: img/champvectorielle.pdf used on input line 416.
+(pdftex.def)             Requested size: 113.81244pt x 113.81102pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<img/champvecteur8MPSTAR.png, id=255, 462.528pt x 346.896pt>
+File: img/champvecteur8MPSTAR.png Graphic file (type png)
+
+<use img/champvecteur8MPSTAR.png>
+Package pdftex.def Info: img/champvecteur8MPSTAR.png used on input line 434.
+(pdftex.def)             Requested size: 151.74544pt x 113.81102pt.
+
+<img/MPSTAR.png, id=256, 1003.75pt x 953.5625pt>
+File: img/MPSTAR.png Graphic file (type png)
+ <use img/MPSTAR.png>
+Package pdftex.def Info: img/MPSTAR.png used on input line 435.
+(pdftex.def)             Requested size: 119.80153pt x 113.81102pt.
+ [9 <./img/blocagetotale.pdf> <./img/spacehash.pdf
+
+pdfTeX warning: pdflatex (file ./img/spacehash.pdf): PDF inclusion: multiple pd
+fs with page group included in a single page
+>] <img/quadrillage.pdf, id=269, 233.05043pt x 233.05043pt>
+File: img/quadrillage.pdf Graphic file (type pdf)
+
+<use img/quadrillage.pdf>
+Package pdftex.def Info: img/quadrillage.pdf used on input line 457.
+(pdftex.def)             Requested size: 113.81165pt x 113.81102pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[10 <./img/champvectorielle.pdf> <./img/champvecteur8MPSTAR.png> <./img/MPSTAR.
+png>] <img/coingradient.pdf, id=284, 219.92973pt x 228.01932pt>
+File: img/coingradient.pdf Graphic file (type pdf)
+
+<use img/coingradient.pdf>
+Package pdftex.def Info: img/coingradient.pdf used on input line 496.
+(pdftex.def)             Requested size: 109.7733pt x 113.81102pt.
+
+<img/champgradient8precis.png, id=285, 462.528pt x 346.896pt>
+File: img/champgradient8precis.png Graphic file (type png)
+
+<use img/champgradient8precis.png>
+Package pdftex.def Info: img/champgradient8precis.png used on input line 504.
+(pdftex.def)             Requested size: 151.74544pt x 113.81102pt.
+File: img/MPSTAR.png Graphic file (type png)
+ <use img/MPSTAR.png>
+Package pdftex.def Info: img/MPSTAR.png used on input line 505.
+(pdftex.def)             Requested size: 119.80153pt x 113.81102pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[11 <./img/quadrillage.pdf> <./img/coingradient.pdf
+
+pdfTeX warning: pdflatex (file ./img/coingradient.pdf): PDF inclusion: multiple
+ pdfs with page group included in a single page
+>] <img/salleVideObstacle.png, id=299, 1003.75pt x 953.5625pt>
+File: img/salleVideObstacle.png Graphic file (type png)
+
+<use img/salleVideObstacle.png>
+Package pdftex.def Info: img/salleVideObstacle.png used on input line 543.
+(pdftex.def)             Requested size: 119.80153pt x 113.81102pt.
+
+<img/salleVide.png, id=300, 1003.75pt x 953.5625pt>
+File: img/salleVide.png Graphic file (type png)
+ <use img/salleVide.png>
+Package pdftex.def Info: img/salleVide.png used on input line 544.
+(pdftex.def)             Requested size: 119.80153pt x 113.81102pt.
+
+<img/ObstacleGaucheSansObstacleDroite.png, id=301, 622.2447pt x 263.0628pt>
+File: img/ObstacleGaucheSansObstacleDroite.png Graphic file (type png)
+
+<use img/ObstacleGaucheSansObstacleDroite.png>
+Package pdftex.def Info: img/ObstacleGaucheSansObstacleDroite.png used on input
+ line 545.
+(pdftex.def)             Requested size: 269.21208pt x 113.81102pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<img/comportement.pdf, id=302, 182.73308pt x 123.57397pt>
+File: img/comportement.pdf Graphic file (type pdf)
+
+<use img/comportement.pdf>
+Package pdftex.def Info: img/comportement.pdf used on input line 553.
+(pdftex.def)             Requested size: 168.30048pt x 113.81102pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[12 <./img/champgradient8precis.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 581--585
+[]\T1/cmr/m/n/10 Tristam Mac-Do-nald, \T1/cmr/m/it/10 Spa-tial Ha-shing\T1/cmr/
+m/n/10 , []$\T1/cmtt/m/n/10 https : / / www . gamedev . net /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 581--585
+\T1/cmtt/m/n/10 resources / _ / technical / game-[]programming / spatial-[]hash
+ing-[]r2697$[]\T1/cmr/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 587--591
+[]\T1/cmr/m/n/10 Alex Nash, \T1/cmr/m/it/10 Any-Angle Path Plan-ning\T1/cmr/m/n
+/10 , []$\T1/cmtt/m/n/10 http : / / idm-[]lab . org / bib /
+ []
+
+
+Underfull \hbox (badness 3482) in paragraph at lines 593--596
+[]\T1/cmr/m/n/10 Wikipedia, \T1/cmr/m/it/10 In-ter-po-la-tion bi-li-néaire\T1/c
+mr/m/n/10 , []$\T1/cmtt/m/n/10 https : / / fr . wikipedia . org / wiki /
+ []
+
+
+Underfull \hbox (badness 3229) in paragraph at lines 598--601
+[]\T1/cmr/m/n/10 Wikipedia, \T1/cmr/m/it/10 In-ter-po-la-tion bi-cu-bique\T1/cm
+r/m/n/10 , []$\T1/cmtt/m/n/10 https : / / fr . wikipedia . org / wiki /
+ []
+
+
+Underfull \hbox (badness 4913) in paragraph at lines 607--612
+[]\T1/cmr/m/n/10 Constantin Theos, \T1/cmr/m/it/10 Mo-dé-li-sa-tion du mou-ve-m
+ent des per-sonnes lors
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 607--612
+\T1/cmr/m/it/10 de l'éva-cua-tion d'un bâ-ti-ment à la suite d'un si-nistre\T1/
+cmr/m/n/10 , []$\T1/cmtt/m/n/10 https :
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 607--612
+\T1/cmtt/m/n/10 / / tel . archives-[]ouvertes . fr / file / index / docid / 523
+176 / filename /
+ []
+
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 617.
+(./_minted-rapport/default-pyg-prefix.pygstyle)
+(./_minted-rapport/default.pygstyle)
+(./_minted-rapport/3DFA3EE7F949DDF59D0EE10F5FAD81A23E52E5280FC21057C2D17D4DBE9D
+02F8.pygtex
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 2.
+ [13 <./img/salleVideObstacle.png> <./img/salleVide.png> <./img/ObstacleGaucheS
+ansObstacleDroite.png>]
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 6.
+
+(/usr/share/texmf-dist/tex/latex/base/ts1cmtt.fd
+File: ts1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+) [14 <./img/comportement.pdf>])
+(./_minted-rapport/6E4047E1C2D12B714D0D33994DF02B7C2C99B5EF34A71FBF10AE51CCC0A1
+59AA.pygtex [15] [16] [17] [18] [19] [20])
+(./_minted-rapport/09CC8DCCCCECD476ECC8844444CCA4A6635F0D6426DC35F62B262ED4DDF0
+C92A.pygtex [21] [22] [23])
+(./_minted-rapport/CCC8E04945025B6DED0C4FEF0B0BC490F2210ACA0705C7F0A5A13FD9F073
+2552.pygtex [24] [25] [26])
+(./_minted-rapport/8216B2CEB58504F3F0159C76F9FBF62DA8F4CBC5AAB46F6688B5848DE64E
+550B.pygtex [27] [28] [29] [30] [31] [32] [33] [34] [35] [36]
+
+LaTeX Font Warning: Font shape `TS1/cmtt/bx/n' undefined
+(Font)              using `TS1/cmtt/m/n' instead
+(Font)              for symbol `textquotesingle' on input line 465.
+
+[37] [38] [39])
+(./_minted-rapport/3A32ED8285B0FB86F217E8CB7495C6F2B1397EF99180368D81302B531707
+528D.pygtex [40] [41] [42] [43] [44] [45])
+(./_minted-rapport/DFCBC6C68A27708B8BD830BCFEF309A05172E567767F782F8F730E5815C5
+6336.pygtex [46])
+(./_minted-rapport/42F18897D5317996C64F28BF8ECCD103F5B7167A6702E1E355B679CA8D62
+7B6D.pygtex [47])
+(./_minted-rapport/90BD110E787343DD00BB38C56015AEDBEA5142D3B7C1C576171CE3274188
+EA02.pygtex [48])
+(./_minted-rapport/7F42AA4439B7D284B6B667E74504D0F1E9008BF0EA4DF6CE71C6C0ED5822
+E82B.pygtex [49] [50] [51])
+(./_minted-rapport/417F19508207475D67C2DB40559B47CB53EB90A81029C6B43E2A04AC18C6
+5A13.pygtex [52] [53] [54] [55])
+(./_minted-rapport/66CE5A22BAC76D6AEC1C664480F9537AA935600277A2E1C827E17744662A
+078C.pygtex [56] [57] [58] [59] [60])
+(./_minted-rapport/905A032DD376EA36BFFEA016147F22386227889A7DD62E6939F9894CF9B5
+5899.pygtex)
+(./_minted-rapport/8AA806CBA73057E1884CEED51407E5C9A79B3378D7199D848AE18CBDAF8B
+5A0E.pygtex)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 646.
+ [61]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 646.
  (./rapport.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 155.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 155.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 646.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 646.
 Package rerunfilecheck Info: File `rapport.out' has not changed.
-(rerunfilecheck)             Checksum: 7DEEED5434FB7E5F454A7139DAECE56F;415.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 155.
+(rerunfilecheck)             Checksum: C5135AF511AC3159E4189E5F2868BFAF;1874.
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 646.
  ) 
 Here is how much of TeX's memory you used:
- 7724 strings out of 493013
- 114032 string characters out of 6139317
- 207794 words of memory out of 5000000
- 11184 multiletter control sequences out of 15000+600000
- 11200 words of font info for 30 fonts, out of 8000000 for 9000
+ 12781 strings out of 493013
+ 201765 string characters out of 6139317
+ 338745 words of memory out of 5000000
+ 15943 multiletter control sequences out of 15000+600000
+ 19035 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,6n,39p,242b,493s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/t
-exmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf-dist/fonts
-/type1/public/cm-super/sfcc1000.pfb></usr/share/texmf-dist/fonts/type1/public/c
-m-super/sfrm1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm120
-0.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/sha
-re/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on rapport.pdf (4 pages, 116115 bytes).
+ 39i,12n,39p,937b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}{/usr/share/
+texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texmf-dist/font
+s/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mmi7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
+share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmsy5.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmsy7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.
+pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share
+/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/texmf-dist/fon
+ts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf-dist/fonts/type1/public
+/cm-super/sfcc1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfit1
+000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm0500.pfb></usr/s
+hare/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf-dist
+/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf-dist/fonts/type1/pu
+blic/cm-super/sfrm1728.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/s
+fti1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></u
+sr/share/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
+Output written on rapport.pdf (61 pages, 733417 bytes).
 PDF statistics:
- 109 PDF objects out of 1000 (max. 8388607)
- 86 compressed objects within 1 object stream
- 16 named destinations out of 1000 (max. 500000)
- 77 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 642 PDF objects out of 1000 (max. 8388607)
+ 516 compressed objects within 6 object streams
+ 114 named destinations out of 1000 (max. 500000)
+ 317 words of extra memory for PDF output out of 10000 (max. 10000000)
 

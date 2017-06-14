@@ -86,8 +86,15 @@ class ConstructeurSalle(object):
         
         coin_inferieur1 = [50,50]
         coin_inferieur2 = [50 + largeur_couloir + largeur_obstacle  ,50]
-        rectangles.append({"largeur" : largeur_obstacle, "hauteur" : hauteur_obstacle,"position" : coin_inferieur1})
-        rectangles.append({"largeur" : largeur_obstacle, "hauteur" : hauteur_obstacle,"position" : coin_inferieur2 })
+
+        rectangles.append({
+            "largeur" : largeur_obstacle,
+            "hauteur" : hauteur_obstacle,
+            "position" : coin_inferieur1})
+        rectangles.append({
+            "largeur" : largeur_obstacle,
+            "hauteur" : hauteur_obstacle,
+            "position" : coin_inferieur2 })
         
         zone_apparition.update({'x_min' :  50 + largeur_obstacle})
         zone_apparition.update({'x_max' :  coin_inferieur2[0]})
@@ -158,10 +165,11 @@ class ConstructeurSalle(object):
         position_gauche_y = position_debut_gauche
         position_droit_y = position_debut_droit
         
-        #on définit la zone d'apparition des personnes
         zone_apparition.update({'x_min' :  50})
         zone_apparition.update({'x_max' :  50 + self.espace.lieu_ferme.largeur})
-        zone_apparition.update({'y_min' :  50 + min(position_debut_gauche + hauteur, position_debut_droit + hauteur)}) 
+        zone_apparition.update({
+            'y_min' :  50 +
+                min(position_debut_gauche, position_debut_droit) + hauteur}) 
         zone_apparition.update({'y_max' :  50 + self.espace.lieu_ferme.hauteur})
 
         #on ajoute les ranges de gauche
@@ -180,7 +188,8 @@ class ConstructeurSalle(object):
             
         #on ajoute les rangs à droite
         while position_droit_y + 50 <= self.espace.lieu_ferme.hauteur :
-            position_droit_x = 50 + self.espace.lieu_ferme.largeur - largeur_droit - distance_au_mur
+            position_droit_x = (50 + self.espace.lieu_ferme.largeur
+                - largeur_droit - distance_au_mur
             position_droit = position_droit_x, position_droit_y
             
             obstacle_droit = ObstacleRectangulaire(
@@ -191,7 +200,10 @@ class ConstructeurSalle(object):
 
             position_droit_y += distance_intermediaire + hauteur
             
-        zone_apparition.update({'y_max' :  50 + min(position_droit_y, position_gauche_y) - distance_intermediaire - hauteur})
+        zone_apparition.update({
+            'y_max' :
+                50 + min(position_droit_y, position_gauche_y)
+                - distance_intermediaire - hauteur})
 
 
 class ConstructeurSimulation(object):
@@ -208,7 +220,9 @@ class ConstructeurSimulation(object):
 
         self.ajouterPersonnes(
             nombre=donnees_simulation['personnes']['nombre'], 
-            **base.fusioner_dictionnaires(donnees_simulation['personnes']['caracteristiques'], donnees_simulation['personnes']['zone_apparition']))
+            **base.fusioner_dictionnaires(
+                donnees_simulation['personnes']['caracteristiques'],
+                donnees_simulation['personnes']['zone_apparition']))
             
         self.construireSources(
             donnees_simulation['personnes']['sources'],
@@ -235,7 +249,12 @@ class ConstructeurSimulation(object):
 
             self.simulation.espace.ajouterPersonne(personne)
             
-    def construireSources(self, liste_sources, rayon_min=30, rayon_max=30, masse_surfacique=1.8):
+    def construireSources(self,
+            liste_sources,
+            rayon_min=30,
+            rayon_max=30,
+            masse_surfacique=1.8):
+
         for source in liste_sources:
             self.simulation.sources.append(Source(
                 self.simulation.espace,

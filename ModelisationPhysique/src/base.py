@@ -4,7 +4,7 @@ import functools
 import operator
 
 class EnsembleRappelle(object):
-    '''Regroupe plusieurs rappelle et renvoie l'ensemble des resultats'''
+    '''Regroupe plusieurs rappelles et renvoie l'ensemble des resultats'''
 
     def __init__(self):
         self.ensemble_rappelles = []
@@ -30,7 +30,7 @@ class EnsembleRappelleRenvoyantCommande(EnsembleRappelle):
             EnsembleRappelleRenvoyantCommande.AUCUN)
 
 class KeyPairDict(collections.UserDict):
-    '''Une table de hachage avec des pair pour clefs
+    '''Une table de hachage dont les clefs sont des pairs
 
         A utiliser surtout dans le cas d'un petit nombre
         d'insertions et d'un grand nombre de recuperation
@@ -39,7 +39,7 @@ class KeyPairDict(collections.UserDict):
 
     #Lorsque peut d'insertions sont faites on peut s'autoriser
     #de stocker toutes les permutations des clefs avec la valeur
-    #associée pour ainsi éviter de devoir faire deux recherche
+    #associée pour ainsi éviter de devoir faire deux recherches
     #à chaque recherche d'une clefs dans la table
 
     def transpose(self, pair):
@@ -190,8 +190,6 @@ def parcoursEnLargeur(debuts_et_valeurs, voisins, assigner_valeur, tableau_final
 
     while len(queue) > 0:
         case_courante = queue.popleft()
-        #print(tableau_finale.avoirCentreCase(case_courante))
-        #input()
         for case_voisine in voisins(case_courante, tableau_finale):
             if case_voisine not in tableau_finale or deja_vue[case_voisine]:
                 continue

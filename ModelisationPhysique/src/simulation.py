@@ -2,8 +2,8 @@ import time
 import base
 
 class Simulation(object):
-    '''L'objet Simualtion s'occupe d'ajouter les écouteurs aux de l'espace
-    personnes et de mettres à jour tous les éléments nécessaire à la
+    '''S'occupe d'ajouter les écouteurs aux personnes de l'espace
+    et de mettres à jour tous les éléments nécessaire à la
     simulation lorsqu'il lui est demandé
 
     creer_ecouteur: une fonction prenant une personne en entree et

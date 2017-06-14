@@ -66,7 +66,6 @@ class Treillis(QuadrillageEspace):
     def avoirLigneHaute(self, point):
         return math.ceil((point.y - self.position.y) / self.precision)
 
-    #De même
     def avoirColonneGauche(self, point):
         return math.floor((point.x - self.position.x) / self.precision)
 
@@ -85,8 +84,8 @@ class Treillis(QuadrillageEspace):
         yield base.Case(ligne_haute, colonne_gauche)
 
     def reglerConflitColonnes(self, colonne_gauche, colonne_droite):
-        #Le point se trouve exactement sur une colonne du treillis
         if colonne_droite == colonne_gauche:
+            #Le point se trouve exactement sur une colonne du treillis
             if colonne_gauche < abs(colonne_droite - self.nombre_colonnes + 1):
                 return colonne_gauche, colonne_droite + 1
             else:
@@ -94,8 +93,8 @@ class Treillis(QuadrillageEspace):
         return colonne_gauche, colonne_droite
 
     def reglerConflitLignes(self, ligne_basse, ligne_haute):
-        #Le point se trouve exactement sur une ligne du treillis
         if ligne_basse == ligne_haute:
+            #Le point se trouve exactement sur une ligne du treillis
             if ligne_basse < abs(ligne_haute - self.nombre_lignes + 1):
                 return ligne_basse , ligne_haute + 1
             else:
@@ -254,7 +253,7 @@ class InterpolationChampScalaire(Treillis):
         
 
     def avoirGradiantPosition(self, position):
-        return self.avoirGradientParInterpolationBicubic(position)
+        return self.avoirGrandientParInterpolationBilineaire(position)
 
 class SpaceHash(QuadrillageEspace):
     '''Keywords argument: precision, position, hauteur, largeur, valeur_defaut (None)'''

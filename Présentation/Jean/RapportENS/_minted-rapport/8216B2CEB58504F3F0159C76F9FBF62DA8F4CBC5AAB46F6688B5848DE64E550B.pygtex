@@ -1,0 +1,610 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{pymunk}
+\PYG{k+kn}{from} \PYG{n+nn}{representation} \PYG{k+kn}{import} \PYG{n}{Rectangle}
+\PYG{k+kn}{from} \PYG{n+nn}{fonctions\PYGZus{}annexes} \PYG{k+kn}{import} \PYG{n}{convertirMetresPixels}
+\PYG{k+kn}{import} \PYG{n+nn}{math}
+\PYG{k+kn}{import} \PYG{n+nn}{functools}
+\PYG{k+kn}{import} \PYG{n+nn}{geometrie}
+\PYG{k+kn}{import} \PYG{n+nn}{collections}
+\PYG{k+kn}{import} \PYG{n+nn}{space\PYGZus{}hash}
+\PYG{k+kn}{from} \PYG{n+nn}{pymunk} \PYG{k+kn}{import} \PYG{n}{Vec2d}
+\PYG{k+kn}{import} \PYG{n+nn}{base}
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+
+
+\PYG{k}{class} \PYG{n+nc}{TestBase}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword arguments: espace, position, rayon, position\PYGZus{}voulue}
+
+\PYG{l+s+sd}{        Toute sous classes doit redéfinir la fonction `update` et}
+\PYG{l+s+sd}{        appeler `fin\PYGZus{}update` à la fin de la mise à jour}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rappelle\PYGZus{}update} \PYG{o}{=} \PYG{k}{lambda} \PYG{n}{test}\PYG{p}{:} \PYG{n+nb+bp}{None}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}espace\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}espace\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rayon} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}rayon\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}rayon\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position\PYGZus{}voulue} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZus{}voulue\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZus{}voulue\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position\PYGZus{}voulue}
+
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position} \PYG{o}{=} \PYG{n}{position}
+
+    \PYG{k}{def} \PYG{n+nf}{fin\PYGZus{}update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rappelle\PYGZus{}update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}
+
+\PYG{k}{class} \PYG{n+nc}{TestGradient}\PYG{p}{(}\PYG{n}{TestBase}\PYG{p}{):}
+    \PYG{c+c1}{\PYGZsh{}Ce test n\PYGZsq{}utilise pas la position\PYGZus{}voulue}
+
+    \PYG{n}{treillis\PYGZus{}interet} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{()}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{treilli\PYGZus{}interet}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{TestGradient}\PYG{o}{.}\PYG{n}{treillis\PYGZus{}interet}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{]}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirDirectionASuivre}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{TestGradient}\PYG{o}{.}\PYG{n}{treillis\PYGZus{}interet}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{]}\PYG{o}{.}\PYG{n}{avoirGradiantPosition}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+        \PYG{n}{direction} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirDirectionASuivre}\PYG{p}{()}
+        
+        \PYG{c+c1}{\PYGZsh{}Si la direction est nul la personne s\PYGZsq{}est retrouvé dans un obstacle}
+        \PYG{c+c1}{\PYGZsh{}On lui donne une direction arbitraire pour le sortire}
+        \PYG{k}{if} \PYG{n}{direction} \PYG{o}{==} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{):}
+            \PYG{n}{direction} \PYG{o}{=} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+
+        \PYG{n}{direction}\PYG{o}{.}\PYG{n}{length} \PYG{o}{=} \PYG{l+m+mi}{25}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n}{direction} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fin\PYGZus{}update}\PYG{p}{()}
+
+\PYG{k}{class} \PYG{n+nc}{TestParcoursLargeur}\PYG{p}{(}\PYG{n}{TestBase}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keywords Arguments: precision, valeur\PYGZus{}defaut, cls\PYGZus{}tableau, rayon,}
+\PYG{l+s+sd}{            position, position\PYGZus{}voulue, espace}
+
+\PYG{l+s+sd}{        Permet de faciliter l\PYGZsq{}utilisation d\PYGZsq{}un parcours en largeur sur des}
+\PYG{l+s+sd}{        QuadrillageEspace}
+
+\PYG{l+s+sd}{        toute sous classe doivent definire}
+\PYG{l+s+sd}{            `genererCaseAdjacentes`}
+\PYG{l+s+sd}{            `genererDebutsEtValeurs`}
+\PYG{l+s+sd}{            `assignerValeurCase`}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}precision\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}precision\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{valeur\PYGZus{}defaut} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}valeur\PYGZus{}defaut\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}valeur\PYGZus{}defaut\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{cls\PYGZus{}tableau} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cls\PYGZus{}tableau\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cls\PYGZus{}tableau\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{initialiserTableau}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n}{tableau} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{cls\PYGZus{}tableau}\PYG{p}{(}
+            \PYG{n}{position}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{position}
+                \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{),}
+            \PYG{n}{hauteur}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o}{+} \PYG{l+m+mi}{4} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{,}
+            \PYG{n}{largeur}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{+} \PYG{l+m+mi}{4} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{,}
+            \PYG{n}{precision}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{,}
+            \PYG{n}{valeur\PYGZus{}defaut}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{valeur\PYGZus{}defaut}\PYG{p}{)}
+
+        \PYG{n}{base}\PYG{o}{.}\PYG{n}{parcoursEnLargeur}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererDebutsEtValeurs}\PYG{p}{(}\PYG{n}{tableau}\PYG{p}{),}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererCaseAdjacentesParcoursLargeur}\PYG{p}{,}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{assignerValeurCase}\PYG{p}{,}
+            \PYG{n}{tableau}\PYG{p}{)}
+
+        \PYG{k}{return} \PYG{n}{tableau}
+
+    \PYG{k}{def} \PYG{n+nf}{caseEstAccessible}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case\PYGZus{}depart}\PYG{p}{,} \PYG{n}{case}\PYG{p}{,} \PYG{n}{tableau}\PYG{p}{):}
+        \PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{avoirInfoSurLancerRayon}\PYG{p}{(}
+            \PYG{n}{tableau}\PYG{o}{.}\PYG{n}{avoirCentreCase}\PYG{p}{(}\PYG{n}{case\PYGZus{}depart}\PYG{p}{),}
+            \PYG{n}{tableau}\PYG{o}{.}\PYG{n}{avoirCentreCase}\PYG{p}{(}\PYG{n}{case}\PYG{p}{))}
+
+        \PYG{k}{return} \PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}
+
+    \PYG{k}{def} \PYG{n+nf}{genererCaseAdjacentesParcoursLargeur}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{,} \PYG{n}{tableau}\PYG{p}{):}
+        \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Generes les cases adjacentes en prenant en comptes les obstacles\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+        \PYG{k}{for} \PYG{n}{case\PYGZus{}adjacentes} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererCaseAdjacentes}\PYG{p}{(}\PYG{n}{case}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{caseEstAccessible}\PYG{p}{(}\PYG{n}{case}\PYG{p}{,} \PYG{n}{case\PYGZus{}adjacentes}\PYG{p}{,} \PYG{n}{tableau}\PYG{p}{):}
+                \PYG{k}{yield} \PYG{n}{case\PYGZus{}adjacentes}
+        
+    \PYG{k}{def} \PYG{n+nf}{genererCaseAdjacentes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Generes les cases adjacentes sans prendre compte des obstacles\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+        \PYG{k}{raise} \PYG{n+ne}{NotImplementedError}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{assignerValeurCase}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case\PYGZus{}voisine}\PYG{p}{,} \PYG{n}{case\PYGZus{}courante}\PYG{p}{,} \PYG{n}{tableau}\PYG{p}{):}
+        \PYG{k}{raise} \PYG{n+ne}{NotImplementedError}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{genererDebutsEtValeurs}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{tableau}\PYG{p}{):}
+        \PYG{k}{raise} \PYG{n+ne}{NotImplementedError}\PYG{p}{()}
+
+\PYG{k}{class} \PYG{n+nc}{TestGradientObstacle}\PYG{p}{(}\PYG{n}{TestGradient}\PYG{p}{):}
+
+    \PYG{n}{DISTANCE\PYGZus{}CHARACTERISITQUE} \PYG{o}{=} \PYG{n}{convertirMetresPixels}\PYG{p}{(}\PYG{l+m+mf}{0.05}\PYG{p}{)}
+    \PYG{n}{DISTANCE\PYGZus{}MAX\PYGZus{}INFLUENCE} \PYG{o}{=} \PYG{l+m+mi}{3} \PYG{o}{*} \PYG{n}{DISTANCE\PYGZus{}CHARACTERISITQUE}
+    
+    \PYG{k}{def} \PYG{n+nf}{transformetChampParRapportObstacle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{tableau}\PYG{p}{):}
+        \PYG{n}{valeur\PYGZus{}characteristique} \PYG{o}{=} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{tableau}\PYG{o}{.}\PYG{n}{genererValeurs}\PYG{p}{())}
+
+        \PYG{k}{for} \PYG{n}{case} \PYG{o+ow}{in} \PYG{n}{tableau}\PYG{o}{.}\PYG{n}{genererCases}\PYG{p}{():}
+            \PYG{n}{info\PYGZus{}point} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{avoirInfoPoint}\PYG{p}{(}
+                \PYG{n}{tableau}\PYG{o}{.}\PYG{n}{avoirCentreCase}\PYG{p}{(}\PYG{n}{case}\PYG{p}{),}
+                \PYG{n}{TestGradientObstacle}\PYG{o}{.}\PYG{n}{DISTANCE\PYGZus{}MAX\PYGZus{}INFLUENCE}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{info\PYGZus{}point} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{k}{continue}
+            \PYG{n}{valeur} \PYG{o}{=} \PYG{n}{valeur\PYGZus{}characteristique} \PYG{o}{*} \PYG{n}{math}\PYG{o}{.}\PYG{n}{exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{info\PYGZus{}point}\PYG{o}{.}\PYG{n}{distance}
+                \PYG{o}{/} \PYG{n}{TestGradientObstacle}\PYG{o}{.}\PYG{n}{DISTANCE\PYGZus{}CHARACTERISITQUE}\PYG{p}{)}
+
+            \PYG{n}{tableau}\PYG{p}{[}\PYG{n}{case}\PYG{p}{]} \PYG{o}{+=} \PYG{n}{valeur}
+
+\PYG{k}{class} \PYG{n+nc}{TestGradientLargeur}\PYG{p}{(}\PYG{n}{TestGradient}\PYG{p}{,} \PYG{n}{TestParcoursLargeur}\PYG{p}{):}
+
+    \PYG{n}{PRECISION\PYGZus{}CHAMP} \PYG{o}{=} \PYG{n}{convertirMetresPixels}\PYG{p}{(}\PYG{l+m+mf}{0.05}\PYG{p}{)}
+    \PYG{n}{INACCESSIBLE\PYGZus{}VALEUR} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{5e2}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}precision\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{TestGradientLargeur}\PYG{o}{.}\PYG{n}{PRECISION\PYGZus{}CHAMP}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}valeur\PYGZus{}defaut\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{TestGradientLargeur}\PYG{o}{.}\PYG{n}{INACCESSIBLE\PYGZus{}VALEUR}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cls\PYGZus{}tableau\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{space\PYGZus{}hash}\PYG{o}{.}\PYG{n}{InterpolationChampScalaire}
+
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{initialiserTreillisInteretSiNecessaire}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{genererDebutsEtValeurs}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{tableau}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{zip}\PYG{p}{(}
+            \PYG{n+nb}{map}\PYG{p}{(}
+                \PYG{n}{tableau}\PYG{o}{.}\PYG{n}{avoirCasePlusProche}\PYG{p}{,}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{avoirCentrePortes}\PYG{p}{()),}
+            \PYG{n}{itertools}\PYG{o}{.}\PYG{n}{cycle}\PYG{p}{([}\PYG{l+m+mi}{0}\PYG{p}{]))}
+
+    \PYG{k}{def} \PYG{n+nf}{genererCaseAdjacentes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{k}{raise} \PYG{n+ne}{NotImplementedError}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{assignerValeurCase}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case\PYGZus{}voisine}\PYG{p}{,} \PYG{n}{case\PYGZus{}courante}\PYG{p}{,} \PYG{n}{tableau}\PYG{p}{):}
+        \PYG{n}{tableau}\PYG{p}{[}\PYG{n}{case\PYGZus{}voisine}\PYG{p}{]} \PYG{o}{=} \PYG{n}{tableau}\PYG{p}{[}\PYG{n}{case\PYGZus{}courante}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}
+
+    \PYG{k}{def} \PYG{n+nf}{initialiserTreillisInteretSiNecessaire}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{TestGradientLargeur}\PYG{o}{.}\PYG{n}{treillis\PYGZus{}interet}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{initialiserTreillisInteret}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{initialiserTreillisInteret}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n}{TestGradientLargeur}\PYG{o}{.}\PYG{n}{treillis\PYGZus{}interet}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{initialiserTableau}\PYG{p}{()}
+
+
+\PYG{k}{class} \PYG{n+nc}{TestGradientLargeurObstacle}\PYG{p}{(}\PYG{n}{TestGradientLargeur}\PYG{p}{,} \PYG{n}{TestGradientObstacle}\PYG{p}{):}
+
+    \PYG{k}{def} \PYG{n+nf}{initialiserTreillisInteret}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n}{initialiserTreillisInteret}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{transformetChampParRapportObstacle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{treilli\PYGZus{}interet}\PYG{p}{)}
+    
+\PYG{k}{class} \PYG{n+nc}{TestChampVecteur}\PYG{p}{(}\PYG{n}{TestParcoursLargeur}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Choisit le mouvement des agents après avoir créer un champ}
+\PYG{l+s+sd}{        de vecteur vers la position voulue}
+
+\PYG{l+s+sd}{        Toute sous classe doivent redéfinir la fonction `avoirCaseAdjacentes`}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{n}{champs} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{()}
+    \PYG{n}{PRECISION\PYGZus{}CHAMP} \PYG{o}{=} \PYG{n}{convertirMetresPixels}\PYG{p}{(}\PYG{l+m+mf}{0.2}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}precision\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{TestChampVecteur}\PYG{o}{.}\PYG{n}{PRECISION\PYGZus{}CHAMP}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}valeur\PYGZus{}defaut\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cls\PYGZus{}tableau\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{Champ}
+
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{initialiserChampsSiNecessaire}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+        \PYG{n}{direction} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{champ}\PYG{o}{.}\PYG{n}{avoirValeurPlusProche}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n}{direction} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fin\PYGZus{}update}\PYG{p}{()}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{champ}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{TestChampVecteur}\PYG{o}{.}\PYG{n}{champs}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{]}
+
+    \PYG{k}{def} \PYG{n+nf}{initialiserChampsSiNecessaire}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{TestChampVecteur}\PYG{o}{.}\PYG{n}{champs}\PYG{p}{:}
+            \PYG{n}{TestChampVecteur}\PYG{o}{.}\PYG{n}{champs}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{initialiserTableau}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{genererCaseAdjacentes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{k}{raise} \PYG{n+ne}{NotImplementedError}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{assignerValeurCase}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case\PYGZus{}voisine}\PYG{p}{,} \PYG{n}{case\PYGZus{}courante}\PYG{p}{,} \PYG{n}{tableau}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{tableau}\PYG{o}{.}\PYG{n}{dirigerVecteurVers}\PYG{p}{(}
+            \PYG{n}{case\PYGZus{}voisine}\PYG{p}{,}
+            \PYG{n}{tableau}\PYG{o}{.}\PYG{n}{avoirCentreCase}\PYG{p}{(}\PYG{n}{case\PYGZus{}courante}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{genererDebutsEtValeurs}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{tableau}\PYG{p}{):}
+        \PYG{k}{for} \PYG{n}{centre\PYGZus{}sortie} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{avoirCentrePortes}\PYG{p}{():}
+            \PYG{n}{case\PYGZus{}sortie} \PYG{o}{=} \PYG{n}{tableau}\PYG{o}{.}\PYG{n}{avoirCaseAvecCentrePlusProche}\PYG{p}{(}\PYG{n}{centre\PYGZus{}sortie}\PYG{p}{)}
+            \PYG{n}{vecteur} \PYG{o}{=} \PYG{n}{centre\PYGZus{}sortie} \PYG{o}{\PYGZhy{}} \PYG{n}{tableau}\PYG{o}{.}\PYG{n}{avoirCentreCase}\PYG{p}{(}\PYG{n}{case\PYGZus{}sortie}\PYG{p}{)}
+            \PYG{k}{yield} \PYG{n}{case\PYGZus{}sortie}\PYG{p}{,} \PYG{n}{vecteur}
+
+
+\PYG{k}{class} \PYG{n+nc}{TestLargeurQuatreDirections}\PYG{p}{(}\PYG{n}{TestParcoursLargeur}\PYG{p}{):}
+
+    \PYG{k}{def} \PYG{n+nf}{genererCaseAdjacentes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{case}\PYG{o}{.}\PYG{n}{genererCaseAdjacentes}\PYG{p}{(}\PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{o}{.}\PYG{n}{genererQuatreDirections}\PYG{p}{())}
+
+
+\PYG{k}{class} \PYG{n+nc}{TestLargeurHuitDirections}\PYG{p}{(}\PYG{n}{TestParcoursLargeur}\PYG{p}{):}
+
+    \PYG{k}{def} \PYG{n+nf}{genererCaseAdjacentes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{case}\PYG{o}{.}\PYG{n}{genererCaseAdjacentes}\PYG{p}{(}\PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{o}{.}\PYG{n}{genererHuitDirections}\PYG{p}{())}
+
+\PYG{k}{class} \PYG{n+nc}{TestChampVecteurQuatreDirections}\PYG{p}{(}
+        \PYG{n}{TestLargeurQuatreDirections}\PYG{p}{,}
+        \PYG{n}{TestChampVecteur}\PYG{p}{):}
+    \PYG{k}{pass}
+
+\PYG{k}{class} \PYG{n+nc}{TestChampVecteurHuitDirections}\PYG{p}{(}
+        \PYG{n}{TestLargeurHuitDirections}\PYG{p}{,}
+        \PYG{n}{TestChampVecteur}\PYG{p}{):}
+    \PYG{k}{pass}
+
+\PYG{k}{class} \PYG{n+nc}{TestGradientLargeurQuatreDirections}\PYG{p}{(}
+        \PYG{n}{TestLargeurQuatreDirections}\PYG{p}{,}
+        \PYG{n}{TestGradientLargeur}\PYG{p}{):}
+    \PYG{k}{pass}
+
+\PYG{k}{class} \PYG{n+nc}{TestGradientLargeurHuitDirections}\PYG{p}{(}
+        \PYG{n}{TestLargeurHuitDirections}\PYG{p}{,}
+        \PYG{n}{TestGradientLargeur}\PYG{p}{):}
+    \PYG{k}{pass}
+
+\PYG{k}{class} \PYG{n+nc}{TestGradientLargeurObstacleQuatreDirections}\PYG{p}{(}
+        \PYG{n}{TestLargeurQuatreDirections}\PYG{p}{,}
+        \PYG{n}{TestGradientLargeurObstacle}\PYG{p}{):}
+    \PYG{k}{pass}
+        
+\PYG{k}{class} \PYG{n+nc}{TestLanceRayon}\PYG{p}{(}\PYG{n}{TestBase}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keywords Arguments: position, rayon, position\PYGZus{}voulue, espace}
+
+\PYG{l+s+sd}{        Aide pour la contruction de test essayant d\PYGZsq{}éviter un obstacle}
+\PYG{l+s+sd}{        bloquant l\PYGZsq{}accès à la sortie.}
+
+\PYG{l+s+sd}{        Dans le code quelque chose est acceptable si aller dans sa direction}
+\PYG{l+s+sd}{        permer d\PYGZsq{}éviter l\PYGZsq{}obstacle bloquant.}
+
+\PYG{l+s+sd}{        Toute sous classe doit redéfinir les fonction `est\PYGZlt{}...\PYGZgt{}Acceptable` selon}
+\PYG{l+s+sd}{        ses besoins, généralement seulement `estObjetAcceptable` doit être}
+\PYG{l+s+sd}{        redéfinie}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{longueur\PYGZus{}rayon} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{avoirLongueurDiagonale}\PYG{p}{()} \PYG{o}{/} \PYG{l+m+mi}{2}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ininitialiserObstacleBloquant}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionVersAngle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{angle}\PYG{p}{):}
+        \PYG{n}{direction} \PYG{o}{=} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position\PYGZus{}voulue} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{p}{)}
+        \PYG{n}{direction}\PYG{o}{.}\PYG{n}{length} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{longueur\PYGZus{}rayon}
+        \PYG{n}{direction}\PYG{o}{.}\PYG{n}{rotate}\PYG{p}{(}\PYG{n}{angle}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{direction} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirLancerAvecAngle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{angle}\PYG{p}{):}
+        \PYG{n}{point\PYGZus{}vers\PYGZus{}lequel\PYGZus{}lancer} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionVersAngle}\PYG{p}{(}\PYG{n}{angle}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{avoirInfoSurLancerRayon}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{p}{,}
+            \PYG{n}{point\PYGZus{}vers\PYGZus{}lequel\PYGZus{}lancer}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirObjetToucheParRayon}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{None}
+        \PYG{k}{return} \PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon}\PYG{o}{.}\PYG{n}{shape}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPointImpactRayon}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{None}
+        \PYG{k}{return} \PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon}\PYG{o}{.}\PYG{n}{point}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPointImpactVersAngle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{angle}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPointImpactRayon}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLancerAvecAngle}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirObjetVersAngle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{angle}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirObjetToucheParRayon}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLancerAvecAngle}\PYG{p}{(}\PYG{n}{angle}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{ininitialiserObstacleBloquant}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacle\PYGZus{}bloquant} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirObjetVersAngle}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{estAngleAcceptable}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{angle}\PYG{p}{):}
+        \PYG{n}{objet\PYGZus{}vers\PYGZus{}angle} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirObjetVersAngle}\PYG{p}{(}\PYG{n}{angle}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estObjetAcceptable}\PYG{p}{(}\PYG{n}{objet\PYGZus{}vers\PYGZus{}angle}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{estObjetAcceptable}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{objet}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{objet} \PYG{o+ow}{is} \PYG{n+nb+bp}{None} \PYG{o+ow}{or} \PYG{n}{objet} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacle\PYGZus{}bloquant}
+
+    \PYG{k}{def} \PYG{n+nf}{estRayonAcceptable}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estObjetAcceptable}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirObjetToucheParRayon}\PYG{p}{(}\PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{angleEstPlusProcheDeSortie}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{angle}\PYG{p}{,} \PYG{n}{autre\PYGZus{}angle}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(}\PYG{n}{geometrie}\PYG{o}{.}\PYG{n}{avoirDistanceAngulaire}\PYG{p}{(}\PYG{n}{angle}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+            \PYG{o}{\PYGZlt{}} \PYG{n}{geometrie}\PYG{o}{.}\PYG{n}{avoirDistanceAngulaire}\PYG{p}{(}\PYG{n}{autre\PYGZus{}angle}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirMeilleureAngleEntre}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{angleEstPlusProcheDeSortie}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{):}
+            \PYG{k}{return} \PYG{n}{angle1}
+        \PYG{k}{return} \PYG{n}{angle2}
+
+
+\PYG{k}{class} \PYG{n+nc}{Champ}\PYG{p}{(}\PYG{n}{space\PYGZus{}hash}\PYG{o}{.}\PYG{n}{SpaceHash}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keywords argument: precision, position, hauteur, largeur\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}valeur\PYGZus{}defaut\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{dirigerVecteurVers}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{case}\PYG{p}{]} \PYG{o}{==} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{):}
+            \PYG{k}{return}
+
+        \PYG{n}{centre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCentreCase}\PYG{p}{(}\PYG{n}{case}\PYG{p}{)}
+        \PYG{n}{longueur\PYGZus{}actuelle} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{case}\PYG{p}{]}\PYG{o}{.}\PYG{n}{length}
+        \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{case}\PYG{p}{]} \PYG{o}{=} \PYG{n}{point} \PYG{o}{\PYGZhy{}} \PYG{n}{centre}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{case}\PYG{p}{]} \PYG{o}{==} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{):}
+            \PYG{k}{return} 
+        \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{case}\PYG{p}{]}\PYG{o}{.}\PYG{n}{length} \PYG{o}{=} \PYG{n}{longueur\PYGZus{}actuelle}
+
+\PYG{k}{class} \PYG{n+nc}{TestLineaire}\PYG{p}{(}\PYG{n}{TestLanceRayon}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword Arguments: position, rayon, position\PYGZus{}voulue, espace}
+
+\PYG{l+s+sd}{        Les sous classes ne doivent pas redéfinir `update` sinon}
+\PYG{l+s+sd}{        elles doivent appeler `TestLanceRayon.update(self, position)`}
+\PYG{l+s+sd}{        au début de leur `update` au lieu de `super().update(position)`}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{n}{PRECISION} \PYG{o}{=} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi} \PYG{o}{/} \PYG{l+m+mi}{100}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+        
+        \PYG{n}{meilleur\PYGZus{}angle} \PYG{o}{=} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi}
+
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirNombreRayon}\PYG{p}{()):}
+            \PYG{n}{angle\PYGZus{}courant} \PYG{o}{=} \PYG{n}{i} \PYG{o}{*} \PYG{n}{TestLineaire}\PYG{o}{.}\PYG{n}{PRECISION}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{angleEstPlusProcheDeSortie}\PYG{p}{(}\PYG{n}{meilleur\PYGZus{}angle}\PYG{p}{,} \PYG{n}{angle\PYGZus{}courant}\PYG{p}{):}
+                \PYG{k}{continue}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estAngleAcceptable}\PYG{p}{(}\PYG{n}{angle\PYGZus{}courant}\PYG{p}{):}
+                \PYG{n}{meilleur\PYGZus{}angle} \PYG{o}{=} \PYG{n}{angle\PYGZus{}courant}
+
+        \PYG{k}{if} \PYG{n}{meileur\PYGZus{}point\PYGZus{}a\PYGZus{}suivre} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n}{meileur\PYGZus{}point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position\PYGZus{}voulue}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionVersAngle}\PYG{p}{(}\PYG{n}{meilleur\PYGZus{}angle}\PYG{p}{)}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fin\PYGZus{}update}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirNombreRayon}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{math}\PYG{o}{.}\PYG{n}{floor}\PYG{p}{((}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi}\PYG{p}{)} \PYG{o}{/} \PYG{n}{TestLineaire}\PYG{o}{.}\PYG{n}{PRECISION}\PYG{p}{)}
+
+\PYG{k}{class} \PYG{n+nc}{TestRetiensObjet}\PYG{p}{(}\PYG{n}{TestLanceRayon}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Permet le retient des objet présent dans la direction}
+\PYG{l+s+sd}{        d\PYGZsq{}un angle pendant le temps d\PYGZsq{}une update,}
+\PYG{l+s+sd}{        à utiliser pour les tests devant accéder plusieurs fois à cette}
+\PYG{l+s+sd}{        information}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ininitialiserObjetVersAngle}\PYG{p}{()}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{ininitialiserObjetVersAngle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{objet\PYGZus{}vers\PYGZus{}angle} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirObjetVersAngle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{angle}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{angle} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{objet\PYGZus{}vers\PYGZus{}angle}\PYG{p}{:}
+            \PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLancerAvecAngle}\PYG{p}{(}\PYG{n}{angle}\PYG{p}{)}
+            \PYG{n}{objet} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirObjetToucheParRayon}\PYG{p}{(}\PYG{n}{info\PYGZus{}lancer\PYGZus{}rayon}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{objet\PYGZus{}vers\PYGZus{}angle}\PYG{p}{[}\PYG{n}{angle}\PYG{p}{]} \PYG{o}{=} \PYG{n}{objet}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{objet\PYGZus{}vers\PYGZus{}angle}\PYG{p}{[}\PYG{n}{angle}\PYG{p}{]}
+
+
+\PYG{k}{class} \PYG{n+nc}{TestDichotomie}\PYG{p}{(}\PYG{n}{TestRetiensObjet}\PYG{p}{):}
+
+    \PYG{n}{PRECISION} \PYG{o}{=} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi} \PYG{o}{/} \PYG{l+m+mi}{100}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacle\PYGZus{}bloquant} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position\PYGZus{}voulue}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fin\PYGZus{}update}\PYG{p}{()}
+            \PYG{k}{return}
+
+        \PYG{c+c1}{\PYGZsh{}Il faut ajouter un décalage avec précision pour être sur que le}
+        \PYG{c+c1}{\PYGZsh{}milieu se trouvera au bon endroit dans la dichotomie}
+        \PYG{n}{meilleur\PYGZus{}angle} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMeilleureAngleEntre}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMeilleureAngleDansIntervalle}\PYG{p}{(}
+                \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi} \PYG{o}{\PYGZhy{}} \PYG{n}{TestDichotomie}\PYG{o}{.}\PYG{n}{PRECISION}\PYG{p}{),}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMeilleureAngleDansIntervalle}\PYG{p}{(}
+                \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi} \PYG{o}{+} \PYG{n}{TestDichotomie}\PYG{o}{.}\PYG{n}{PRECISION}\PYG{p}{))}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionVersAngle}\PYG{p}{(}\PYG{n}{meilleur\PYGZus{}angle}\PYG{p}{)}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fin\PYGZus{}update}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirMeilleureAngleDansIntervalle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{):}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{geometrie}\PYG{o}{.}\PYG{n}{avoirDistanceAngulaire}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{)} 
+                \PYG{o}{\PYGZlt{}} \PYG{n}{TestDichotomie}\PYG{o}{.}\PYG{n}{PRECISION}\PYG{p}{):}
+            \PYG{k}{return} \PYG{n}{angle1}
+
+        \PYG{k}{if} \PYG{n}{geometrie}\PYG{o}{.}\PYG{n}{avoirDistanceAngulaire}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi}\PYG{p}{:}
+            \PYG{k}{raise} \PYG{n+ne}{ValueError}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Une dichotomie doit se faire sur des angles}
+\PYG{l+s+s1}{                proche d\PYGZsq{}au moint pi\PYGZsq{}\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+
+        \PYG{k}{if} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estAngleAcceptable}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{)} 
+                \PYG{o+ow}{and} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estAngleAcceptable}\PYG{p}{(}\PYG{n}{angle2}\PYG{p}{)):}
+            \PYG{k}{raise} \PYG{n+ne}{RuntimeError}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Il n}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{est pas possible d}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{avoir des objet \PYGZsq{}}
+                \PYG{o}{+} \PYG{l+s+s1}{\PYGZsq{}acceptable sur les deux borne de la dichotomie\PYGZsq{}}\PYG{p}{)}
+
+        \PYG{n}{milieu} \PYG{o}{=} \PYG{n}{geometrie}\PYG{o}{.}\PYG{n}{avoirMilieuProche}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{)}
+
+        \PYG{k}{if} \PYG{p}{(}\PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estAngleAcceptable}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{)}
+                \PYG{o+ow}{and} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estAngleAcceptable}\PYG{p}{(}\PYG{n}{angle2}\PYG{p}{)):}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMeilleureAngleEntre}\PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMeilleureAngleDansIntervalle}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{milieu}\PYG{p}{),}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMeilleureAngleDansIntervalle}\PYG{p}{(}\PYG{n}{milieu}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{))}
+
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estAngleAcceptable}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estAngleAcceptable}\PYG{p}{(}\PYG{n}{milieu}\PYG{p}{):}
+                \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMeilleureAngleDansIntervalle}\PYG{p}{(}\PYG{n}{milieu}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{)}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMeilleureAngleDansIntervalle}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{milieu}\PYG{p}{)}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estAngleAcceptable}\PYG{p}{(}\PYG{n}{milieu}\PYG{p}{):}
+                \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMeilleureAngleDansIntervalle}\PYG{p}{(}\PYG{n}{milieu}\PYG{p}{,} \PYG{n}{angle1}\PYG{p}{)}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMeilleureAngleDansIntervalle}\PYG{p}{(}\PYG{n}{angle2}\PYG{p}{,} \PYG{n}{milieu}\PYG{p}{)}
+
+
+\PYG{k}{class} \PYG{n+nc}{TestCompactageObstacle}\PYG{p}{(}\PYG{n}{TestBase}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword Arguments: position, rayon, espace, position\PYGZus{}voulue}
+\PYG{l+s+sd}{        }
+\PYG{l+s+sd}{        Associe à chaque obstacle les obstacles étant trop proche pour qu\PYGZsq{}un}
+\PYG{l+s+sd}{        disque de rayon `self.rayon` puisse passer entre les deux obstacles}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{initialiserObstacleCompacte}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{sontConsidererMemeObstacle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{obstacle1}\PYG{p}{,} \PYG{n}{obstacle2}\PYG{p}{):}
+        \PYG{k}{return} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{peutPasserEntre}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rayon}\PYG{p}{,}
+            \PYG{n}{obstacle1}\PYG{p}{,}
+            \PYG{n}{obstacle2}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{initialiserObstacleCompacte}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacle\PYGZus{}compactes} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{()}
+        \PYG{k}{for} \PYG{n}{obstacle} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}obstacle}\PYG{p}{:}
+            \PYG{n}{ensemble\PYGZus{}compacte} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{()}
+            \PYG{k}{for} \PYG{n}{autre\PYGZus{}obstacle} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}obstacle}\PYG{p}{:}
+                \PYG{k}{if} \PYG{p}{(}\PYG{n}{autre\PYGZus{}obstacle} \PYG{o+ow}{is} \PYG{n}{obstacle}
+                        \PYG{o+ow}{or} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sontConsidererMemeObstacle}\PYG{p}{(}\PYG{n}{obstacle}\PYG{p}{,} \PYG{n}{autre\PYGZus{}obstacle}\PYG{p}{)):}
+                    \PYG{n}{ensemble\PYGZus{}compacte}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{autre\PYGZus{}obstacle}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacle\PYGZus{}compactes}\PYG{p}{[}\PYG{n}{obstacle}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb}{frozenset}\PYG{p}{(}\PYG{n}{ensemble\PYGZus{}compacte}\PYG{p}{)}
+
+
+\PYG{k}{class} \PYG{n+nc}{TestLanceCompactageObstacle}\PYG{p}{(}\PYG{n}{TestLanceRayon}\PYG{p}{,} \PYG{n}{TestCompactageObstacle}\PYG{p}{):}
+
+    \PYG{k}{def} \PYG{n+nf}{obstacleEstCompacteAvecObstacleBloquant}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{obstacle}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{obstacle} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacle\PYGZus{}compactes}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacle\PYGZus{}bloquant}\PYG{p}{]}
+
+    \PYG{k}{def} \PYG{n+nf}{estObjetAcceptable}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{objet}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(}\PYG{n}{objet} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}
+            \PYG{o+ow}{or} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacleEstCompacteAvecObstacleBloquant}\PYG{p}{(}\PYG{n}{objet}\PYG{p}{))}
+
+\PYG{k}{class} \PYG{n+nc}{TestLineaireCompactageObstacle}\PYG{p}{(}\PYG{n}{TestLanceCompactageObstacle}\PYG{p}{,} \PYG{n}{TestLineaire}\PYG{p}{):}
+    \PYG{k}{pass}
+                
+\PYG{k}{class} \PYG{n+nc}{TestDichotomieCompactageObstacle}\PYG{p}{(}\PYG{n}{TestLanceCompactageObstacle}\PYG{p}{,} \PYG{n}{TestDichotomie}\PYG{p}{):}
+    \PYG{k}{pass}
+
+
+\PYG{k}{class} \PYG{n+nc}{TestBordsObstacle}\PYG{p}{(}\PYG{n}{TestLanceRayon}\PYG{p}{):}
+
+    \PYG{k}{def} \PYG{n+nf}{sommetEstAccessible}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{sommet}\PYG{p}{):}
+        \PYG{k}{return} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{cercleEstEnDehorsDeLieuFerme}\PYG{p}{(}\PYG{n}{sommet}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rayon} \PYG{o}{*} \PYG{l+m+mi}{2}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacle\PYGZus{}bloquant} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position\PYGZus{}voulue}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{point\PYGZus{}impact} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPointImpactVersAngle}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}
+            \PYG{n}{avoirDistanceAPointImpact} \PYG{o}{=} \PYG{p}{(}
+                \PYG{k}{lambda} \PYG{n}{sommet}\PYG{p}{:} \PYG{n}{sommet}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n}{point\PYGZus{}impact}\PYG{p}{))}
+
+            \PYG{n}{sommets\PYGZus{}accessible} \PYG{o}{=} \PYG{n+nb}{filter}\PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sommetEstAccessible}\PYG{p}{,}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacle\PYGZus{}bloquant}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{)}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n+nb}{min}\PYG{p}{(}
+                \PYG{n}{sommets\PYGZus{}accessible}\PYG{p}{,}
+                \PYG{n}{key}\PYG{o}{=}\PYG{n}{avoirDistanceAPointImpact}\PYG{p}{,}
+                \PYG{n}{default}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{obstacle\PYGZus{}bloquant}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fin\PYGZus{}update}\PYG{p}{()}
+
+\PYG{k}{class} \PYG{n+nc}{TestProximite}\PYG{p}{(}\PYG{n}{TestBase}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword arguments: espace, position, rayon, position\PYGZus{}voulue, nombre\PYGZus{}point (16)\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{n}{COEFFICIENT\PYGZus{}TEST} \PYG{o}{=} \PYG{l+m+mi}{3}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}nombre\PYGZus{}point\PYGZsq{}} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{kwargs}\PYG{p}{:}
+            \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}nombre\PYGZus{}point\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{16}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}point} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}nombre\PYGZus{}point\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}nombre\PYGZus{}point\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+        
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}point} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererEnsemblePoint}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rayon} \PYG{o}{*} \PYG{n}{TestProximite}\PYG{o}{.}\PYG{n}{COEFFICIENT\PYGZus{}TEST}\PYG{p}{))}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}point}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+
+    \PYG{k}{def} \PYG{n+nf}{genererEnsemblePoint}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{rayon}\PYG{p}{):}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}point}\PYG{p}{):}
+            \PYG{n}{point\PYGZus{}local\PYGZus{}x} \PYG{o}{=} \PYG{n}{math}\PYG{o}{.}\PYG{n}{cos}\PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi} \PYG{o}{*} \PYG{n}{i} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}point}\PYG{p}{)}
+            \PYG{n}{point\PYGZus{}local\PYGZus{}y} \PYG{o}{=} \PYG{n}{math}\PYG{o}{.}\PYG{n}{sin}\PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi} \PYG{o}{*} \PYG{n}{i} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}point}\PYG{p}{)}
+            \PYG{n}{point\PYGZus{}local} \PYG{o}{=} \PYG{n}{rayon} \PYG{o}{*} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{n}{point\PYGZus{}local\PYGZus{}x}\PYG{p}{,} \PYG{n}{point\PYGZus{}local\PYGZus{}y}\PYG{p}{)}
+            \PYG{k}{yield} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position} \PYG{o}{+} \PYG{n}{point\PYGZus{}local}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{updatePosition}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{pointEstDansObstacle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre}\PYG{p}{):}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{updatePointASuivre}\PYG{p}{()}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{fin\PYGZus{}update}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{forceUpdate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{updatePosition}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{updatePointASuivre}\PYG{p}{()}
+        
+    \PYG{k}{def} \PYG{n+nf}{updatePosition}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{k}{for} \PYG{n}{point} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}point}\PYG{p}{:}
+            \PYG{n}{point} \PYG{o}{+=} \PYG{n}{position} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position} \PYG{o}{=} \PYG{n}{position}
+
+    \PYG{k}{def} \PYG{n+nf}{updatePointASuivre}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPointLibrePlusProcheSortie}\PYG{p}{()}
+            
+    \PYG{k}{def} \PYG{n+nf}{genererPointsLibres}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{filter}\PYG{p}{(}
+            \PYG{k}{lambda} \PYG{n}{point}\PYG{p}{:} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{pointEstDansObstacle}\PYG{p}{(}\PYG{n}{point}\PYG{p}{),}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}point}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPointLibrePlusProcheSortie}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererPointsLibres}\PYG{p}{(),}
+            \PYG{n}{key}\PYG{o}{=}\PYG{k}{lambda} \PYG{n}{p}\PYG{p}{:} \PYG{n}{p}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position\PYGZus{}voulue}\PYG{p}{),}
+            \PYG{n}{default}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}point}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])}
+\end{Verbatim}

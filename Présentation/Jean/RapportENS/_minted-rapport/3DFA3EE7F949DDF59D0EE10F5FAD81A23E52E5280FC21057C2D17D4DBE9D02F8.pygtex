@@ -1,0 +1,74 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{time}
+\PYG{k+kn}{import} \PYG{n+nn}{base}
+
+\PYG{k}{class} \PYG{n+nc}{Simulation}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}S\PYGZsq{}occupe d\PYGZsq{}ajouter les écouteurs aux personnes de l\PYGZsq{}espace}
+\PYG{l+s+sd}{    et de mettres à jour tous les éléments nécessaire à la}
+\PYG{l+s+sd}{    simulation lorsqu\PYGZsq{}il lui est demandé}
+
+\PYG{l+s+sd}{    creer\PYGZus{}ecouteur: une fonction prenant une personne en entree et}
+\PYG{l+s+sd}{        renvoyant un ecouteur associé à cette personne}
+
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{n}{AUCUN} \PYG{o}{=} \PYG{l+m+mh}{0x0}
+    \PYG{n}{ARRET} \PYG{o}{=} \PYG{l+m+mh}{0x1}
+    \PYG{n}{TOGGLE\PYGZus{}PAUSE} \PYG{o}{=} \PYG{l+m+mh}{0x2}
+    
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{espace}\PYG{p}{,} \PYG{n}{nombre\PYGZus{}mise\PYGZus{}a\PYGZus{}jour\PYGZus{}par\PYGZus{}seconde}\PYG{p}{,} \PYG{n}{creer\PYGZus{}ecouteur}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace} \PYG{o}{=} \PYG{n}{espace}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mise\PYGZus{}a\PYGZus{}jour\PYGZus{}par\PYGZus{}seconde} \PYG{o}{=} \PYG{n}{nombre\PYGZus{}mise\PYGZus{}a\PYGZus{}jour\PYGZus{}par\PYGZus{}seconde}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ecouteurs} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sources} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{action\PYGZus{}mise\PYGZus{}a\PYGZus{}jour} \PYG{o}{=} \PYG{k}{lambda} \PYG{n}{simulation}\PYG{p}{:} \PYG{n+nb+bp}{None}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{en\PYGZus{}marche} \PYG{o}{=} \PYG{n+nb+bp}{False}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{creer\PYGZus{}ecouteur} \PYG{o}{=} \PYG{n}{creer\PYGZus{}ecouteur}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{rappelle\PYGZus{}personne\PYGZus{}ajoute} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{EnsembleRappelle}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{rappelle\PYGZus{}personne\PYGZus{}ajoute}\PYG{o}{.}\PYG{n}{ajouter}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterEcouteurPourPersonne}\PYG{p}{)}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{rappelle\PYGZus{}personne\PYGZus{}ajoute}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{rappelle\PYGZus{}personne\PYGZus{}ajoute}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{ensemble\PYGZus{}personnes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}personnes}
+
+    \PYG{k}{def} \PYG{n+nf}{mettreAJour}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{temps\PYGZus{}depuis\PYGZus{}lancement} \PYG{o}{+=} \PYG{l+m+mi}{1} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mise\PYGZus{}a\PYGZus{}jour\PYGZus{}par\PYGZus{}seconde}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{avancer}\PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mise\PYGZus{}a\PYGZus{}jour\PYGZus{}par\PYGZus{}seconde}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{ecouteur} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ecouteurs}\PYG{p}{:}
+            \PYG{n}{ecouteur}\PYG{o}{.}\PYG{n}{ecouter}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{temps\PYGZus{}depuis\PYGZus{}lancement}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mettreAJourSource}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{ajouterEcouteurPourPersonne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{personne}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ecouteurs}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{creer\PYGZus{}ecouteur}\PYG{p}{(}\PYG{n}{personne}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{gererActionExterieur}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n}{commande} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{action\PYGZus{}mise\PYGZus{}a\PYGZus{}jour}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{executerCommande}\PYG{p}{(}\PYG{n}{commande}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{mettreAJourSource}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{for} \PYG{n}{source} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sources}\PYG{p}{:}
+            \PYG{n}{source}\PYG{o}{.}\PYG{n}{mettreAJour}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{temps\PYGZus{}depuis\PYGZus{}lancement}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{executerCommande}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{commande}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{commande} \PYG{o}{\PYGZam{}} \PYG{n}{Simulation}\PYG{o}{.}\PYG{n}{ARRET}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{en\PYGZus{}marche} \PYG{o}{=} \PYG{n+nb+bp}{False}
+        \PYG{k}{if} \PYG{n}{commande} \PYG{o}{\PYGZam{}} \PYG{n}{Simulation}\PYG{o}{.}\PYG{n}{TOGGLE\PYGZus{}PAUSE}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{en\PYGZus{}pause} \PYG{o}{=} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{en\PYGZus{}pause}
+
+    \PYG{k}{def} \PYG{n+nf}{lancer}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{debut\PYGZus{}lancement} \PYG{o}{=} \PYG{n}{time}\PYG{o}{.}\PYG{n}{time}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{temps\PYGZus{}depuis\PYGZus{}lancement} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{en\PYGZus{}marche} \PYG{o}{=} \PYG{n+nb+bp}{True}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{en\PYGZus{}pause} \PYG{o}{=} \PYG{n+nb+bp}{False}
+        \PYG{k}{while} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{en\PYGZus{}marche}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{gererActionExterieur}\PYG{p}{()}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{en\PYGZus{}pause}\PYG{p}{:}
+                \PYG{k}{continue}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mettreAJour}\PYG{p}{()}
+\end{Verbatim}

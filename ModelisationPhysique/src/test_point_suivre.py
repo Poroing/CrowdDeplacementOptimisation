@@ -14,7 +14,7 @@ import itertools
 class TestBase(object):
     '''Keyword arguments: espace, position, rayon, position_voulue
 
-        Toute sous classe doit redéfinir la fonction `update` et
+        Toute sous classes doit redéfinir la fonction `update` et
         appeler `fin_update` à la fin de la mise à jour
     '''
 
@@ -122,13 +122,13 @@ class TestParcoursLargeur(TestBase):
         return info_lancer_rayon is None
 
     def genererCaseAdjacentesParcoursLargeur(self, case, tableau):
-        '''Generes les cases adjacentes en prenant en comptes des obstacles'''
+        '''Generes les cases adjacentes en prenant en comptes les obstacles'''
         for case_adjacentes in self.genererCaseAdjacentes(case):
             if self.caseEstAccessible(case, case_adjacentes, tableau):
                 yield case_adjacentes
         
     def genererCaseAdjacentes(self, case):
-        '''Generes les cases adjacentes sans prendre en comptes des obstacles'''
+        '''Generes les cases adjacentes sans prendre compte des obstacles'''
         raise NotImplementedError()
 
     def assignerValeurCase(self, case_voisine, case_courante, tableau):
@@ -158,7 +158,7 @@ class TestGradientObstacle(TestGradient):
 
 class TestGradientLargeur(TestGradient, TestParcoursLargeur):
 
-    PRECISION_CHAMP = convertirMetresPixels(0.1)
+    PRECISION_CHAMP = convertirMetresPixels(0.05)
     INACCESSIBLE_VALEUR = -5e2
 
     def __init__(self, **kwargs):
@@ -284,7 +284,7 @@ class TestGradientLargeurObstacleQuatreDirections(
     pass
         
 class TestLanceRayon(TestBase):
-    '''Keywords Arguments: position, rayon, position_voulue, obstacle
+    '''Keywords Arguments: position, rayon, position_voulue, espace
 
         Aide pour la contruction de test essayant d'éviter un obstacle
         bloquant l'accès à la sortie.
@@ -293,7 +293,8 @@ class TestLanceRayon(TestBase):
         permer d'éviter l'obstacle bloquant.
 
         Toute sous classe doit redéfinir les fonction `est<...>Acceptable` selon
-        ses besoins.
+        ses besoins, généralement seulement `estObjetAcceptable` doit être
+        redéfinie
     '''
 
     def update(self, position):
@@ -406,7 +407,7 @@ class TestLineaire(TestLanceRayon):
 class TestRetiensObjet(TestLanceRayon):
     '''Permet le retient des objet présent dans la direction
         d'un angle pendant le temps d'une update,
-        a utiliser pour les tests devant accéder plusieurs fois à cette
+        à utiliser pour les tests devant accéder plusieurs fois à cette
         information
     '''
 
@@ -539,9 +540,13 @@ class TestBordsObstacle(TestLanceRayon):
             self.point_a_suivre = self.position_voulue
         else:
             point_impact = self.avoirPointImpactVersAngle(0)
-            avoirDistanceAPointImpact = lambda sommet: sommet.get_distance(point_impact)
+            avoirDistanceAPointImpact = (
+                lambda sommet: sommet.get_distance(point_impact))
 
-            sommets_accessible = filter(self.sommetEstAccessible, self.obstacle_bloquant.sommets)
+            sommets_accessible = filter(
+                self.sommetEstAccessible,
+                self.obstacle_bloquant.sommets)
+
             self.point_a_suivre = min(
                 sommets_accessible,
                 key=avoirDistanceAPointImpact,
@@ -572,7 +577,6 @@ class TestProximite(TestBase):
             point_local_y = math.sin(2 * math.pi * i / self.nombre_point)
             point_local = rayon * Vec2d(point_local_x, point_local_y)
             yield self.position + point_local
-            
 
     def update(self, position):
         self.updatePosition(position)
@@ -594,7 +598,9 @@ class TestProximite(TestBase):
         self.point_a_suivre = self.avoirPointLibrePlusProcheSortie()
             
     def genererPointsLibres(self):
-        return filter(lambda point: not self.espace.pointEstDansObstacle(point), self.ensemble_point)
+        return filter(
+            lambda point: not self.espace.pointEstDansObstacle(point),
+            self.ensemble_point)
 
     def avoirPointLibrePlusProcheSortie(self):
         return min(self.genererPointsLibres(),

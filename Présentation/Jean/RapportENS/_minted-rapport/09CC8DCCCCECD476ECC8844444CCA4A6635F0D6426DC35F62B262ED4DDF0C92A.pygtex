@@ -1,0 +1,124 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{pymunk}
+\PYG{k+kn}{from} \PYG{n+nn}{obstacle} \PYG{k+kn}{import} \PYG{n}{ObstacleRectangulaire}\PYG{p}{,} \PYG{n}{OsbtacleSegment}
+\PYG{k+kn}{from} \PYG{n+nn}{representation\PYGZus{}categories} \PYG{k+kn}{import} \PYG{n}{RepresentationCategorie}\PYG{p}{,} \PYG{n}{avoirMasqueSansValeur}
+\PYG{k+kn}{from} \PYG{n+nn}{personne} \PYG{k+kn}{import} \PYG{n}{Personne}
+\PYG{k+kn}{import} \PYG{n+nn}{time}
+\PYG{k+kn}{import} \PYG{n+nn}{geometrie}
+\PYG{k+kn}{from} \PYG{n+nn}{pymunk} \PYG{k+kn}{import} \PYG{n}{Vec2d}
+
+
+\PYG{k}{class} \PYG{n+nc}{Espace}\PYG{p}{(}\PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Space}\PYG{p}{):}
+
+    \PYG{n}{DIRECTIONS} \PYG{o}{=} \PYG{p}{[} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{),} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{),} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{),} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{]}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme} \PYG{o}{=} \PYG{n+nb+bp}{None}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}obstacle} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}personnes} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}murs} \PYG{o}{=} \PYG{p}{[]}
+
+        \PYG{c+c1}{\PYGZsh{}Pour eviter les calculs répété de distances entre des obstacles}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{calculateur\PYGZus{}distance} \PYG{o}{=} \PYG{n}{geometrie}\PYG{o}{.}\PYG{n}{CalculateurDistanceAvecCache}\PYG{p}{()}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rappelle\PYGZus{}personne\PYGZus{}ajoute} \PYG{o}{=} \PYG{k}{lambda} \PYG{n}{personne}\PYG{p}{:} \PYG{n+nb+bp}{None}
+        
+    \PYG{k}{def} \PYG{n+nf}{avancer}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{delta}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{n}{delta}\PYG{p}{)}
+        
+        \PYG{k}{for} \PYG{n}{personne} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}personnes}\PYG{p}{:}
+            \PYG{n}{personne}\PYG{o}{.}\PYG{n}{update}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirDistanceEntre}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{obstacle1}\PYG{p}{,} \PYG{n}{obstacle2}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{calculateur\PYGZus{}distance}\PYG{o}{.}\PYG{n}{avoirDistanceEntre}\PYG{p}{(}
+            \PYG{n}{obstacle1}\PYG{p}{,}
+            \PYG{n}{obstacle2}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{peutPasserEntre}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{rayon}\PYG{p}{,} \PYG{n}{obstacle1}\PYG{p}{,} \PYG{n}{obstacle2}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{calculateur\PYGZus{}distance}\PYG{o}{.}\PYG{n}{avoirDistanceEntre}\PYG{p}{(}
+                \PYG{n}{obstacle1}\PYG{p}{,}
+                \PYG{n}{obstacle2}\PYG{p}{)}
+            \PYG{o}{\PYGZgt{}} \PYG{n}{rayon}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{cercleEstEnDehorsDeLieuFerme}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{,} \PYG{n}{rayon}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{any}\PYG{p}{(}\PYG{n+nb}{map}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{pointEstAExterieur}\PYG{p}{,}
+            \PYG{n+nb}{map}\PYG{p}{(}\PYG{k}{lambda} \PYG{n}{direction}\PYG{p}{:} \PYG{n}{position} \PYG{o}{+} \PYG{n}{rayon} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{,} \PYG{n}{Espace}\PYG{o}{.}\PYG{n}{DIRECTIONS}\PYG{p}{)))}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirFiltre}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{ignorer\PYGZus{}personne}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{ignorer\PYGZus{}personne}\PYG{p}{:}
+            \PYG{n}{filtre} \PYG{o}{=} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{ShapeFilter}\PYG{p}{(}\PYG{n}{mask}\PYG{o}{=}\PYG{n}{avoirMasqueSansValeur}\PYG{p}{(}
+                \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{ShapeFilter}\PYG{o}{.}\PYG{n}{ALL\PYGZus{}MASKS}\PYG{p}{,}
+                \PYG{n}{RepresentationCategorie}\PYG{o}{.}\PYG{n}{PERSONNE}\PYG{o}{.}\PYG{n}{value}\PYG{p}{))}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{filtre} \PYG{o}{=} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{ShapeFilter}\PYG{p}{()}
+        \PYG{k}{return} \PYG{n}{filtre}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirInfoSurLancerRayon}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{debut}\PYG{p}{,} \PYG{n}{fin}\PYG{p}{,} \PYG{n}{ignorer\PYGZus{}personne}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{):}
+        \PYG{n}{filtre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirFiltre}\PYG{p}{(}\PYG{n}{ignorer\PYGZus{}personne}\PYG{p}{)}
+        \PYG{n}{epaisseur\PYGZus{}rayon} \PYG{o}{=} \PYG{l+m+mi}{1}
+
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{segment\PYGZus{}query\PYGZus{}first}\PYG{p}{(}\PYG{n}{debut}\PYG{p}{,} \PYG{n}{fin}\PYG{p}{,} \PYG{n}{epaisseur\PYGZus{}rayon}\PYG{p}{,} \PYG{n}{filtre}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirInfoPoint}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{,} \PYG{n}{max\PYGZus{}distance}\PYG{p}{,} \PYG{n}{ignorer\PYGZus{}personne}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{):}
+        \PYG{n}{filtre} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirFiltre}\PYG{p}{(}\PYG{n}{ignorer\PYGZus{}personne}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}query\PYGZus{}nearest}\PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{max\PYGZus{}distance}\PYG{p}{,} \PYG{n}{filtre}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{pointEstDansObstacle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirInfoPoint}\PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}
+            \PYG{o+ow}{or} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{pointEstAExterieur}\PYG{p}{(}\PYG{n}{point}\PYG{p}{))}
+    
+    \PYG{k}{def} \PYG{n+nf}{ajouterPersonne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{personne}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}personnes}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{personne}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{personne}\PYG{o}{.}\PYG{n}{corps}\PYG{p}{,} \PYG{n}{personne}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rappelle\PYGZus{}personne\PYGZus{}ajoute}\PYG{p}{(}\PYG{n}{personne}\PYG{p}{)}
+    
+    \PYG{k}{def} \PYG{n+nf}{ajouterObstacle}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{obstacle}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}obstacle}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{obstacle}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{add}\PYG{p}{(}\PYG{n}{obstacle}\PYG{o}{.}\PYG{n}{corps}\PYG{p}{,} \PYG{n}{obstacle}\PYG{p}{)}
+            
+    \PYG{k}{def} \PYG{n+nf}{recupererSommetsPorte}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{porte}\PYG{p}{):}
+        \PYG{n}{mur} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{avoirCote}\PYG{p}{(}\PYG{n}{porte}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}mur\PYGZsq{}}\PYG{p}{])}
+        \PYG{n}{largeur\PYGZus{}porte\PYGZus{}pourcentage} \PYG{o}{=} \PYG{n}{porte}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}largeur\PYGZsq{}}\PYG{p}{]} \PYG{o}{/} \PYG{n}{mur}\PYG{o}{.}\PYG{n}{avoirLongueur}\PYG{p}{()}
+
+        \PYG{n}{pourcentage\PYGZus{}sommet1} \PYG{o}{=} \PYG{n}{porte}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{largeur\PYGZus{}porte\PYGZus{}pourcentage} \PYG{o}{/} \PYG{l+m+mi}{2}
+        \PYG{n}{pourcentage\PYGZus{}sommet2} \PYG{o}{=} \PYG{n}{porte}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]} \PYG{o}{+} \PYG{n}{largeur\PYGZus{}porte\PYGZus{}pourcentage} \PYG{o}{/} \PYG{l+m+mi}{2}
+        \PYG{n}{sommet1} \PYG{o}{=} \PYG{n}{mur}\PYG{o}{.}\PYG{n}{avoirPositionPourcentage}\PYG{p}{(}\PYG{n}{pourcentage\PYGZus{}sommet1}\PYG{p}{)}
+        \PYG{n}{sommet2} \PYG{o}{=} \PYG{n}{mur}\PYG{o}{.}\PYG{n}{avoirPositionPourcentage}\PYG{p}{(}\PYG{n}{pourcentage\PYGZus{}sommet2}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{sommet1}\PYG{p}{,} \PYG{n}{sommet2}
+
+    \PYG{k}{def} \PYG{n+nf}{ajouterMurEtPortes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{sommets}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{}Le tri étant lexicographique selon (x, y) et les sommets étant}
+        \PYG{c+c1}{\PYGZsh{}soit à x constant soit à y constant on fait un .sort() pour}
+        \PYG{c+c1}{\PYGZsh{}avoir leurs position sur le mur}
+        \PYG{n}{sommets}\PYG{o}{.}\PYG{n}{sort}\PYG{p}{()}
+        \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range} \PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{sommets}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{):}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterObstacle}\PYG{p}{(}\PYG{n}{OsbtacleSegment}\PYG{p}{(}
+                \PYG{n}{point1}\PYG{o}{=}\PYG{n}{sommets}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],}
+                \PYG{n}{point2}\PYG{o}{=}\PYG{n}{sommets}\PYG{p}{[}\PYG{n}{k} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{]))}
+
+    \PYG{k}{def} \PYG{n+nf}{ajouterLieuFerme}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{lieu\PYGZus{}ferme}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme} \PYG{o}{=} \PYG{n}{lieu\PYGZus{}ferme}
+    
+        \PYG{n}{sommets} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+            \PYG{l+s+s1}{\PYGZsq{}gauche\PYGZsq{}} \PYG{p}{:}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{genererSommetsCote}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}gauche\PYGZsq{}}\PYG{p}{)),}
+            \PYG{l+s+s1}{\PYGZsq{}droite\PYGZsq{}} \PYG{p}{:}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{genererSommetsCote}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}droite\PYGZsq{}}\PYG{p}{)),}
+            \PYG{l+s+s1}{\PYGZsq{}bas\PYGZsq{}} \PYG{p}{:}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{genererSommetsCote}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}bas\PYGZsq{}}\PYG{p}{)),}
+            \PYG{l+s+s1}{\PYGZsq{}haut\PYGZsq{}} \PYG{p}{:}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{genererSommetsCote}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}haut\PYGZsq{}}\PYG{p}{)),}
+        \PYG{p}{\PYGZcb{}}
+
+        
+        \PYG{k}{for} \PYG{n}{porte} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{liste\PYGZus{}portes} \PYG{p}{:}
+            
+            \PYG{n}{sommet1}\PYG{p}{,} \PYG{n}{sommet2} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{recupererSommetsPorte}\PYG{p}{(}\PYG{n}{porte}\PYG{p}{)}
+            
+            \PYG{n}{sommets}\PYG{p}{[}\PYG{n}{porte}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}mur\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{sommet1}\PYG{p}{)}
+            \PYG{n}{sommets}\PYG{p}{[}\PYG{n}{porte}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}mur\PYGZsq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{sommet2}\PYG{p}{)}
+        
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterMurEtPortes}\PYG{p}{(}\PYG{n}{sommets}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}bas\PYGZsq{}}\PYG{p}{])}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterMurEtPortes}\PYG{p}{(}\PYG{n}{sommets}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}haut\PYGZsq{}}\PYG{p}{])}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterMurEtPortes}\PYG{p}{(}\PYG{n}{sommets}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}gauche\PYGZsq{}}\PYG{p}{])}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterMurEtPortes}\PYG{p}{(}\PYG{n}{sommets}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}droite\PYGZsq{}}\PYG{p}{])}
+\end{Verbatim}

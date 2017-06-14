@@ -11,7 +11,8 @@ class EcouteurPersonne(object):
         self.personne_deja_sortie = False
 
         self.mettreAJourPointSuiviePersonne(self.personne.test_direction)
-        self.personne.test_direction.rappelle_update = self.mettreAJourPointSuiviePersonne
+        self.personne.test_direction.rappelle_update = (
+            self.mettreAJourPointSuiviePersonne)
 
     def initialiserIdentifiant(self):
         self.identifiant = EcouteurPersonne.dernier_identifiant_ecouteur + 1
@@ -26,7 +27,5 @@ class EcouteurPersonne(object):
             self.executerAction(temps)
 
     def executerAction(self, temps):
-        #Seul moyen d'appeler la fonction self.action sans passer self comme
-        #premier argument
         _action = self.action
         _action(temps)

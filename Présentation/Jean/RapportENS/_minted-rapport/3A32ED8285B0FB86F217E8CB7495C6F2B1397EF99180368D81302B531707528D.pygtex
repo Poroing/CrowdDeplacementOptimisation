@@ -1,0 +1,294 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{math}
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+\PYG{k+kn}{import} \PYG{n+nn}{base}
+\PYG{k+kn}{from} \PYG{n+nn}{pymunk.vec2d} \PYG{k+kn}{import} \PYG{n}{Vec2d}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k+kn}{as} \PYG{n+nn}{np}
+
+\PYG{k}{class} \PYG{n+nc}{QuadrillageEspace}\PYG{p}{(}\PYG{n}{base}\PYG{o}{.}\PYG{n}{TableauDeuxDimension}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword Arguments: precision, hauteur, largeur, position,}
+\PYG{l+s+sd}{            valeur\PYGZus{}defaut (None)}
+
+\PYG{l+s+sd}{        Toute sous classe doit définir `avoirCentreCase`}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}precision\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}precision\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}hauteur\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}hauteur\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{=} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}largeur\PYGZsq{}}\PYG{p}{]}
+        \PYG{k}{del} \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}largeur\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}nombre\PYGZus{}lignes\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{math}\PYG{o}{.}\PYG{n}{ceil}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{)}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}nombre\PYGZus{}colonnes\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{math}\PYG{o}{.}\PYG{n}{ceil}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{)}
+
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirCentreCase}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{Vec2d}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionColonne}\PYG{p}{(}\PYG{n}{case}\PYG{o}{.}\PYG{n}{colonne}\PYG{p}{),}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionLigne}\PYG{p}{(}\PYG{n}{case}\PYG{o}{.}\PYG{n}{ligne}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionLigne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{ligne}\PYG{p}{):}
+        \PYG{k}{raise} \PYG{n+ne}{NotImplementedError}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionColonne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{colonne}\PYG{p}{):}
+        \PYG{k}{raise} \PYG{n+ne}{NotImplementedError}\PYG{p}{()}
+
+
+\PYG{k}{class} \PYG{n+nc}{Treillis}\PYG{p}{(}\PYG{n}{QuadrillageEspace}\PYG{p}{):}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirCasePlusProche}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{min}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererCasesEncadrante}\PYG{p}{(}\PYG{n}{point}\PYG{p}{),}
+            \PYG{n}{key}\PYG{o}{=}\PYG{k}{lambda} \PYG{n}{case}\PYG{p}{:} \PYG{n}{point}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionCase}\PYG{p}{(}\PYG{n}{case}\PYG{p}{)))}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionCase}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{n}{position\PYGZus{}relative} \PYG{o}{=} \PYG{n}{Vec2d}\PYG{p}{(}
+            \PYG{n}{case}\PYG{o}{.}\PYG{n}{colonne} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{,}
+            \PYG{n}{case}\PYG{o}{.}\PYG{n}{ligne} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position} \PYG{o}{+} \PYG{n}{position\PYGZus{}relative}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionLigne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{ligne}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{n}{ligne} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionColonne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{colonne}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n}{colonne} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirLigneBasse}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{math}\PYG{o}{.}\PYG{n}{floor}\PYG{p}{((}\PYG{n}{point}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirLigneHaute}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{math}\PYG{o}{.}\PYG{n}{ceil}\PYG{p}{((}\PYG{n}{point}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirColonneGauche}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{math}\PYG{o}{.}\PYG{n}{floor}\PYG{p}{((}\PYG{n}{point}\PYG{o}{.}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirColonneDroite}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{math}\PYG{o}{.}\PYG{n}{ceil}\PYG{p}{((}\PYG{n}{point}\PYG{o}{.}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{genererCasesEncadrante}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{n}{ligne\PYGZus{}haute} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneHaute}\PYG{p}{(}\PYG{n}{point}\PYG{p}{)}
+        \PYG{n}{ligne\PYGZus{}basse} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneBasse}\PYG{p}{(}\PYG{n}{point}\PYG{p}{)}
+        \PYG{n}{colonne\PYGZus{}gauche} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirColonneGauche}\PYG{p}{(}\PYG{n}{point}\PYG{p}{)}
+        \PYG{n}{colonne\PYGZus{}droite} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirColonneDroite}\PYG{p}{(}\PYG{n}{point}\PYG{p}{)}
+
+        \PYG{k}{yield} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}haute}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}haute}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{reglerConflitColonnes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{colonne\PYGZus{}droite} \PYG{o}{==} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{}Le point se trouve exactement sur une colonne du treillis}
+            \PYG{k}{if} \PYG{n}{colonne\PYGZus{}gauche} \PYG{o}{\PYGZlt{}} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{colonne\PYGZus{}droite} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}colonnes} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{):}
+                \PYG{k}{return} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite} \PYG{o}{+} \PYG{l+m+mi}{1}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n}{colonne\PYGZus{}gauche} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite}
+        \PYG{k}{return} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite}
+
+    \PYG{k}{def} \PYG{n+nf}{reglerConflitLignes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{ligne\PYGZus{}haute}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{ligne\PYGZus{}basse} \PYG{o}{==} \PYG{n}{ligne\PYGZus{}haute}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{}Le point se trouve exactement sur une ligne du treillis}
+            \PYG{k}{if} \PYG{n}{ligne\PYGZus{}basse} \PYG{o}{\PYGZlt{}} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}haute} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{nombre\PYGZus{}lignes} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{):}
+                \PYG{k}{return} \PYG{n}{ligne\PYGZus{}basse} \PYG{p}{,} \PYG{n}{ligne\PYGZus{}haute} \PYG{o}{+} \PYG{l+m+mi}{1}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n}{ligne\PYGZus{}basse} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{ligne\PYGZus{}haute} 
+        \PYG{k}{return} \PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{ligne\PYGZus{}haute}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirLigneColonnesCasesVoisines}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n}{ligne\PYGZus{}basse} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneBasse}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+        \PYG{n}{ligne\PYGZus{}haute} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneHaute}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+        \PYG{n}{colonne\PYGZus{}gauche} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirColonneGauche}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+        \PYG{n}{colonne\PYGZus{}droite} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirColonneDroite}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+        \PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{ligne\PYGZus{}haute} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{reglerConflitLignes}\PYG{p}{(}
+            \PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,}
+            \PYG{n}{ligne\PYGZus{}haute}\PYG{p}{)}
+
+        \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{reglerConflitColonnes}\PYG{p}{(}
+            \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{,}
+            \PYG{n}{colonne\PYGZus{}droite}\PYG{p}{)}
+
+        \PYG{k}{return} \PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{ligne\PYGZus{}haute}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionRelative}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{ligne\PYGZus{}haute}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite} \PYG{o}{=} \PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneColonnesCasesVoisines}\PYG{p}{(}\PYG{n}{point}\PYG{p}{))}
+
+        \PYG{n}{origine\PYGZus{}relative} \PYG{o}{=} \PYG{n}{Vec2d}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionColonne}\PYG{p}{(}\PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{),}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionLigne}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}basse}\PYG{p}{))}
+
+        \PYG{k}{return} \PYG{p}{(}\PYG{n}{point} \PYG{o}{\PYGZhy{}} \PYG{n}{origine\PYGZus{}relative}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}
+
+\PYG{k}{class} \PYG{n+nc}{InterpolationChampScalaire}\PYG{p}{(}\PYG{n}{Treillis}\PYG{p}{):}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirGrandientParInterpolationBilineaire}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{}On derive la formule d\PYGZsq{}interpolation bilineaire}
+        \PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{ligne\PYGZus{}haute}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite} \PYG{o}{=} \PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneColonnesCasesVoisines}\PYG{p}{(}\PYG{n}{position}\PYG{p}{))}
+
+        \PYG{n}{valeur\PYGZus{}1\PYGZus{}1} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{)]}
+        \PYG{n}{valeur\PYGZus{}1\PYGZus{}2} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}haute}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{)]}
+        \PYG{n}{valeur\PYGZus{}2\PYGZus{}2} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}haute}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite}\PYG{p}{)]}
+        \PYG{n}{valeur\PYGZus{}2\PYGZus{}1} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite}\PYG{p}{)]}
+
+        \PYG{n}{y\PYGZus{}1} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionLigne}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}basse}\PYG{p}{)}
+        \PYG{n}{y\PYGZus{}2} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionLigne}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}haute}\PYG{p}{)}
+        \PYG{n}{x\PYGZus{}1} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionColonne}\PYG{p}{(}\PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{)}
+        \PYG{n}{x\PYGZus{}2} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionColonne}\PYG{p}{(}\PYG{n}{colonne\PYGZus{}droite}\PYG{p}{)}
+
+        \PYG{n}{delta\PYGZus{}x} \PYG{o}{=} \PYG{n}{x\PYGZus{}2} \PYG{o}{\PYGZhy{}} \PYG{n}{x\PYGZus{}1}
+        \PYG{n}{delta\PYGZus{}y} \PYG{o}{=} \PYG{n}{y\PYGZus{}2} \PYG{o}{\PYGZhy{}} \PYG{n}{y\PYGZus{}1}
+        \PYG{n}{dx} \PYG{o}{=} \PYG{n}{position}\PYG{o}{.}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n}{x\PYGZus{}1}
+        \PYG{n}{dy} \PYG{o}{=} \PYG{n}{position}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{n}{y\PYGZus{}1}
+
+        \PYG{n}{delta\PYGZus{}f\PYGZus{}x} \PYG{o}{=} \PYG{n}{valeur\PYGZus{}2\PYGZus{}1} \PYG{o}{\PYGZhy{}} \PYG{n}{valeur\PYGZus{}1\PYGZus{}1}
+        \PYG{n}{delta\PYGZus{}f\PYGZus{}y} \PYG{o}{=} \PYG{n}{valeur\PYGZus{}1\PYGZus{}2} \PYG{o}{\PYGZhy{}} \PYG{n}{valeur\PYGZus{}1\PYGZus{}1}
+        \PYG{n}{delta\PYGZus{}f\PYGZus{}x\PYGZus{}y} \PYG{o}{=} \PYG{n}{valeur\PYGZus{}1\PYGZus{}1} \PYG{o}{+} \PYG{n}{valeur\PYGZus{}2\PYGZus{}2} \PYG{o}{\PYGZhy{}} \PYG{n}{valeur\PYGZus{}2\PYGZus{}1} \PYG{o}{\PYGZhy{}} \PYG{n}{valeur\PYGZus{}1\PYGZus{}2}
+
+        \PYG{k}{return} \PYG{n}{Vec2d}\PYG{p}{(}
+            \PYG{n}{delta\PYGZus{}f\PYGZus{}x} \PYG{o}{/} \PYG{n}{delta\PYGZus{}x} \PYG{o}{+} \PYG{n}{delta\PYGZus{}f\PYGZus{}x\PYGZus{}y} \PYG{o}{*} \PYG{n}{dy} \PYG{o}{/} \PYG{p}{(}\PYG{n}{delta\PYGZus{}x} \PYG{o}{*} \PYG{n}{delta\PYGZus{}y}\PYG{p}{),}
+            \PYG{n}{delta\PYGZus{}f\PYGZus{}y} \PYG{o}{/} \PYG{n}{delta\PYGZus{}y} \PYG{o}{+} \PYG{n}{delta\PYGZus{}f\PYGZus{}x\PYGZus{}y} \PYG{o}{*} \PYG{n}{dx} \PYG{o}{/} \PYG{p}{(}\PYG{n}{delta\PYGZus{}x} \PYG{o}{*} \PYG{n}{delta\PYGZus{}y}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirDistanceRelativeCase}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case\PYGZus{}1}\PYG{p}{,} \PYG{n}{case\PYGZus{}2}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{math}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}
+            \PYG{p}{(}\PYG{n}{case\PYGZus{}1}\PYG{o}{.}\PYG{n}{ligne} \PYG{o}{\PYGZhy{}} \PYG{n}{case\PYGZus{}2}\PYG{o}{.}\PYG{n}{ligne}\PYG{p}{)}\PYG{o}{**} \PYG{l+m+mi}{2}
+            \PYG{o}{+} \PYG{p}{(}\PYG{n}{case\PYGZus{}1}\PYG{o}{.}\PYG{n}{colonne} \PYG{o}{\PYGZhy{}} \PYG{n}{case\PYGZus{}2}\PYG{o}{.}\PYG{n}{colonne}\PYG{p}{)}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirTauxDeVariationRelatif}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case\PYGZus{}1}\PYG{p}{,} \PYG{n}{case\PYGZus{}2}\PYG{p}{):}
+        \PYG{n}{dl} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirDistanceRelativeCase}\PYG{p}{(}\PYG{n}{case\PYGZus{}2}\PYG{p}{,} \PYG{n}{case\PYGZus{}1}\PYG{p}{)}
+        \PYG{k}{return} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{case\PYGZus{}1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n}{case\PYGZus{}2}\PYG{p}{])} \PYG{o}{/} \PYG{n}{dl}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirDeriveXCaseRelative}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{n}{case\PYGZus{}1} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{+} \PYG{n}{case}
+        \PYG{n}{case\PYGZus{}2} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{+} \PYG{n}{case}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirTauxDeVariationRelatif}\PYG{p}{(}\PYG{n}{case\PYGZus{}1}\PYG{p}{,} \PYG{n}{case\PYGZus{}2}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirDeriveYCaseRelative}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{n}{case\PYGZus{}1} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{+} \PYG{n}{case}
+        \PYG{n}{case\PYGZus{}2} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{+} \PYG{n}{case}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirTauxDeVariationRelatif}\PYG{p}{(}\PYG{n}{case\PYGZus{}1}\PYG{p}{,} \PYG{n}{case\PYGZus{}2}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirDeriveXYCaseRelative}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{case}\PYG{p}{):}
+        \PYG{n}{case\PYGZus{}1} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{+} \PYG{n}{case}
+        \PYG{n}{case\PYGZus{}2} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{+} \PYG{n}{case}
+        \PYG{n}{derive\PYGZus{}x\PYGZus{}1} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirDeriveXCaseRelative}\PYG{p}{(}\PYG{n}{case\PYGZus{}1}\PYG{p}{)}
+        \PYG{n}{derive\PYGZus{}x\PYGZus{}2} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirDeriveXCaseRelative}\PYG{p}{(}\PYG{n}{case\PYGZus{}2}\PYG{p}{)}
+
+        \PYG{n}{dy} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirDistanceRelativeCase}\PYG{p}{(}\PYG{n}{case\PYGZus{}1}\PYG{p}{,} \PYG{n}{case\PYGZus{}2}\PYG{p}{)}
+        
+        \PYG{k}{return} \PYG{p}{(}\PYG{n}{derive\PYGZus{}x\PYGZus{}1} \PYG{o}{\PYGZhy{}} \PYG{n}{derive\PYGZus{}x\PYGZus{}2}\PYG{p}{)} \PYG{o}{/} \PYG{n}{dy}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirMatriceBicubic}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n}{matrice\PYGZus{}coefficients} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{matrix}\PYG{p}{([}
+            \PYG{p}{[} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{],}
+            \PYG{p}{[} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{],}
+            \PYG{p}{[} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{p}{],}
+            \PYG{p}{[} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1} \PYG{p}{]} \PYG{p}{])}
+
+        \PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{ligne\PYGZus{}haute}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite} \PYG{o}{=} \PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneColonnesCasesVoisines}\PYG{p}{(}\PYG{n}{position}\PYG{p}{))}
+
+        \PYG{n}{haut\PYGZus{}gauche} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}haute}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{)}
+        \PYG{n}{haut\PYGZus{}droit} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}haute}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite}\PYG{p}{)}
+        \PYG{n}{bas\PYGZus{}gauche} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}gauche}\PYG{p}{)}
+        \PYG{n}{bas\PYGZus{}droit} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}\PYG{n}{ligne\PYGZus{}basse}\PYG{p}{,} \PYG{n}{colonne\PYGZus{}droite}\PYG{p}{)}
+
+        \PYG{n}{template} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{matrix}\PYG{p}{([}
+            \PYG{p}{[} \PYG{n}{bas\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{haut\PYGZus{}gauche} \PYG{p}{],}
+            \PYG{p}{[} \PYG{n}{bas\PYGZus{}droit}\PYG{p}{,} \PYG{n}{haut\PYGZus{}droit} \PYG{p}{]} \PYG{p}{])}
+
+        \PYG{n}{block\PYGZus{}haut\PYGZus{}gauche} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{mapMatrix}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}getitem\PYGZus{}\PYGZus{}}\PYG{p}{,} \PYG{n}{template}\PYG{p}{)}
+        \PYG{n}{block\PYGZus{}haut\PYGZus{}droit} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{mapMatrix}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirDeriveYCaseRelative}\PYG{p}{,} \PYG{n}{template}\PYG{p}{)}
+        \PYG{n}{block\PYGZus{}bas\PYGZus{}gauche} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{mapMatrix}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirDeriveXCaseRelative}\PYG{p}{,} \PYG{n}{template}\PYG{p}{)}
+        \PYG{n}{block\PYGZus{}bas\PYGZus{}droit} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{mapMatrix}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirDeriveXYCaseRelative}\PYG{p}{,} \PYG{n}{template}\PYG{p}{)}
+
+        \PYG{n}{block\PYGZus{}gauche} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{(}
+            \PYG{p}{(}\PYG{n}{block\PYGZus{}haut\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{block\PYGZus{}bas\PYGZus{}gauche}\PYG{p}{),}
+            \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+        \PYG{n}{block\PYGZus{}droit} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{(}
+            \PYG{p}{(}\PYG{n}{block\PYGZus{}haut\PYGZus{}droit}\PYG{p}{,} \PYG{n}{block\PYGZus{}bas\PYGZus{}gauche}\PYG{p}{),}
+            \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+        \PYG{n}{matrice\PYGZus{}valeurs} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{block\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{block\PYGZus{}droit}\PYG{p}{),} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
+
+        \PYG{k}{return} \PYG{n}{matrice\PYGZus{}coefficients} \PYG{o}{*} \PYG{n}{matrice\PYGZus{}valeurs} \PYG{o}{*} \PYG{n}{matrice\PYGZus{}coefficients}\PYG{o}{.}\PYG{n}{T}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirLigneVandermonde}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{scalaire}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{np}\PYG{o}{.}\PYG{n}{matrix}\PYG{p}{([} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{scalaire}\PYG{p}{,} \PYG{n}{scalaire}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{scalaire}\PYG{o}{**}\PYG{l+m+mi}{3} \PYG{p}{])}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirLigneVandermondeDerivee}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{scalaire}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{np}\PYG{o}{.}\PYG{n}{matrix}\PYG{p}{([} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{scalaire}\PYG{p}{,} \PYG{l+m+mi}{3} \PYG{o}{*} \PYG{n}{scalaire}\PYG{o}{**}\PYG{l+m+mi}{2} \PYG{p}{])}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirValeurParInterpolationBicubic}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{n}{x}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionRelative}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+        \PYG{n}{X} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneVandermonde}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+        \PYG{n}{Y} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneVandermonde}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+
+        \PYG{n}{matrice\PYGZus{}bicubic} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMatriceBicubic}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+        \PYG{k}{return} \PYG{n}{X} \PYG{o}{*} \PYG{n}{matrice\PYGZus{}bicubic} \PYG{o}{*} \PYG{n}{Y}\PYG{o}{.}\PYG{n}{T}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirGradientParInterpolationBicubic}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{}On dérive la formule d\PYGZsq{}interpolation bicubic}
+        \PYG{n}{x}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionRelative}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+        \PYG{n}{X} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneVandermonde}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+        \PYG{n}{DX} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneVandermondeDerivee}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+        \PYG{n}{Y} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneVandermonde}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+        \PYG{n}{DY} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLigneVandermondeDerivee}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+
+        \PYG{n}{matrice\PYGZus{}bicubic} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirMatriceBicubic}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+        
+        \PYG{k}{return} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{n}{DX} \PYG{o}{*} \PYG{n}{matrice\PYGZus{}bicubic} \PYG{o}{*} \PYG{n}{Y}\PYG{o}{.}\PYG{n}{T}\PYG{p}{,} \PYG{n}{X} \PYG{o}{*} \PYG{n}{matrice\PYGZus{}bicubic} \PYG{o}{*} \PYG{n}{DY}\PYG{o}{.}\PYG{n}{T}\PYG{p}{)}
+        
+
+    \PYG{k}{def} \PYG{n+nf}{avoirGradiantPosition}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirGrandientParInterpolationBilineaire}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+\PYG{k}{class} \PYG{n+nc}{SpaceHash}\PYG{p}{(}\PYG{n}{QuadrillageEspace}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keywords argument: precision, position, hauteur, largeur, valeur\PYGZus{}defaut (None)\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirLignePoint}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{math}\PYG{o}{.}\PYG{n}{floor}\PYG{p}{((}\PYG{n}{point}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirColonnePoint}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{math}\PYG{o}{.}\PYG{n}{floor}\PYG{p}{((}\PYG{n}{point}\PYG{o}{.}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirCasePoint}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLignePoint}\PYG{p}{(}\PYG{n}{point}\PYG{p}{),}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirColonnePoint}\PYG{p}{(}\PYG{n}{point}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirValeurPlusProche}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCaseAvecCentrePlusProche}\PYG{p}{(}\PYG{n}{point}\PYG{p}{)]}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionLigne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{ligne}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{p}{(}\PYG{n}{ligne} \PYG{o}{+} \PYG{l+m+mi}{1} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionColonne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{colonne}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x} \PYG{o}{+} \PYG{p}{(}\PYG{n}{colonne} \PYG{o}{+} \PYG{l+m+mi}{1} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{precision}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirCaseAvecCentrePlusProche}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{n}{case\PYGZus{}point} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCasePoint}\PYG{p}{(}\PYG{n}{point}\PYG{p}{)}
+        \PYG{n}{cases\PYGZus{}proches} \PYG{o}{=} \PYG{n}{itertools}\PYG{o}{.}\PYG{n}{chain}\PYG{p}{(}
+            \PYG{n}{case\PYGZus{}point}\PYG{o}{.}\PYG{n}{genererCaseAdjacentes}\PYG{p}{(}\PYG{n}{base}\PYG{o}{.}\PYG{n}{Case}\PYG{o}{.}\PYG{n}{genererQuatreDirections}\PYG{p}{()),}
+            \PYG{p}{[}\PYG{n}{case\PYGZus{}point}\PYG{p}{])}
+        \PYG{n}{cases\PYGZus{}proches\PYGZus{}valides} \PYG{o}{=} \PYG{n+nb}{filter}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}contains\PYGZus{}\PYGZus{}}\PYG{p}{,}
+            \PYG{n}{cases\PYGZus{}proches}\PYG{p}{)}
+
+        \PYG{n}{distance\PYGZus{}a\PYGZus{}point} \PYG{o}{=} \PYG{k}{lambda} \PYG{n}{case}\PYG{p}{:} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCentreCase}\PYG{p}{(}\PYG{n}{case}\PYG{p}{)}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n}{point}\PYG{p}{)}
+
+        \PYG{k}{return} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{cases\PYGZus{}proches\PYGZus{}valides}\PYG{p}{,} \PYG{n}{key}\PYG{o}{=}\PYG{n}{distance\PYGZus{}a\PYGZus{}point}\PYG{p}{)}
+\end{Verbatim}

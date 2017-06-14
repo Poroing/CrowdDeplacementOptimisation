@@ -1,0 +1,32 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{EcouteurPersonne}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+
+    \PYG{n}{dernier\PYGZus{}identifiant\PYGZus{}ecouteur} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{personne}\PYG{p}{,} \PYG{n}{action}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{initialiserIdentifiant}\PYG{p}{()}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{personne} \PYG{o}{=} \PYG{n}{personne}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{action} \PYG{o}{=} \PYG{n}{action}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{personne\PYGZus{}deja\PYGZus{}sortie} \PYG{o}{=} \PYG{n+nb+bp}{False}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mettreAJourPointSuiviePersonne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{personne}\PYG{o}{.}\PYG{n}{test\PYGZus{}direction}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{personne}\PYG{o}{.}\PYG{n}{test\PYGZus{}direction}\PYG{o}{.}\PYG{n}{rappelle\PYGZus{}update} \PYG{o}{=} \PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mettreAJourPointSuiviePersonne}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{initialiserIdentifiant}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{identifiant} \PYG{o}{=} \PYG{n}{EcouteurPersonne}\PYG{o}{.}\PYG{n}{dernier\PYGZus{}identifiant\PYGZus{}ecouteur} \PYG{o}{+} \PYG{l+m+mi}{1}
+        \PYG{n}{EcouteurPersonne}\PYG{o}{.}\PYG{n}{dernier\PYGZus{}identifiant\PYGZus{}ecouteur} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+    \PYG{k}{def} \PYG{n+nf}{mettreAJourPointSuiviePersonne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{test\PYGZus{}point\PYGZus{}suivre}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point\PYGZus{}suivie\PYGZus{}personne} \PYG{o}{=} \PYG{n}{test\PYGZus{}point\PYGZus{}suivre}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre}
+
+    \PYG{k}{def} \PYG{n+nf}{ecouter}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{temps}\PYG{p}{):}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{personne\PYGZus{}deja\PYGZus{}sortie} \PYG{o+ow}{and} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{personne}\PYG{o}{.}\PYG{n}{estSortie}\PYG{p}{():}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{personne\PYGZus{}deja\PYGZus{}sortie} \PYG{o}{=} \PYG{n+nb+bp}{True}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{executerAction}\PYG{p}{(}\PYG{n}{temps}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{executerAction}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{temps}\PYG{p}{):}
+        \PYG{n}{\PYGZus{}action} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{action}
+        \PYG{n}{\PYGZus{}action}\PYG{p}{(}\PYG{n}{temps}\PYG{p}{)}
+\end{Verbatim}

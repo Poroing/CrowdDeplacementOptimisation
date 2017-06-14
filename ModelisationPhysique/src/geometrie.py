@@ -92,7 +92,7 @@ class SimpleRectangle(object):
 
 
 class CalculateurDistanceAvecCache(object):
-    '''Sers a mettre en cache les valeurs calculées pour éviter
+    '''Sers à mettre en cache les valeurs calculées pour éviter
         de calculer plusieurs fois la même distance
     ''' 
 
@@ -100,11 +100,9 @@ class CalculateurDistanceAvecCache(object):
         self.distances = base.KeyPairDict()
 
     def avoirDistanceEntre(self, polygon1, polygon2):
-        if (polygon1, polygon2) in self.distances:
-            return self.distances[(polygon1, polygon2)]
-        distance = self.calculerDistanceEntre(polygon1, polygon2)
-        self.distances[(polygon1, polygon2)] = distance
-        return distance
+        return self.distances.setdefault(
+            (polygon1, polygon2),
+            self.calculerDistanceEntre(polygon1, polygon2))
 
     def calculerDistanceEntre(self, polygon1, polygon2):
         distance_min = polygon1.sommets[0].get_distance(polygon2.sommets[0])
@@ -112,7 +110,6 @@ class CalculateurDistanceAvecCache(object):
         for sommet1 in polygon1.sommets:
             for sommet2 in polygon2.sommets:
                 distance_min = min(distance_min, sommet1.get_distance(sommet2))
-                
 
         for sommet in polygon1.sommets:
             for arete in polygon2.genererAretes():

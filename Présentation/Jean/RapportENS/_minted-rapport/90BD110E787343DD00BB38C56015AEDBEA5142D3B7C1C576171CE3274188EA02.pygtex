@@ -1,0 +1,45 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{representation\PYGZus{}categories} \PYG{k+kn}{import} \PYG{n}{RepresentationCategorie}
+\PYG{k+kn}{from} \PYG{n+nn}{representation} \PYG{k+kn}{import} \PYG{n}{Representation}\PYG{p}{,} \PYG{n}{Rectangle}\PYG{p}{,} \PYG{n}{Cercle}\PYG{p}{,} \PYG{n}{Polygon}\PYG{p}{,} \PYG{n}{Segment}
+\PYG{k+kn}{import} \PYG{n+nn}{pymunk}
+
+\PYG{k}{class} \PYG{n+nc}{Obstacle}\PYG{p}{(}\PYG{n}{Representation}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword Arguments: position\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+        \PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}corps\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Body}\PYG{p}{(}\PYG{n}{body\PYGZus{}type}\PYG{o}{=}\PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{Body}\PYG{o}{.}\PYG{n}{STATIC}\PYG{p}{)}
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{filter} \PYG{o}{=} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{ShapeFilter}\PYG{p}{(}
+            \PYG{n}{categories}\PYG{o}{=}\PYG{n}{RepresentationCategorie}\PYG{o}{.}\PYG{n}{OBSTACLE}\PYG{o}{.}\PYG{n}{value}\PYG{p}{)}
+
+
+\PYG{k}{class} \PYG{n+nc}{OsbtacleSegment}\PYG{p}{(}\PYG{n}{Obstacle}\PYG{p}{,} \PYG{n}{Segment}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keywords Arguments: position, point1, point2\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}repr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}ObstacleSegment(\PYGZob{}\PYGZcb{}, \PYGZob{}\PYGZcb{})\PYGZsq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point1}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point2}\PYG{p}{)}
+
+    
+
+\PYG{k}{class} \PYG{n+nc}{ObstaclePolygonale}\PYG{p}{(}\PYG{n}{Obstacle}\PYG{p}{,} \PYG{n}{Polygon}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keywords Arguments: position, sommets\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{k}{pass}
+
+
+\PYG{k}{class} \PYG{n+nc}{ObstacleRectangulaire}\PYG{p}{(}\PYG{n}{ObstaclePolygonale}\PYG{p}{,} \PYG{n}{Rectangle}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keywords Arguments: position, hauteur, largeur\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf}{pointEstAInterieur}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(} \PYG{n}{point}\PYG{o}{.}\PYG{n}{x} \PYG{o}{\PYGZgt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x} \PYG{o+ow}{and} \PYG{n}{point}\PYG{o}{.}\PYG{n}{x} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur}
+            \PYG{o+ow}{and} \PYG{n}{point}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZgt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y} \PYG{o+ow}{and} \PYG{n}{point}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{}Cette objet n\PYGZsq{}est pas utiliser mais pourrais être à l\PYGZsq{}avenir}
+\PYG{c+c1}{\PYGZsh{}Il devra être modifié dns ce cas}
+\PYG{k}{class} \PYG{n+nc}{ObstacleCirculaire}\PYG{p}{(}\PYG{n}{Obstacle}\PYG{p}{,} \PYG{n}{Cercle}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Keyword Arguments: position, rayon\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{k}{def} \PYG{n+nf}{pointEstAInterieur}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n}{point}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rayon}
+\end{Verbatim}

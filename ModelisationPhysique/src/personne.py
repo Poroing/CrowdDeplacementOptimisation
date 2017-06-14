@@ -11,7 +11,10 @@ class Personne(CercleDynamique):
 
     VITESSE_MAXIMALE = convertirMetresPixels(1.3)
     COEFFICIENT_EVITEMENT = 0.4
-    RAYON_DE_PROXIMITE = VITESSE_MAXIMALE # Distance maximale parcouru par l'agent en une seconde
+
+    #On choisi la distance maximale parcouru par l'agent en une seconde
+    #comme rayon de proximité
+    RAYON_DE_PROXIMITE = VITESSE_MAXIMALE 
 
     TEST_DIRECTION = test_point_suivre.TestDichotomieCompactageObstacle
 
@@ -21,10 +24,14 @@ class Personne(CercleDynamique):
             position,
             espace):
 
-        super().__init__(masse_surfacique = masse_surfacique, rayon=rayon, position=position)
+        super().__init__(
+            masse_surfacique=masse_surfacique,
+            rayon=rayon,
+            position=position)
         
         self.force_deplacement = self.rayon * 10**4
-        self.filter = pymunk.ShapeFilter(categories=RepresentationCategorie.PERSONNE.value)
+        self.filter = pymunk.ShapeFilter(
+            categories=RepresentationCategorie.PERSONNE.value)
         self.espace = espace
         self.test_direction = Personne.TEST_DIRECTION(
             position=position,
@@ -80,7 +87,7 @@ class Personne(CercleDynamique):
         return self.avoirCarreProximite().area()
 
     def mettreAJourDensite(self):
-        #Densite en personne par metres carrés
+        #Densite en personnes par metres carrès
         surface_proximite = convertirSurfacePixelsSurfaceMetres(
             self.avoirSurfaceZoneDeProximite())
         self.densite = (self.avoirNombreDePersonnesAProximite()
@@ -95,17 +102,19 @@ class Personne(CercleDynamique):
         
     def traiterVitesse(self):
         if self.corps.velocity.length > self.vitesse_maximale_propre :
-            # On doit multiplier par un coefficient pour garder la direction du vecteur.
-            self.corps.velocity *= self.vitesse_maximale_propre / self.body.velocity.length 
+            self.corps.velocity.length = self.vitesse_maximale_propre
 
-    def update(self):
-        self.mettreAJourDensite()
-        self.miseAJourVitesseMax()
-        self.traiterVitesse()
+    def mettreAJourForce(self):
         if not self.estSortie():
             self.test_direction.update(self.position)
             force = self.test_direction.point_a_suivre - self.body.position
             if force != Vec2d(0, 0):
                 force.length = self.force_deplacement
             self.body.apply_force_at_local_point(force, Vec2d(0, 0))
+
+    def update(self):
+        self.mettreAJourDensite()
+        self.miseAJourVitesseMax()
+        self.traiterVitesse()
+        self.mettreAJourForce()
 

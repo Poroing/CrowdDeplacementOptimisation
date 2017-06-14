@@ -1,0 +1,176 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{pymunk.vec2d} \PYG{k+kn}{import} \PYG{n}{Vec2d}
+\PYG{k+kn}{import} \PYG{n+nn}{base}
+\PYG{k+kn}{import} \PYG{n+nn}{math}
+
+\PYG{n}{IDENTIDIANT\PYGZus{}COTE} \PYG{o}{=} \PYG{p}{[} \PYG{l+s+s1}{\PYGZsq{}gauche\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}haut\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}droite\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}bas\PYGZsq{}} \PYG{p}{]}
+
+\PYG{k}{class} \PYG{n+nc}{SimpleSegment}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+    \PYG{c+c1}{\PYGZsh{}Permet de travailler avec aise sur les segments sans devoir instancier}
+    \PYG{c+c1}{\PYGZsh{}une representation qui demande plus de place}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point1}\PYG{p}{,} \PYG{n}{point2}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point1} \PYG{o}{=} \PYG{n}{point1}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point2} \PYG{o}{=} \PYG{n}{point2}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionPourcentage}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{pourcentage}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point1} \PYG{o}{+} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point2} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point1}\PYG{p}{)} \PYG{o}{*} \PYG{n}{pourcentage}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirLongueur}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point2} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point1}\PYG{p}{)}\PYG{o}{.}\PYG{n}{length}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionDistance}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{distance}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirPositionPourcentage}\PYG{p}{(}\PYG{n}{distance} \PYG{o}{/} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirLongueur}\PYG{p}{())}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}repr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}SimpleSegment(\PYGZob{}\PYGZcb{}, \PYGZob{}\PYGZcb{})\PYGZsq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point1}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{point2}\PYG{p}{)}
+
+
+\PYG{k}{class} \PYG{n+nc}{SimpleRectangle}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+    \PYG{c+c1}{\PYGZsh{}Permet de travailler avec aise sur les rectangles sans devoir instancier}
+    \PYG{c+c1}{\PYGZsh{}une representation qui demande plus de place}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{position}\PYG{p}{,} \PYG{n}{largeur}\PYG{p}{,} \PYG{n}{hauteur}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{=} \PYG{n}{largeur}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o}{=} \PYG{n}{hauteur}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position} \PYG{o}{=} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{n}{position}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirLongueurDiagonale}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{math}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur}\PYG{o}{**}\PYG{l+m+mi}{2} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirPositionScalaire}\PYG{p}{(}\PYG{n}{identifiant\PYGZus{}cote}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{identifiant\PYGZus{}cote} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}bas\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y}
+        \PYG{k}{if} \PYG{n}{identifiant\PYGZus{}cote} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}gauche\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x}
+        \PYG{k}{if} \PYG{n}{identifiant\PYGZus{}cote} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}droite\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur}
+        \PYG{k}{if} \PYG{n}{identifiant\PYGZus{}cote} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}haut\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur}
+
+    \PYG{n+nd}{@property}
+    \PYG{k}{def} \PYG{n+nf}{sommets}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n}{ajouterPosition} \PYG{o}{=} \PYG{k}{lambda} \PYG{n}{sommet}\PYG{p}{:} \PYG{n}{sommet} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}
+        \PYG{k}{return} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb}{map}\PYG{p}{(}
+            \PYG{n}{ajouterPosition}\PYG{p}{,}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererSommetsRelatifSensHoraireDepuisPosition}\PYG{p}{()))}
+
+    \PYG{k}{def} \PYG{n+nf}{genererSommetsCote}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{identifiant\PYGZus{}cote}\PYG{p}{):}
+        \PYG{n}{ajouterPosition} \PYG{o}{=} \PYG{k}{lambda} \PYG{n}{sommet}\PYG{p}{:} \PYG{n}{sommet} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}
+        \PYG{k}{return} \PYG{n+nb}{map}\PYG{p}{(}
+            \PYG{n}{ajouterPosition}\PYG{p}{,}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererSommetsCoteRelatif}\PYG{p}{(}\PYG{n}{identifiant\PYGZus{}cote}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{genererSommetsCoteRelatif}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{identifiant\PYGZus{}cote}\PYG{p}{):}
+        \PYG{n}{GAUCHE} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{n}{HAUT} \PYG{o}{=} \PYG{l+m+mi}{1}
+        \PYG{n}{DROITE} \PYG{o}{=} \PYG{l+m+mi}{2}
+        \PYG{n}{BAS} \PYG{o}{=} \PYG{l+m+mi}{3}
+        \PYG{k}{if} \PYG{n}{identifiant\PYGZus{}cote} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}bas\PYGZsq{}}\PYG{p}{:}
+            \PYG{n}{arrete} \PYG{o}{=} \PYG{n}{BAS}
+        \PYG{k}{elif} \PYG{n}{identifiant\PYGZus{}cote} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}gauche\PYGZsq{}}\PYG{p}{:}
+            \PYG{n}{arrete} \PYG{o}{=} \PYG{n}{GAUCHE}
+        \PYG{k}{elif} \PYG{n}{identifiant\PYGZus{}cote} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}droite\PYGZsq{}}\PYG{p}{:}
+            \PYG{n}{arrete} \PYG{o}{=} \PYG{n}{DROITE}
+        \PYG{k}{elif} \PYG{n}{identifiant\PYGZus{}cote} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}haut\PYGZsq{}}\PYG{p}{:}
+            \PYG{n}{arrete} \PYG{o}{=} \PYG{n}{HAUT}
+
+        \PYG{n}{sommets} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererSommetsRelatifSensHoraireDepuisPosition}\PYG{p}{())}
+        \PYG{k}{return} \PYG{n}{sommets}\PYG{p}{[}\PYG{n}{arrete}\PYG{p}{],} \PYG{n}{sommets}\PYG{p}{[(}\PYG{n}{arrete} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{4}\PYG{p}{]}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirCote}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{identifiant\PYGZus{}cote}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{SimpleSegment}\PYG{p}{(}\PYG{o}{*}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{genererSommetsCote}\PYG{p}{(}\PYG{n}{identifiant\PYGZus{}cote}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{genererSommetsRelatifSensHoraireDepuisPosition}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{yield} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur}\PYG{p}{)}
+        \PYG{k}{yield} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{pointEstAExterieur}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{p}{(} \PYG{n}{point}\PYG{o}{.}\PYG{n}{x} \PYG{o}{\PYGZgt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{largeur} \PYG{o+ow}{or} \PYG{n}{point}\PYG{o}{.}\PYG{n}{x} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x}
+            \PYG{o+ow}{or} \PYG{n}{point}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZgt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hauteur} \PYG{o+ow}{or} \PYG{n}{point}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y}\PYG{p}{)}
+
+
+\PYG{k}{class} \PYG{n+nc}{CalculateurDistanceAvecCache}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Sers à mettre en cache les valeurs calculées pour éviter}
+\PYG{l+s+sd}{        de calculer plusieurs fois la même distance}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}} 
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{distances} \PYG{o}{=} \PYG{n}{base}\PYG{o}{.}\PYG{n}{KeyPairDict}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirDistanceEntre}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{polygon1}\PYG{p}{,} \PYG{n}{polygon2}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{distances}\PYG{o}{.}\PYG{n}{setdefault}\PYG{p}{(}
+            \PYG{p}{(}\PYG{n}{polygon1}\PYG{p}{,} \PYG{n}{polygon2}\PYG{p}{),}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{calculerDistanceEntre}\PYG{p}{(}\PYG{n}{polygon1}\PYG{p}{,} \PYG{n}{polygon2}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{calculerDistanceEntre}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{polygon1}\PYG{p}{,} \PYG{n}{polygon2}\PYG{p}{):}
+        \PYG{n}{distance\PYGZus{}min} \PYG{o}{=} \PYG{n}{polygon1}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n}{polygon2}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])}
+        
+        \PYG{k}{for} \PYG{n}{sommet1} \PYG{o+ow}{in} \PYG{n}{polygon1}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{:}
+            \PYG{k}{for} \PYG{n}{sommet2} \PYG{o+ow}{in} \PYG{n}{polygon2}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{:}
+                \PYG{n}{distance\PYGZus{}min} \PYG{o}{=} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{distance\PYGZus{}min}\PYG{p}{,} \PYG{n}{sommet1}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n}{sommet2}\PYG{p}{))}
+
+        \PYG{k}{for} \PYG{n}{sommet} \PYG{o+ow}{in} \PYG{n}{polygon1}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{:}
+            \PYG{k}{for} \PYG{n}{arete} \PYG{o+ow}{in} \PYG{n}{polygon2}\PYG{o}{.}\PYG{n}{genererAretes}\PYG{p}{():}
+                \PYG{n}{projection} \PYG{o}{=} \PYG{n}{avoirProjectionSurSegment}\PYG{p}{(}\PYG{n}{sommet}\PYG{p}{,} \PYG{n}{arete}\PYG{p}{)}
+                \PYG{k}{if} \PYG{n}{projection} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                    \PYG{k}{continue}
+                \PYG{n}{distance\PYGZus{}min} \PYG{o}{=} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{distance\PYGZus{}min}\PYG{p}{,} \PYG{n}{sommet}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n}{projection}\PYG{p}{))}
+
+        \PYG{k}{for} \PYG{n}{sommet} \PYG{o+ow}{in} \PYG{n}{polygon2}\PYG{o}{.}\PYG{n}{sommets}\PYG{p}{:}
+            \PYG{k}{for} \PYG{n}{arete} \PYG{o+ow}{in} \PYG{n}{polygon1}\PYG{o}{.}\PYG{n}{genererAretes}\PYG{p}{():}
+                \PYG{n}{projection} \PYG{o}{=} \PYG{n}{avoirProjectionSurSegment}\PYG{p}{(}\PYG{n}{sommet}\PYG{p}{,} \PYG{n}{arete}\PYG{p}{)}
+                \PYG{k}{if} \PYG{n}{projection} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                    \PYG{k}{continue}
+                \PYG{n}{distance\PYGZus{}min} \PYG{o}{=} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{distance\PYGZus{}min}\PYG{p}{,} \PYG{n}{sommet}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n}{projection}\PYG{p}{))}
+
+        \PYG{k}{return} \PYG{n}{distance\PYGZus{}min}
+
+\PYG{k}{def} \PYG{n+nf}{avoirDistanceAngulaire}\PYG{p}{(}\PYG{n}{angle}\PYG{p}{,} \PYG{n}{autre\PYGZus{}angle}\PYG{p}{):}
+    \PYG{n}{angle\PYGZus{}centre} \PYG{o}{=} \PYG{n}{angle} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi}\PYG{p}{)}
+    \PYG{n}{autre\PYGZus{}angle\PYGZus{}centre} \PYG{o}{=} \PYG{n}{autre\PYGZus{}angle} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{angle\PYGZus{}centre} \PYG{o}{\PYGZgt{}} \PYG{n}{autre\PYGZus{}angle\PYGZus{}centre}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{avoirDistanceAngulaire}\PYG{p}{(}\PYG{n}{autre\PYGZus{}angle}\PYG{p}{,} \PYG{n}{angle}\PYG{p}{)}
+    \PYG{n}{distance} \PYG{o}{=} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{angle\PYGZus{}centre} \PYG{o}{\PYGZhy{}} \PYG{n}{autre\PYGZus{}angle\PYGZus{}centre}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{distance} \PYG{o}{\PYGZgt{}} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi}\PYG{p}{:}
+        \PYG{n}{autre\PYGZus{}angle\PYGZus{}centre} \PYG{o}{\PYGZhy{}=} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi}
+        \PYG{n}{distance} \PYG{o}{=} \PYG{n+nb}{abs}\PYG{p}{(}\PYG{n}{autre\PYGZus{}angle\PYGZus{}centre} \PYG{o}{\PYGZhy{}} \PYG{n}{angle\PYGZus{}centre}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{distance}               
+
+\PYG{k}{def} \PYG{n+nf}{avoirMilieusAngulaire}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Renvoie le milieu proche suivie du milieu eloigne\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{n}{angle1\PYGZus{}centre} \PYG{o}{=} \PYG{n}{angle1} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi}\PYG{p}{)}
+    \PYG{n}{angle2\PYGZus{}centre} \PYG{o}{=} \PYG{n}{angle2} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi}\PYG{p}{)}
+
+    \PYG{n}{milieu1} \PYG{o}{=} \PYG{p}{(}\PYG{n}{angle1\PYGZus{}centre} \PYG{o}{+} \PYG{n}{angle2\PYGZus{}centre}\PYG{p}{)} \PYG{o}{/} \PYG{l+m+mi}{2}
+    \PYG{n}{milieu2} \PYG{o}{=} \PYG{n}{milieu1} \PYG{o}{+} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi}
+    \PYG{k}{if} \PYG{n}{avoirDistanceAngulaire}\PYG{p}{(}\PYG{n}{milieu1}\PYG{p}{,} \PYG{n}{angle1}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{math}\PYG{o}{.}\PYG{n}{pi} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{:}
+        \PYG{n}{milieu\PYGZus{}proche} \PYG{o}{=} \PYG{n}{milieu1}
+        \PYG{n}{milieu\PYGZus{}eloigne} \PYG{o}{=} \PYG{n}{milieu2}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{milieu\PYGZus{}proche} \PYG{o}{=} \PYG{n}{milieu2}
+        \PYG{n}{milieu\PYGZus{}eloigne} \PYG{o}{=} \PYG{n}{milieu1}
+    \PYG{k}{return} \PYG{p}{(}\PYG{n}{milieu\PYGZus{}proche}\PYG{p}{,} \PYG{n}{milieu\PYGZus{}eloigne}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{avoirMilieuEloigne}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{):}
+    \PYG{k}{return} \PYG{n}{avoirMilieusAngulaire}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{]}
+
+\PYG{k}{def} \PYG{n+nf}{avoirMilieuProche}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{):}
+    \PYG{k}{return} \PYG{n}{avoirMilieusAngulaire}\PYG{p}{(}\PYG{n}{angle1}\PYG{p}{,} \PYG{n}{angle2}\PYG{p}{)[}\PYG{l+m+mi}{0}\PYG{p}{]}
+
+\PYG{k}{def} \PYG{n+nf}{centrerPoint}\PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{centre}\PYG{p}{):}
+    \PYG{k}{return} \PYG{n}{point} \PYG{o}{\PYGZhy{}} \PYG{n}{centre}
+
+\PYG{k}{def} \PYG{n+nf}{avoirPositionProjection}\PYG{p}{(}\PYG{n}{vecteur1}\PYG{p}{,} \PYG{n}{vecteur2}\PYG{p}{):}
+    \PYG{k}{return} \PYG{n}{vecteur1}\PYG{o}{.}\PYG{n}{dot}\PYG{p}{(}\PYG{n}{vecteur2}\PYG{p}{)} \PYG{o}{/} \PYG{n}{vecteur2}\PYG{o}{.}\PYG{n}{get\PYGZus{}length\PYGZus{}sqrd}\PYG{p}{()}
+
+\PYG{k}{def} \PYG{n+nf}{avoirProjectionSurSegment}\PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{segment}\PYG{p}{):}
+    \PYG{n}{point\PYGZus{}centre} \PYG{o}{=} \PYG{n}{centrerPoint}\PYG{p}{(}\PYG{n}{point}\PYG{p}{,} \PYG{n}{segment}\PYG{o}{.}\PYG{n}{point2}\PYG{p}{)}
+    \PYG{n}{direction\PYGZus{}segment\PYGZus{}centre} \PYG{o}{=} \PYG{n}{centrerPoint}\PYG{p}{(}\PYG{n}{segment}\PYG{o}{.}\PYG{n}{point1}\PYG{p}{,} \PYG{n}{segment}\PYG{o}{.}\PYG{n}{point2}\PYG{p}{)}
+    \PYG{n}{t} \PYG{o}{=} \PYG{n}{avoirPositionProjection}\PYG{p}{(}\PYG{n}{point\PYGZus{}centre}\PYG{p}{,} \PYG{n}{direction\PYGZus{}segment\PYGZus{}centre}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{t} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{0} \PYG{o+ow}{or} \PYG{n}{t} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n+nb+bp}{None}
+    \PYG{k}{return} \PYG{n}{direction\PYGZus{}segment\PYGZus{}centre} \PYG{o}{*} \PYG{n}{t} \PYG{o}{+} \PYG{n}{segment}\PYG{o}{.}\PYG{n}{point2}
+\end{Verbatim}

@@ -1,0 +1,268 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{lieu\PYGZus{}ferme} \PYG{k+kn}{import} \PYG{n}{LieuFerme}
+\PYG{k+kn}{from} \PYG{n+nn}{personne} \PYG{k+kn}{import} \PYG{n}{Personne}
+\PYG{k+kn}{from} \PYG{n+nn}{obstacle} \PYG{k+kn}{import} \PYG{n}{ObstacleRectangulaire}\PYG{p}{,} \PYG{n}{ObstacleCirculaire}
+\PYG{k+kn}{from} \PYG{n+nn}{obstacle} \PYG{k+kn}{import} \PYG{n}{ObstaclePolygonale}
+\PYG{k+kn}{import} \PYG{n+nn}{base}
+\PYG{k+kn}{from} \PYG{n+nn}{ecouteur} \PYG{k+kn}{import} \PYG{n}{EcouteurPersonne}
+\PYG{k+kn}{from} \PYG{n+nn}{espace} \PYG{k+kn}{import} \PYG{n}{Espace}
+\PYG{k+kn}{from} \PYG{n+nn}{pymunk.vec2d} \PYG{k+kn}{import} \PYG{n}{Vec2d}
+\PYG{k+kn}{from} \PYG{n+nn}{random} \PYG{k+kn}{import} \PYG{n}{random}\PYG{p}{,} \PYG{n}{randint}
+\PYG{k+kn}{from} \PYG{n+nn}{source\PYGZus{}personne} \PYG{k+kn}{import} \PYG{n}{Source}
+\PYG{k+kn}{from} \PYG{n+nn}{math} \PYG{k+kn}{import} \PYG{n}{sqrt}
+\PYG{k+kn}{from} \PYG{n+nn}{simulation} \PYG{k+kn}{import} \PYG{n}{Simulation}
+
+\PYG{c+c1}{\PYGZsh{}TODO: éviter les constante tout à fait arbitraire}
+
+\PYG{k}{class} \PYG{n+nc}{ConstructeurSalle}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+       
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation} \PYG{o}{=} \PYG{n}{donnees\PYGZus{}simulation}
+        
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace} \PYG{o}{=} \PYG{n}{Espace}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{type} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}type\PYGZsq{}}\PYG{p}{]}
+        
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterLieuFerme}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{,}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}personnes\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}zone\PYGZus{}apparition\PYGZsq{}}\PYG{p}{],}
+            \PYG{o}{**}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}lieu\PYGZus{}ferme\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}salle\PYGZsq{}}\PYG{p}{])}
+            
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{type} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}salle\PYGZus{}de\PYGZus{}classe\PYGZdq{}} \PYG{p}{:}
+            
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterRangs}\PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{,}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}personnes\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}zone\PYGZus{}apparition\PYGZsq{}}\PYG{p}{],}
+                \PYG{o}{**}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}obstacles\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}rangs\PYGZsq{}}\PYG{p}{])}
+        
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{type} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}salle\PYGZus{}en\PYGZus{}T\PYGZdq{}}\PYG{p}{:}
+            
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterFormeT}\PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}obstacles\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}particulier\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}rectangles\PYGZsq{}}\PYG{p}{],}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}personnes\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}zone\PYGZus{}apparition\PYGZsq{}}\PYG{p}{],}
+                \PYG{o}{**}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}lieu\PYGZus{}ferme\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}salle\PYGZus{}couloir\PYGZsq{}}\PYG{p}{])}
+                
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{type} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}salle\PYGZus{}en\PYGZus{}Y\PYGZdq{}}\PYG{p}{:}
+            
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterFormeY}\PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}obstacles\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}particulier\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}polygones\PYGZsq{}}\PYG{p}{],}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}personnes\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}zone\PYGZus{}apparition\PYGZsq{}}\PYG{p}{],}
+                \PYG{o}{**}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}lieu\PYGZus{}ferme\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}salle\PYGZus{}couloir\PYGZsq{}}\PYG{p}{])}
+            
+            
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterObstacles}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{,}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}obstacles\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}particulier\PYGZsq{}}\PYG{p}{])}
+        
+        
+    
+    \PYG{k}{def} \PYG{n+nf}{ajouterLieuFerme}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{espace}\PYG{p}{,}
+            \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{salle\PYGZus{}hauteur}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{salle\PYGZus{}largeur}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{porte\PYGZus{}largeur}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{porte\PYGZus{}position}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{):}
+
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}x\PYGZus{}min\PYGZsq{}} \PYG{p}{:}  \PYG{l+m+mi}{50}\PYG{p}{\PYGZcb{})}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}x\PYGZus{}max\PYGZsq{}} \PYG{p}{:} \PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n}{salle\PYGZus{}largeur} \PYG{p}{\PYGZcb{})}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}min\PYGZsq{}} \PYG{p}{:}  \PYG{l+m+mi}{50} \PYG{p}{\PYGZcb{})}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}max\PYGZsq{}} \PYG{p}{:}  \PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n}{salle\PYGZus{}hauteur} \PYG{p}{\PYGZcb{})}
+        
+        
+        \PYG{n}{espace}\PYG{o}{.}\PYG{n}{ajouterLieuFerme}\PYG{p}{(}\PYG{n}{LieuFerme}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}lieu\PYGZus{}ferme\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}porte\PYGZsq{}}\PYG{p}{],}
+            \PYG{n}{salle\PYGZus{}largeur}\PYG{p}{,}
+            \PYG{n}{salle\PYGZus{}hauteur}\PYG{p}{,}
+            \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{,} \PYG{l+m+mi}{50}\PYG{p}{)))}
+            
+    \PYG{k}{def} \PYG{n+nf}{ajouterFormeT}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{rectangles}\PYG{p}{,}
+            \PYG{n}{zone\PYGZus{}apparition}\PYG{p}{,}
+            \PYG{n}{largeur\PYGZus{}horizontale}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{largeur\PYGZus{}verticale}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{):}
+        
+        \PYG{n}{largeur\PYGZus{}couloir} \PYG{o}{=} \PYG{n}{largeur\PYGZus{}horizontale}
+        \PYG{n}{hauteur\PYGZus{}obstacle} \PYG{o}{=} \PYG{n}{largeur\PYGZus{}verticale}
+        \PYG{n}{largeur\PYGZus{}obstacle} \PYG{o}{=} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{largeur} \PYG{o}{\PYGZhy{}} \PYG{n}{largeur\PYGZus{}couloir}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}
+        
+        \PYG{n}{coin\PYGZus{}inferieur1} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{50}\PYG{p}{,}\PYG{l+m+mi}{50}\PYG{p}{]}
+        \PYG{n}{coin\PYGZus{}inferieur2} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n}{largeur\PYGZus{}couloir} \PYG{o}{+} \PYG{n}{largeur\PYGZus{}obstacle}  \PYG{p}{,}\PYG{l+m+mi}{50}\PYG{p}{]}
+
+        \PYG{n}{rectangles}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(\PYGZob{}}
+            \PYG{l+s+s2}{\PYGZdq{}largeur\PYGZdq{}} \PYG{p}{:} \PYG{n}{largeur\PYGZus{}obstacle}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}hauteur\PYGZdq{}} \PYG{p}{:} \PYG{n}{hauteur\PYGZus{}obstacle}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}position\PYGZdq{}} \PYG{p}{:} \PYG{n}{coin\PYGZus{}inferieur1}\PYG{p}{\PYGZcb{})}
+        \PYG{n}{rectangles}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(\PYGZob{}}
+            \PYG{l+s+s2}{\PYGZdq{}largeur\PYGZdq{}} \PYG{p}{:} \PYG{n}{largeur\PYGZus{}obstacle}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}hauteur\PYGZdq{}} \PYG{p}{:} \PYG{n}{hauteur\PYGZus{}obstacle}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}position\PYGZdq{}} \PYG{p}{:} \PYG{n}{coin\PYGZus{}inferieur2} \PYG{p}{\PYGZcb{})}
+        
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}x\PYGZus{}min\PYGZsq{}} \PYG{p}{:}  \PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n}{largeur\PYGZus{}obstacle}\PYG{p}{\PYGZcb{})}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}x\PYGZus{}max\PYGZsq{}} \PYG{p}{:}  \PYG{n}{coin\PYGZus{}inferieur2}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]\PYGZcb{})}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}min\PYGZsq{}} \PYG{p}{:}  \PYG{l+m+mi}{50}\PYG{p}{\PYGZcb{})}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}max\PYGZsq{}} \PYG{p}{:}  \PYG{p}{(}\PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n}{hauteur\PYGZus{}obstacle}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{o}{/}\PYG{l+m+mi}{3}\PYG{p}{)\PYGZcb{})}
+        
+        
+        
+    \PYG{k}{def} \PYG{n+nf}{ajouterFormeY}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{polygones}\PYG{p}{,}
+            \PYG{n}{zone\PYGZus{}apparition}\PYG{p}{,}
+            \PYG{n}{largeur\PYGZus{}horizontale}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{largeur\PYGZus{}verticale}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{):}
+    
+        \PYG{c+c1}{\PYGZsh{}cf ficher annexe}
+        \PYG{n}{d} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{largeur}  
+        \PYG{n}{l} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{hauteur}
+        \PYG{n}{a} \PYG{o}{=} \PYG{n}{largeur\PYGZus{}horizontale}
+        \PYG{n}{b} \PYG{o}{=} \PYG{n}{largeur\PYGZus{}verticale}
+        \PYG{n}{c} \PYG{o}{=} \PYG{p}{(}\PYG{n}{d}\PYG{o}{\PYGZhy{}}\PYG{n}{a}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}
+        \PYG{n}{y} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{n}{x} \PYG{o}{=} \PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{a}\PYG{o}{**}\PYG{l+m+mi}{2} \PYG{o}{\PYGZhy{}} \PYG{n}{y}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}
+        \PYG{n}{h} \PYG{o}{=} \PYG{p}{((}\PYG{n}{d}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{x}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{*} \PYG{n}{sqrt}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}
+        \PYG{n}{k} \PYG{o}{=} \PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{h}\PYG{o}{**}\PYG{l+m+mi}{2} \PYG{o}{\PYGZhy{}} \PYG{p}{((}\PYG{n}{d}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{x}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}
+        
+        \PYG{n}{origine} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{50}\PYG{p}{,}\PYG{l+m+mi}{50}\PYG{p}{]}
+        \PYG{n}{bordGauche} \PYG{o}{=} \PYG{p}{[[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{],[}\PYG{n}{c}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{],[}\PYG{n}{c}\PYG{p}{,}\PYG{n}{b}\PYG{p}{],[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{b}\PYG{o}{+}\PYG{n}{c}\PYG{p}{]]}
+        
+        \PYG{n}{polygones}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}} \PYG{p}{:} \PYG{n}{origine}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}sommets\PYGZsq{}} \PYG{p}{:} \PYG{n}{bordGauche}\PYG{p}{\PYGZcb{})}
+        
+        \PYG{n}{bordDroit} \PYG{o}{=} \PYG{p}{[[}\PYG{n}{c}\PYG{o}{+}\PYG{n}{a}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{],[}\PYG{n}{d}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{],[}\PYG{n}{c}\PYG{o}{+}\PYG{n}{a}\PYG{p}{,}\PYG{n}{b}\PYG{p}{],[}\PYG{n}{d}\PYG{p}{,}\PYG{n}{b}\PYG{o}{+}\PYG{n}{c}\PYG{p}{]]}
+        
+        \PYG{n}{polygones}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}} \PYG{p}{:} \PYG{n}{origine}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}sommets\PYGZsq{}} \PYG{p}{:} \PYG{n}{bordDroit}\PYG{p}{\PYGZcb{})}
+       
+        \PYG{n}{triangle} \PYG{o}{=} \PYG{p}{[[}\PYG{n}{x}\PYG{p}{,}\PYG{n}{l}\PYG{p}{],[}\PYG{n}{d}\PYG{o}{\PYGZhy{}}\PYG{n}{x}\PYG{p}{,}\PYG{n}{l}\PYG{p}{],[}\PYG{n}{d}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{n}{l}\PYG{o}{\PYGZhy{}}\PYG{n}{k}\PYG{p}{]]}
+        
+        \PYG{n}{polygones}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}} \PYG{p}{:} \PYG{n}{origine}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}sommets\PYGZsq{}} \PYG{p}{:} \PYG{n}{triangle}\PYG{p}{\PYGZcb{})}
+        
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}x\PYGZus{}min\PYGZsq{}} \PYG{p}{:} \PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n}{c}\PYG{p}{\PYGZcb{}} \PYG{p}{)}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}x\PYGZus{}max\PYGZsq{}} \PYG{p}{:} \PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n}{c}\PYG{o}{+}\PYG{n}{a}\PYG{p}{\PYGZcb{}} \PYG{p}{)}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}min\PYGZsq{}} \PYG{p}{:} \PYG{l+m+mi}{50}\PYG{p}{\PYGZcb{}} \PYG{p}{)}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}max\PYGZsq{}} \PYG{p}{:} \PYG{p}{(}\PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n}{b}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{o}{/}\PYG{l+m+mi}{3}\PYG{p}{)\PYGZcb{})}
+        
+    
+    \PYG{k}{def} \PYG{n+nf}{ajouterObstacles}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{espace}\PYG{p}{,} \PYG{n}{particulier}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterObstaclesParticulier}\PYG{p}{(}\PYG{n}{espace}\PYG{p}{,} \PYG{n}{particulier}\PYG{p}{)}
+        
+    \PYG{k}{def} \PYG{n+nf}{ajouterObstaclesParticulier}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{espace}\PYG{p}{,} \PYG{n}{obstacles}\PYG{p}{):}
+        \PYG{k}{for} \PYG{n}{obstacle} \PYG{o+ow}{in} \PYG{n}{obstacles}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}rectangles\PYGZsq{}}\PYG{p}{]:}
+            \PYG{n}{espace}\PYG{o}{.}\PYG{n}{ajouterObstacle}\PYG{p}{(}\PYG{n}{ObstacleRectangulaire}\PYG{p}{(}\PYG{o}{**}\PYG{n}{obstacle}\PYG{p}{))}
+        \PYG{k}{for} \PYG{n}{obstacle} \PYG{o+ow}{in} \PYG{n}{obstacles}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}cercles\PYGZsq{}}\PYG{p}{]:}
+            \PYG{n}{espace}\PYG{o}{.}\PYG{n}{ajouterObstacle}\PYG{p}{(}\PYG{n}{ObstacleCirculaire}\PYG{p}{(}\PYG{o}{**}\PYG{n}{obstacle}\PYG{p}{))}
+        \PYG{k}{for} \PYG{n}{obstacle} \PYG{o+ow}{in} \PYG{n}{obstacles}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}polygones\PYGZsq{}}\PYG{p}{]:}
+            \PYG{n}{espace}\PYG{o}{.}\PYG{n}{ajouterObstacle}\PYG{p}{(}\PYG{n}{ObstaclePolygonale}\PYG{p}{(}\PYG{o}{**}\PYG{n}{obstacle}\PYG{p}{))}
+
+
+    \PYG{k}{def} \PYG{n+nf}{ajouterRangs}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{espace}\PYG{p}{,}
+            \PYG{n}{zone\PYGZus{}apparition}\PYG{p}{,}
+            \PYG{n}{largeur\PYGZus{}gauche}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{largeur\PYGZus{}droit} \PYG{o}{=} \PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{hauteur} \PYG{o}{=} \PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{distance\PYGZus{}intermediaire}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{distance\PYGZus{}au\PYGZus{}mur}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{position\PYGZus{}debut\PYGZus{}gauche}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{position\PYGZus{}debut\PYGZus{}droit}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{):}
+
+        \PYG{n}{position\PYGZus{}gauche\PYGZus{}y} \PYG{o}{=} \PYG{n}{position\PYGZus{}debut\PYGZus{}gauche}
+        \PYG{n}{position\PYGZus{}droit\PYGZus{}y} \PYG{o}{=} \PYG{n}{position\PYGZus{}debut\PYGZus{}droit}
+        
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}x\PYGZus{}min\PYGZsq{}} \PYG{p}{:}  \PYG{l+m+mi}{50}\PYG{p}{\PYGZcb{})}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}x\PYGZus{}max\PYGZsq{}} \PYG{p}{:}  \PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{largeur}\PYG{p}{\PYGZcb{})}
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}
+            \PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}min\PYGZsq{}} \PYG{p}{:}  \PYG{l+m+mi}{50} \PYG{o}{+}
+                \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{position\PYGZus{}debut\PYGZus{}gauche}\PYG{p}{,} \PYG{n}{position\PYGZus{}debut\PYGZus{}droit}\PYG{p}{)} \PYG{o}{+} \PYG{n}{hauteur}\PYG{p}{\PYGZcb{})} 
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}max\PYGZsq{}} \PYG{p}{:}  \PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{hauteur}\PYG{p}{\PYGZcb{})}
+
+        \PYG{c+c1}{\PYGZsh{}on ajoute les ranges de gauche}
+        \PYG{k}{while} \PYG{n}{position\PYGZus{}gauche\PYGZus{}y} \PYG{o}{+} \PYG{l+m+mi}{50} \PYG{o}{\PYGZlt{}=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{hauteur} \PYG{p}{:}
+            \PYG{n}{position\PYGZus{}gauche} \PYG{o}{=} \PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n}{distance\PYGZus{}au\PYGZus{}mur}\PYG{p}{,} \PYG{n}{position\PYGZus{}gauche\PYGZus{}y}
+            
+            \PYG{n}{obstacle\PYGZus{}gauche} \PYG{o}{=} \PYG{n}{ObstacleRectangulaire}\PYG{p}{(}
+                \PYG{n}{hauteur} \PYG{o}{=} \PYG{n}{hauteur}\PYG{p}{,}
+                \PYG{n}{largeur} \PYG{o}{=} \PYG{n}{largeur\PYGZus{}gauche}\PYG{p}{,}
+                \PYG{n}{position} \PYG{o}{=} \PYG{n}{position\PYGZus{}gauche}\PYG{p}{)}
+
+            \PYG{n}{espace}\PYG{o}{.}\PYG{n}{ajouterObstacle}\PYG{p}{(}\PYG{n}{obstacle\PYGZus{}gauche}\PYG{p}{)}
+
+            \PYG{n}{position\PYGZus{}gauche\PYGZus{}y} \PYG{o}{+=} \PYG{n}{distance\PYGZus{}intermediaire} \PYG{o}{+} \PYG{n}{hauteur}
+            
+            
+        \PYG{c+c1}{\PYGZsh{}on ajoute les rangs à droite}
+        \PYG{k}{while} \PYG{n}{position\PYGZus{}droit\PYGZus{}y} \PYG{o}{+} \PYG{l+m+mi}{50} \PYG{o}{\PYGZlt{}=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{hauteur} \PYG{p}{:}
+            \PYG{n}{position\PYGZus{}droit\PYGZus{}x} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{largeur}
+                \PYG{o}{\PYGZhy{}} \PYG{n}{largeur\PYGZus{}droit} \PYG{o}{\PYGZhy{}} \PYG{n}{distance\PYGZus{}au\PYGZus{}mur}
+            \PYG{n}{position\PYGZus{}droit} \PYG{o}{=} \PYG{n}{position\PYGZus{}droit\PYGZus{}x}\PYG{p}{,} \PYG{n}{position\PYGZus{}droit\PYGZus{}y}
+            
+            \PYG{n}{obstacle\PYGZus{}droit} \PYG{o}{=} \PYG{n}{ObstacleRectangulaire}\PYG{p}{(}
+                \PYG{n}{hauteur} \PYG{o}{=} \PYG{n}{hauteur}\PYG{p}{,}
+                \PYG{n}{largeur} \PYG{o}{=} \PYG{n}{largeur\PYGZus{}droit}\PYG{p}{,}
+                \PYG{n}{position} \PYG{o}{=} \PYG{n}{position\PYGZus{}droit}\PYG{p}{)}
+            \PYG{n}{espace}\PYG{o}{.}\PYG{n}{ajouterObstacle}\PYG{p}{(}\PYG{n}{obstacle\PYGZus{}droit}\PYG{p}{)}
+
+            \PYG{n}{position\PYGZus{}droit\PYGZus{}y} \PYG{o}{+=} \PYG{n}{distance\PYGZus{}intermediaire} \PYG{o}{+} \PYG{n}{hauteur}
+            
+        \PYG{n}{zone\PYGZus{}apparition}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(\PYGZob{}}
+            \PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}max\PYGZsq{}} \PYG{p}{:}
+                \PYG{l+m+mi}{50} \PYG{o}{+} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{position\PYGZus{}droit\PYGZus{}y}\PYG{p}{,} \PYG{n}{position\PYGZus{}gauche\PYGZus{}y}\PYG{p}{)}
+                \PYG{o}{\PYGZhy{}} \PYG{n}{distance\PYGZus{}intermediaire} \PYG{o}{\PYGZhy{}} \PYG{n}{hauteur}\PYG{p}{\PYGZcb{})}
+
+
+\PYG{k}{class} \PYG{n+nc}{ConstructeurSimulation}\PYG{p}{(}\PYG{n+nb}{object}\PYG{p}{):}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{,} \PYG{n}{action\PYGZus{}sortie}\PYG{p}{):}
+        \PYG{n}{constructeur\PYGZus{}salle} \PYG{o}{=} \PYG{n}{ConstructeurSalle}\PYG{p}{(}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{)}
+
+        \PYG{n}{creer\PYGZus{}ecouteur} \PYG{o}{=} \PYG{k}{lambda} \PYG{n}{personne}\PYG{p}{:} \PYG{n}{EcouteurPersonne}\PYG{p}{(}\PYG{n}{personne}\PYG{p}{,} \PYG{n}{action\PYGZus{}sortie}\PYG{p}{)}
+        
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{simulation} \PYG{o}{=} \PYG{n}{Simulation}\PYG{p}{(}
+            \PYG{n}{constructeur\PYGZus{}salle}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{,}
+            \PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}mise\PYGZus{}a\PYGZus{}jour\PYGZus{}par\PYGZus{}seconde\PYGZsq{}}\PYG{p}{],}
+            \PYG{n}{creer\PYGZus{}ecouteur}\PYG{p}{)}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ajouterPersonnes}\PYG{p}{(}
+            \PYG{n}{nombre}\PYG{o}{=}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}personnes\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}nombre\PYGZsq{}}\PYG{p}{],} 
+            \PYG{o}{**}\PYG{n}{base}\PYG{o}{.}\PYG{n}{fusioner\PYGZus{}dictionnaires}\PYG{p}{(}
+                \PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}personnes\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}caracteristiques\PYGZsq{}}\PYG{p}{],}
+                \PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}personnes\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}zone\PYGZus{}apparition\PYGZsq{}}\PYG{p}{]))}
+            
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{construireSources}\PYG{p}{(}
+            \PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}personnes\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}sources\PYGZsq{}}\PYG{p}{],}
+            \PYG{o}{**}\PYG{n}{donnees\PYGZus{}simulation}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}personnes\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}caracteristiques\PYGZsq{}}\PYG{p}{])}
+
+    \PYG{k}{def} \PYG{n+nf}{ajouterPersonnes}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{nombre}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,}
+            \PYG{n}{rayon\PYGZus{}min} \PYG{o}{=} \PYG{l+m+mi}{30}\PYG{p}{,}
+            \PYG{n}{rayon\PYGZus{}max} \PYG{o}{=} \PYG{l+m+mi}{30}\PYG{p}{,}
+            \PYG{n}{masse\PYGZus{}surfacique} \PYG{o}{=} \PYG{l+m+mf}{1.8}\PYG{p}{,}
+            \PYG{n}{y\PYGZus{}min}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{y\PYGZus{}max}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{x\PYGZus{}min}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,}
+            \PYG{n}{x\PYGZus{}max}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{):}
+                
+        \PYG{k}{for} \PYG{n}{\PYGZus{}} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{nombre}\PYG{p}{):}
+            \PYG{n}{personne} \PYG{o}{=} \PYG{n}{Personne}\PYG{p}{(}
+                \PYG{n}{masse\PYGZus{}surfacique}\PYG{p}{,}
+                \PYG{n}{randint}\PYG{p}{(}\PYG{n}{rayon\PYGZus{}min}\PYG{p}{,} \PYG{n}{rayon\PYGZus{}max}\PYG{p}{),}
+                \PYG{n}{Vec2d}\PYG{p}{(}
+                    \PYG{n}{x\PYGZus{}min} \PYG{o}{+} \PYG{n}{random}\PYG{p}{()}\PYG{o}{*}\PYG{p}{(}\PYG{n}{x\PYGZus{}max}\PYG{o}{\PYGZhy{}}\PYG{n}{x\PYGZus{}min}\PYG{p}{),}
+                    \PYG{n}{y\PYGZus{}min} \PYG{o}{+} \PYG{n}{random}\PYG{p}{()}\PYG{o}{*}\PYG{p}{(}\PYG{n}{y\PYGZus{}max}\PYG{o}{\PYGZhy{}}\PYG{n}{y\PYGZus{}min}\PYG{p}{)),}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{simulation}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{)}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{simulation}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{ajouterPersonne}\PYG{p}{(}\PYG{n}{personne}\PYG{p}{)}
+            
+    \PYG{k}{def} \PYG{n+nf}{construireSources}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{liste\PYGZus{}sources}\PYG{p}{,}
+            \PYG{n}{rayon\PYGZus{}min}\PYG{o}{=}\PYG{l+m+mi}{30}\PYG{p}{,}
+            \PYG{n}{rayon\PYGZus{}max}\PYG{o}{=}\PYG{l+m+mi}{30}\PYG{p}{,}
+            \PYG{n}{masse\PYGZus{}surfacique}\PYG{o}{=}\PYG{l+m+mf}{1.8}\PYG{p}{):}
+
+        \PYG{k}{for} \PYG{n}{source} \PYG{o+ow}{in} \PYG{n}{liste\PYGZus{}sources}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{simulation}\PYG{o}{.}\PYG{n}{sources}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{Source}\PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{simulation}\PYG{o}{.}\PYG{n}{espace}\PYG{p}{,}
+                \PYG{n}{source}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}position\PYGZsq{}}\PYG{p}{],}
+                \PYG{n}{source}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}periode\PYGZsq{}}\PYG{p}{],}
+                \PYG{n}{rayon\PYGZus{}min}\PYG{p}{,}
+                \PYG{n}{rayon\PYGZus{}max}\PYG{p}{,}
+                \PYG{n}{masse\PYGZus{}surfacique}\PYG{p}{))}
+            
+\end{Verbatim}

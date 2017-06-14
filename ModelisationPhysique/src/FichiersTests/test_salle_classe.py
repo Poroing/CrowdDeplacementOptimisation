@@ -3,11 +3,15 @@ sys.path.append('..')
 from convertir_json_python import convertirJsonPython
 from traitement import RecuperationDeDonnees, TraitementDeDonnees
 from affichage import Afficheur
+from personne import Personne
+import test_point_suivre
+
+Personne.TEST_DIRECTION = test_point_suivre.TestGradientLargeurQuatreDirections
 
 afficheur = Afficheur(debug=False)
 
 configuration = convertirJsonPython(
-    '../FichiersConfiguration/salle_vide.json')
+    '../FichiersConfiguration/MPSTAR.json')
 recuperation = RecuperationDeDonnees(
     configuration,
     arreter_apres_temps=True,

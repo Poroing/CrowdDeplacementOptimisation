@@ -67,10 +67,9 @@ def afficherChampGradient(champ):
     for i in range(champ.nombre_lignes - 5):
         for j in range(champ.nombre_colonnes - 5):
             try:
-                U[i, j], V[i, j] = champ.avoirGradiantPosition(Vec2d(Y[i], X[j]))
+                U[i, j], V[i, j] = champ.avoirGradiantPosition(Vec2d(X[j], Y[i]))
             except IndexError:
                 pass
-    print(champ.nombre_lignes, champ.nombre_colonnes)
 
     plt.streamplot(X, Y, U, V)
     plt.show()

@@ -1,0 +1,121 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{representation\PYGZus{}categories} \PYG{k+kn}{import} \PYG{n}{RepresentationCategorie}
+\PYG{k+kn}{from} \PYG{n+nn}{representation} \PYG{k+kn}{import} \PYG{n}{CercleDynamique}
+\PYG{k+kn}{import} \PYG{n+nn}{test\PYGZus{}point\PYGZus{}suivre}
+\PYG{k+kn}{from} \PYG{n+nn}{fonctions\PYGZus{}annexes} \PYG{k+kn}{import} \PYG{n}{convertirMetresPixels}\PYG{p}{,} \PYG{n}{convertirSurfacePixelsSurfaceMetres}
+\PYG{k+kn}{import} \PYG{n+nn}{math}
+\PYG{k+kn}{import} \PYG{n+nn}{pymunk}
+\PYG{k+kn}{import} \PYG{n+nn}{math}
+\PYG{k+kn}{from} \PYG{n+nn}{pymunk.vec2d} \PYG{k+kn}{import} \PYG{n}{Vec2d}
+
+\PYG{k}{class} \PYG{n+nc}{Personne}\PYG{p}{(}\PYG{n}{CercleDynamique}\PYG{p}{):}
+
+    \PYG{n}{VITESSE\PYGZus{}MAXIMALE} \PYG{o}{=} \PYG{n}{convertirMetresPixels}\PYG{p}{(}\PYG{l+m+mf}{1.3}\PYG{p}{)}
+    \PYG{n}{COEFFICIENT\PYGZus{}EVITEMENT} \PYG{o}{=} \PYG{l+m+mf}{0.4}
+
+    \PYG{c+c1}{\PYGZsh{}On choisi la distance maximale parcouru par l\PYGZsq{}agent en une seconde}
+    \PYG{c+c1}{\PYGZsh{}comme rayon de proximité}
+    \PYG{n}{RAYON\PYGZus{}DE\PYGZus{}PROXIMITE} \PYG{o}{=} \PYG{n}{VITESSE\PYGZus{}MAXIMALE} 
+
+    \PYG{n}{TEST\PYGZus{}DIRECTION} \PYG{o}{=} \PYG{n}{test\PYGZus{}point\PYGZus{}suivre}\PYG{o}{.}\PYG{n}{TestDichotomieCompactageObstacle}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{masse\PYGZus{}surfacique}\PYG{p}{,}
+            \PYG{n}{rayon}\PYG{p}{,}
+            \PYG{n}{position}\PYG{p}{,}
+            \PYG{n}{espace}\PYG{p}{):}
+
+        \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}
+            \PYG{n}{masse\PYGZus{}surfacique}\PYG{o}{=}\PYG{n}{masse\PYGZus{}surfacique}\PYG{p}{,}
+            \PYG{n}{rayon}\PYG{o}{=}\PYG{n}{rayon}\PYG{p}{,}
+            \PYG{n}{position}\PYG{o}{=}\PYG{n}{position}\PYG{p}{)}
+        
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{force\PYGZus{}deplacement} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rayon} \PYG{o}{*} \PYG{l+m+mi}{10}\PYG{o}{**}\PYG{l+m+mi}{4}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{filter} \PYG{o}{=} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{ShapeFilter}\PYG{p}{(}
+            \PYG{n}{categories}\PYG{o}{=}\PYG{n}{RepresentationCategorie}\PYG{o}{.}\PYG{n}{PERSONNE}\PYG{o}{.}\PYG{n}{value}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace} \PYG{o}{=} \PYG{n}{espace}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{test\PYGZus{}direction} \PYG{o}{=} \PYG{n}{Personne}\PYG{o}{.}\PYG{n}{TEST\PYGZus{}DIRECTION}\PYG{p}{(}
+            \PYG{n}{position}\PYG{o}{=}\PYG{n}{position}\PYG{p}{,}
+            \PYG{n}{espace}\PYG{o}{=}\PYG{n}{espace}\PYG{p}{,}
+            \PYG{n}{rayon}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rayon}\PYG{p}{,}
+            \PYG{n}{position\PYGZus{}voulue}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{sortieLaPlusProche}\PYG{p}{())}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vitesse\PYGZus{}maximale\PYGZus{}propre} \PYG{o}{=} \PYG{n}{Personne}\PYG{o}{.}\PYG{n}{VITESSE\PYGZus{}MAXIMALE}
+    
+    \PYG{k}{def} \PYG{n+nf}{sortieLaPlusProche}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n}{liste\PYGZus{}centres} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{avoirCentrePortes}\PYG{p}{()}
+        \PYG{n}{distmin} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n}{liste\PYGZus{}centres}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])}
+        \PYG{n}{centre\PYGZus{}min} \PYG{o}{=} \PYG{n}{liste\PYGZus{}centres}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        
+        \PYG{k}{for} \PYG{n}{centre} \PYG{o+ow}{in} \PYG{p}{(}\PYG{n}{liste\PYGZus{}centres}\PYG{p}{):}
+            \PYG{n}{dist} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n}{centre}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{dist} \PYG{o}{\PYGZlt{}} \PYG{n}{distmin} \PYG{p}{:}
+                \PYG{n}{distmin}\PYG{p}{,} \PYG{n}{centre\PYGZus{}min} \PYG{o}{=} \PYG{n}{dist}\PYG{p}{,} \PYG{n}{centre}
+                
+        \PYG{k}{return} \PYG{n}{centre\PYGZus{}min}
+    
+    \PYG{k}{def} \PYG{n+nf}{pointEstAInterieur}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{point}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{point}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{body}\PYG{o}{.}\PYG{n}{position}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rayon}
+
+    \PYG{k}{def} \PYG{n+nf}{personneEstTropProche}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{personne}\PYG{p}{):}    
+        \PYG{k}{return} \PYG{p}{(}\PYG{n}{personne}\PYG{o}{.}\PYG{n}{body}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{get\PYGZus{}distance}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{body}\PYG{o}{.}\PYG{n}{position}\PYG{p}{)}
+            \PYG{o}{\PYGZlt{}} \PYG{p}{(}\PYG{l+m+mi}{2} \PYG{o}{+} \PYG{n}{Personne}\PYG{o}{.}\PYG{n}{COEFFICIENT\PYGZus{}EVITEMENT}\PYG{p}{)} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{rayon}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{estTropProcheDePersonne}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb}{any}\PYG{p}{(}\PYG{n+nb}{map}\PYG{p}{(}\PYG{k}{lambda} \PYG{n}{personne}\PYG{p}{:} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{personneEstTropProche}\PYG{p}{(}\PYG{n}{personne}\PYG{p}{),}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{ensemble\PYGZus{}personnes}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{estSortie}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{lieu\PYGZus{}ferme}\PYG{o}{.}\PYG{n}{pointEstAExterieur}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{p}{)}
+    
+    \PYG{k}{def} \PYG{n+nf}{avoirCarreProximite}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        
+        \PYG{n}{gauche} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n}{Personne}\PYG{o}{.}\PYG{n}{RAYON\PYGZus{}DE\PYGZus{}PROXIMITE}
+        \PYG{n}{droite} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n}{Personne}\PYG{o}{.}\PYG{n}{RAYON\PYGZus{}DE\PYGZus{}PROXIMITE}
+        \PYG{n}{haut} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{n}{Personne}\PYG{o}{.}\PYG{n}{RAYON\PYGZus{}DE\PYGZus{}PROXIMITE}
+        \PYG{n}{bas} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{o}{.}\PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{n}{Personne}\PYG{o}{.}\PYG{n}{RAYON\PYGZus{}DE\PYGZus{}PROXIMITE}
+        
+        \PYG{k}{return} \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{BB}\PYG{p}{(}\PYG{n}{gauche}\PYG{p}{,}\PYG{n}{bas}\PYG{p}{,}\PYG{n}{droite}\PYG{p}{,}\PYG{n}{haut}\PYG{p}{)}
+        
+        
+    \PYG{k}{def} \PYG{n+nf}{avoirNombreDePersonnesAProximite}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n}{personnes\PYGZus{}proches} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{espace}\PYG{o}{.}\PYG{n}{bb\PYGZus{}query}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCarreProximite}\PYG{p}{(),}
+            \PYG{n}{pymunk}\PYG{o}{.}\PYG{n}{ShapeFilter}\PYG{p}{(}\PYG{n}{mask}\PYG{o}{=}\PYG{n}{RepresentationCategorie}\PYG{o}{.}\PYG{n}{PERSONNE}\PYG{o}{.}\PYG{n}{value}\PYG{p}{))}
+        
+        \PYG{k}{return} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{personnes\PYGZus{}proches}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{avoirSurfaceZoneDeProximite}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirCarreProximite}\PYG{p}{()}\PYG{o}{.}\PYG{n}{area}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{mettreAJourDensite}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{}Densite en personnes par metres carrès}
+        \PYG{n}{surface\PYGZus{}proximite} \PYG{o}{=} \PYG{n}{convertirSurfacePixelsSurfaceMetres}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirSurfaceZoneDeProximite}\PYG{p}{())}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{densite} \PYG{o}{=} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{avoirNombreDePersonnesAProximite}\PYG{p}{()}
+            \PYG{o}{/} \PYG{n}{surface\PYGZus{}proximite}\PYG{p}{)}
+            
+    \PYG{k}{def} \PYG{n+nf}{miseAJourVitesseMax}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{densite} \PYG{o}{==} \PYG{l+m+mi}{0} \PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vitesse\PYGZus{}maximale\PYGZus{}propre} \PYG{o}{=}  \PYG{n}{Personne}\PYG{o}{.}\PYG{n}{VITESSE\PYGZus{}MAXIMALE}
+        \PYG{k}{else} \PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vitesse\PYGZus{}maximale\PYGZus{}propre} \PYG{o}{=} \PYG{p}{(}
+                \PYG{n}{Personne}\PYG{o}{.}\PYG{n}{VITESSE\PYGZus{}MAXIMALE} \PYG{o}{*} \PYG{n+nb}{min}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{densite}\PYG{o}{**}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.8}\PYG{p}{)))}
+        
+    \PYG{k}{def} \PYG{n+nf}{traiterVitesse}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{corps}\PYG{o}{.}\PYG{n}{velocity}\PYG{o}{.}\PYG{n}{length} \PYG{o}{\PYGZgt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vitesse\PYGZus{}maximale\PYGZus{}propre} \PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{corps}\PYG{o}{.}\PYG{n}{velocity}\PYG{o}{.}\PYG{n}{length} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vitesse\PYGZus{}maximale\PYGZus{}propre}
+
+    \PYG{k}{def} \PYG{n+nf}{mettreAJourForce}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{estSortie}\PYG{p}{():}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{test\PYGZus{}direction}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{position}\PYG{p}{)}
+            \PYG{n}{force} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{test\PYGZus{}direction}\PYG{o}{.}\PYG{n}{point\PYGZus{}a\PYGZus{}suivre} \PYG{o}{\PYGZhy{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{body}\PYG{o}{.}\PYG{n}{position}
+            \PYG{k}{if} \PYG{n}{force} \PYG{o}{!=} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{):}
+                \PYG{n}{force}\PYG{o}{.}\PYG{n}{length} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{force\PYGZus{}deplacement}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{body}\PYG{o}{.}\PYG{n}{apply\PYGZus{}force\PYGZus{}at\PYGZus{}local\PYGZus{}point}\PYG{p}{(}\PYG{n}{force}\PYG{p}{,} \PYG{n}{Vec2d}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mettreAJourDensite}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{miseAJourVitesseMax}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{traiterVitesse}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{mettreAJourForce}\PYG{p}{()}
+\end{Verbatim}
